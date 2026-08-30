@@ -2714,10 +2714,14 @@ function openMapModal() {
   overlay.style.display = "flex";
 
   const rawMap = introDataGlobal?.world_data?.mapa_locais;
-  const mapData = (rawMap && Array.isArray(rawMap) && rawMap.length >= 8) ? rawMap : getFallbackMap();
-  if (introDataGlobal?.world_data) {
-    introDataGlobal.world_data.mapa_locais = mapData;
-  }
+  const isValidMap = rawMap && Array.isArray(rawMap) && rawMap.length >= 8 && !rawMap.some(r => r.id === "loc_1" || r.id === "loc_2");
+  const mapData = isValidMap ? rawMap : getFallbackMap();
+
+  if (!introDataGlobal) introDataGlobal = {};
+  if (!introDataGlobal.world_data) introDataGlobal.world_data = {};
+  introDataGlobal.world_data.mapa_locais = mapData;
+  try { localStorage.setItem("sessionIntro", JSON.stringify(introDataGlobal)); } catch(e) {}
+
   renderTacticalMap(mapData);
   initMapInteractions();
 }
@@ -2732,7 +2736,19 @@ function renderTacticalMap(rooms) {
   svgLinks.innerHTML = "";
 
   const sh = getCurrentSheet();
-  const currentLocName = sh?.current_location || rooms.find(r => r.inicial)?.nome || rooms[0]?.nome;
+
+  // Localiza estritamente 1 ÚNICA sala atual para o jogador ativo
+  let activeRoom = null;
+  if (sh?.current_location_id) {
+    activeRoom = rooms.find(r => r.id === sh.current_location_id);
+  }
+  if (!activeRoom && sh?.current_location) {
+    activeRoom = rooms.find(r => r.nome.toLowerCase() === sh.current_location.toLowerCase());
+  }
+  if (!activeRoom) {
+    activeRoom = rooms.find(r => r.inicial) || rooms[0];
+  }
+  const activeRoomId = activeRoom ? activeRoom.id : rooms[0]?.id;
 
   const roomMap = {};
   rooms.forEach((room, idx) => {
@@ -2764,7 +2780,7 @@ function renderTacticalMap(rooms) {
       const toCenterX = toPos.x + toPos.w / 2;
       const toCenterY = toPos.y + toPos.h / 2;
 
-      const isCurrentRoute = (room.nome === currentLocName) || (toPos.room.nome === currentLocName);
+      const isCurrentRoute = (room.id === activeRoomId) || (toPos.room.id === activeRoomId);
       linksHtml += `<line class="map-corridor-line${isCurrentRoute ? ' active' : ''}" x1="${fromCenterX}" y1="${fromCenterY}" x2="${toCenterX}" y2="${toCenterY}" />`;
     });
   });
@@ -2772,18 +2788,18 @@ function renderTacticalMap(rooms) {
 
   const agentColors = ["#22c55e", "#38bdf8", "#c084fc", "#eab308", "#f43f5e"];
 
-  // 2. Renderiza as Salas Contíguas (Planta Baixa Sem Spoilers)
+  // 2. Renderiza as Salas Contíguas (Planta Baixa Sem Spoilers e Sem Duplicações)
   rooms.forEach(room => {
     const pos = roomMap[room.id];
     if (!pos) return;
 
-    const isCurrent = (room.nome === currentLocName) || (room.id === sh?.current_location_id);
+    const isCurrent = (room.id === activeRoomId);
     const isLocked = room.trancado;
 
-    // Agentes presentes
+    // Agentes presentes nesta sala (cada agente em rigorosamente 1 sala)
     const agentsHere = allCharacters.filter(c => {
-      const cLoc = c.current_location || (rooms.find(r => r.inicial)?.nome);
-      return cLoc === room.nome || c.current_location_id === room.id;
+      const targetRoomId = c.current_location_id || (rooms.find(r => r.nome.toLowerCase() === (c.current_location || "").toLowerCase())?.id) || rooms.find(r => r.inicial)?.id || rooms[0]?.id;
+      return targetRoomId === room.id;
     });
 
     const nodeEl = document.createElement("div");
@@ -2827,12 +2843,11 @@ function renderTacticalMap(rooms) {
     nodesContainer.appendChild(nodeEl);
   });
 
-  centerOnCurrentRoom(roomMap, currentLocName);
+  centerOnCurrentRoom(roomMap, activeRoomId);
 }
 
-
-function centerOnCurrentRoom(roomMap, currentLocName) {
-  const currentRoomEntry = Object.values(roomMap).find(e => e.room.nome === currentLocName) || Object.values(roomMap)[0];
+function centerOnCurrentRoom(roomMap, activeRoomId) {
+  const currentRoomEntry = roomMap[activeRoomId] || Object.values(roomMap)[0];
   if (!currentRoomEntry) return;
 
   const viewport = el("map-viewport");
@@ -2849,20 +2864,6 @@ function centerOnCurrentRoom(roomMap, currentLocName) {
   applyMapTransform();
 }
 
-function centerOnCurrentRoom(roomMap, currentLocName) {
-  const currentRoomEntry = Object.values(roomMap).find(e => e.room.nome === currentLocName) || Object.values(roomMap)[0];
-  if (!currentRoomEntry) return;
-
-  const viewport = el("map-viewport");
-  if (!viewport) return;
-
-  const vw = viewport.clientWidth || 800;
-  const vh = viewport.clientHeight || 500;
-
-  mapPanX = (vw / 2) - (currentRoomEntry.x * mapScale);
-  mapPanY = (vh / 2) - (currentRoomEntry.y * mapScale);
-  applyMapTransform();
-}
 
 function onMapNodeClick(room, isCurrent) {
   if (isCurrent) {
