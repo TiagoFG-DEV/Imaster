@@ -6712,3 +6712,284 @@ body.screen-shake {
   box-shadow: 0 10px 36px rgba(0, 0, 0, 0.8), 0 0 20px rgba(201, 168, 76, 0.2);
   animation: formExpand .25s ease;
 }
+
+/* ══════════════════════════════════════════════════════════
+   MODAL DE SELEÇÃO DE DESTINATÁRIO / ALVO (TARGET MODAL)
+══════════════════════════════════════════════════════════ */
+.target-menu-box {
+  max-width: 580px;
+  width: 92%;
+  background: linear-gradient(170deg, rgba(22, 16, 32, 0.98) 0%, rgba(10, 8, 16, 0.99) 100%);
+  border: 1.5px solid var(--gold);
+  border-radius: 14px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.9), 0 0 30px rgba(201, 168, 76, 0.25);
+  animation: modalPopIn .22s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.target-auxilio-type-wrap {
+  padding: 12px 18px 0;
+}
+
+.target-auxilio-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.btn-auxilio-type {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  color: var(--text2);
+  cursor: pointer;
+  text-align: left;
+  transition: all .2s ease;
+}
+
+.btn-auxilio-type:hover {
+  background: rgba(201, 168, 76, 0.12);
+  border-color: var(--gold);
+  color: #fff;
+}
+
+.btn-auxilio-type.active {
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.22) 0%, rgba(30, 24, 45, 0.9) 100%);
+  border-color: var(--gold2);
+  color: var(--gold2);
+  box-shadow: 0 0 14px rgba(201, 168, 76, 0.3);
+}
+
+.btn-auxilio-type .aux-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.btn-auxilio-type .aux-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.btn-auxilio-type .aux-text strong {
+  font-family: var(--font-t);
+  font-size: 12px;
+  letter-spacing: .5px;
+}
+
+.btn-auxilio-type .aux-text span {
+  font-size: 9.5px;
+  opacity: .8;
+  line-height: 1.2;
+}
+
+.target-menu-body {
+  padding: 14px 18px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.target-section-label {
+  font-family: var(--font-t);
+  font-size: 9.5px;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  color: var(--gold-d);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.target-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+.target-card-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: rgba(28, 22, 42, 0.85);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  transition: all .2s ease;
+}
+
+.target-card-btn:hover {
+  background: rgba(48, 38, 72, 0.95);
+  border-color: var(--gold);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(201, 168, 76, 0.2);
+}
+
+.target-card-btn.selected {
+  background: linear-gradient(90deg, rgba(201, 168, 76, 0.25) 0%, rgba(35, 26, 55, 0.95) 100%);
+  border-color: var(--gold2);
+  box-shadow: 0 0 16px rgba(201, 168, 76, 0.35);
+}
+
+.target-card-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--gold);
+  flex-shrink: 0;
+}
+
+.target-card-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--gold);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  flex-shrink: 0;
+}
+
+.target-card-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.target-card-name {
+  font-family: var(--font-t);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.target-card-sub {
+  font-size: 9.5px;
+  color: var(--text-d);
+}
+
+.target-card-check {
+  font-size: 14px;
+  color: var(--gold2);
+  opacity: 0;
+  transition: opacity .15s ease;
+}
+
+.target-card-btn.selected .target-card-check {
+  opacity: 1;
+}
+
+.target-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px 18px;
+  border-top: 1px solid rgba(201, 168, 76, 0.15);
+  background: rgba(14, 10, 20, 0.95);
+  border-radius: 0 0 14px 14px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ATMOSFERAS VISUAIS DINÂMICAS POR TIPO DE CENA
+══════════════════════════════════════════════════════════ */
+.scene-vignette-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  transition: background 1.5s ease, opacity 1.5s ease;
+  opacity: 1;
+}
+
+/* 1. COMBATE (Vermelho Sangue + Brasas Ardentes) */
+body[data-scene-type="combate"] #scene-vignette-overlay,
+body.theme-combate #scene-vignette-overlay {
+  background: radial-gradient(ellipse at center, rgba(140, 15, 15, 0.12) 0%, rgba(25, 4, 8, 0.75) 100%);
+  box-shadow: inset 0 0 120px rgba(220, 30, 30, 0.25);
+}
+
+body[data-scene-type="combate"] .chat-header,
+body.theme-combate .chat-header {
+  border-bottom-color: rgba(220, 40, 40, 0.4);
+}
+
+/* 2. PERSEGUIÇÃO (Azul Noturno + Batimentos Cardíacos Pulsantes) */
+body[data-scene-type="perseguicao"] #scene-vignette-overlay,
+body.theme-perseguicao #scene-vignette-overlay {
+  background: radial-gradient(ellipse at center, rgba(15, 60, 150, 0.18) 0%, rgba(3, 8, 24, 0.8) 100%);
+  box-shadow: inset 0 0 140px rgba(40, 120, 240, 0.3);
+  animation: heartbeatPulse 1.25s ease-in-out infinite;
+}
+
+body[data-scene-type="perseguicao"] .chat-header,
+body.theme-perseguicao .chat-header {
+  border-bottom-color: rgba(40, 120, 240, 0.4);
+}
+
+@keyframes heartbeatPulse {
+  0% {
+    box-shadow: inset 0 0 90px rgba(40, 120, 240, 0.2);
+  }
+  20% {
+    box-shadow: inset 0 0 170px rgba(50, 140, 255, 0.45);
+  }
+  35% {
+    box-shadow: inset 0 0 110px rgba(40, 120, 240, 0.25);
+  }
+  50% {
+    box-shadow: inset 0 0 185px rgba(60, 160, 255, 0.5);
+  }
+  75% {
+    box-shadow: inset 0 0 90px rgba(40, 120, 240, 0.2);
+  }
+  100% {
+    box-shadow: inset 0 0 90px rgba(40, 120, 240, 0.2);
+  }
+}
+
+/* 3. INVESTIGAÇÃO (Verde Calmo Esmeralda + Névoa Sutil) */
+body[data-scene-type="investigacao"] #scene-vignette-overlay,
+body.theme-investigacao #scene-vignette-overlay {
+  background: radial-gradient(ellipse at center, rgba(16, 75, 45, 0.12) 0%, rgba(5, 18, 12, 0.72) 100%);
+  box-shadow: inset 0 0 100px rgba(34, 197, 94, 0.15);
+}
+
+body[data-scene-type="investigacao"] .chat-header,
+body.theme-investigacao .chat-header {
+  border-bottom-color: rgba(34, 197, 94, 0.35);
+}
+
+/* 4. BOSS FINAL (Dourado Escarlate + Trovões Ocultos) */
+body[data-scene-type="boss"] #scene-vignette-overlay,
+body.theme-boss #scene-vignette-overlay {
+  background: radial-gradient(ellipse at center, rgba(160, 30, 20, 0.22) 0%, rgba(12, 4, 18, 0.9) 100%);
+  box-shadow: inset 0 0 160px rgba(201, 168, 76, 0.35), inset 0 0 80px rgba(220, 40, 40, 0.4);
+  animation: bossAuraPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes bossAuraPulse {
+  0% {
+    box-shadow: inset 0 0 120px rgba(201, 168, 76, 0.25), inset 0 0 60px rgba(220, 40, 40, 0.3);
+  }
+  100% {
+    box-shadow: inset 0 0 190px rgba(201, 168, 76, 0.5), inset 0 0 110px rgba(240, 50, 50, 0.6);
+  }
+}

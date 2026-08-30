@@ -270,17 +270,25 @@ async function playerAction(action, sessionId, diceResult) {
   return {
     narration:       result.narration || "O Mestre observa em silêncio.",
     bgm_mood:        result.bgm_mood || "calmo",
+    scene_type:      result.scene_type || session.world_data?.tipo_cena_atual || "investigacao",
+    scene_title:     result.scene_title || session.world_data?.cena_atual_obj?.titulo || "Investigação",
+    scene_progress:  result.scene_progress || null,
     cinematica:      result.cinematica || null,
     dice_request:    result.dice_request || null,
     contextual_suggestions: session.contextual_suggestions || [],
     sheet:           session.character_sheet,
     all_characters:  session.all_characters || null,
+    world_data:      session.world_data || null,
     game_mode:       session.game_mode || null,
     initiative_order: session.initiative_order || null,
     current_turn_index: session.current_turn_index || 0,
-    last_dice:       session.last_dice
+    last_dice:       session.last_dice,
+    victory:         session.ended && session.victory,
+    madness:         session.ended && session.madness,
+    dead:            session.ended && session.dead
   };
 }
+
 
 // ─── Sugestões — agora locais, sem IA ────────────────────────────────────────
 // Retorna 4 sugestões de ação baseadas no estado atual da sessão

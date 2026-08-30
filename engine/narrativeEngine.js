@@ -208,6 +208,132 @@ function generateCharacterSheet(classChoice, playerData = {}) {
   return sheet;
 }
 
+// ─── GERAÇÃO DE ESTRUTURA COMPLETA DE CAMPANHA (14 CENAS COM TAGS) ─────────────
+function buildRichCampaignScenes(story, entity) {
+  const loc = story.local_principal || "Local da Missão";
+  const bossName = entity?.nome || story.climax?.boss_nome || "A Entidade Abissal";
+
+  return [
+    // ── ATO 1: RECONHECIMENTO & PRIMEIROS CONTATOS (4 Cenas) ──
+    {
+      id: "cena_1",
+      ato: 1,
+      titulo: `Chegada e Perímetro de ${loc}`,
+      tipo: "investigacao",
+      descricao: `Os agentes chegam ao local sob atmosfera densa e anormal. Vestígios de atividade recente cobrem o chão.`,
+      objetivo: "Examinar os arredores, isolar o perímetro e buscar as primeiras anomalias."
+    },
+    {
+      id: "cena_2",
+      ato: 1,
+      titulo: `Interrogatório e Vestígios Forenses`,
+      tipo: "investigacao",
+      descricao: `Testemunhas aterrorizadas ou registros gravados revelam o momento exato em que a membrana começou a se romper.`,
+      objetivo: "Cruzar depoimentos, decifrar anotações e entender o padrão dos desaparecimentos."
+    },
+    {
+      id: "cena_3",
+      ato: 1,
+      titulo: `Emboscada de Criaturas Menores`,
+      tipo: "combate_comum",
+      descricao: `Criaturas carniceiras menores do Outro Lado e animais corrompidos saltam das sombras em um ataque rápido e violento!`,
+      objetivo: "Neutralizar a ameaça imediata sem gastar recursos vitais."
+    },
+    {
+      id: "cena_4",
+      ato: 1,
+      titulo: `O Primeiro Altar Revelado`,
+      tipo: "investigacao",
+      descricao: `Símbolos gravados com sangue seco conectam a estrutura a um ritual muito mais antigo e profundo.`,
+      objetivo: "Identificar o elemento paranormal (Sangue, Morte, Conhecimento ou Energia)."
+    },
+
+    // ── ATO 2: ESCALADA, REVELAÇÕES & PERSEGUIÇÃO (6 Cenas) ──
+    {
+      id: "cena_5",
+      ato: 2,
+      titulo: `Infiltração no Núcleo do Culto`,
+      tipo: "investigacao",
+      descricao: `Os agentes adentram as alas mais profundas e isoladas. O ar é frio e pesado com a presença do Outro Lado.`,
+      objetivo: "Navegar pelas passagens secretas sem acionar armadilhas de lodo paranormal."
+    },
+    {
+      id: "cena_6",
+      ato: 2,
+      titulo: `Patrulha de Guardas Fanáticos`,
+      tipo: "combate_comum",
+      descricao: `Um grupo de acólitos armados e corrompidos pela loucura tenta impedir o avanço dos agentes a qualquer custo.`,
+      objetivo: "Eliminar a guarda e recolher chaves ou artefatos de acesso."
+    },
+    {
+      id: "cena_7",
+      ato: 2,
+      titulo: `Perseguição nos Corredores em Ruína`,
+      tipo: "perseguicao",
+      descricao: `Uma abominação descomunal surge derrubando vigas e paredes! Fuga acelerada em meio a escombros e armadilhas!`,
+      objetivo: "Correr desesperadamente, saltar obstáculos e manter o ritmo cardíaco sob controle."
+    },
+    {
+      id: "cena_8",
+      ato: 2,
+      titulo: `Batalha contra o Tenente do Culto`,
+      tipo: "combate_importante",
+      descricao: `O sacerdote intermediário do culto invoca poderes corrompidos e ataca com fúria ritualística devastadora!`,
+      objetivo: "Superar a resistência paranormal do líder intermediário e quebrar seu elo místico."
+    },
+    {
+      id: "cena_9",
+      ato: 2,
+      titulo: `A Revelação da Fraqueza Oculta`,
+      tipo: "investigacao",
+      descricao: `Diários ocultistas e artefatos de proteção deixados por vítimas revelam a fraqueza elemental do Boss Final.`,
+      objetivo: "Decifrar o contra-ritual ou mecanismo tático necessário para ferir a entidade suprema."
+    },
+    {
+      id: "cena_10",
+      ato: 2,
+      titulo: `Corrida Contra o Tempo do Sacrifício`,
+      tipo: "perseguicao",
+      descricao: `Sirenes ecoam e a membrana vibra. Os cultistas iniciam a contagem final para o sacrifício supremo!`,
+      objetivo: "Cruzar o complexo em velocidade máxima antes que o portal se estabilize totalmente."
+    },
+
+    // ── ATO 3: CONFRONTO FINAL, BOSS FIGHT & EPÍLOGO (4 Cenas) ──
+    {
+      id: "cena_11",
+      ato: 3,
+      titulo: `A Vanguarda das Aberrações`,
+      tipo: "combate_comum",
+      descricao: `Hordas de corpos reanimados e resquícios paranormais cercam a entrada da câmara principal.`,
+      objetivo: "Abrir caminho através da barreira com força total."
+    },
+    {
+      id: "cena_12",
+      ato: 3,
+      titulo: `O Guardião Colossal do Santuário`,
+      tipo: "combate_importante",
+      descricao: `Uma aberração de elite forjada na dor e no sofrimento protege o limiar do ritual com ataques de área brutais.`,
+      objetivo: "Trabalhar em equipe para derrubar o colosso antes de adentrar a câmara do Boss."
+    },
+    {
+      id: "cena_13",
+      ato: 3,
+      titulo: `CONFRONTO SUPREMO: ${bossName}`,
+      tipo: "boss_climax",
+      descricao: `A manifestação total do Outro Lado se ergue! O Boss Final da missão desafia a realidade, exigindo combate tático feroz, contra-rituais intelectuais e manobras extremas de sobrevivência!`,
+      objetivo: `Destruir ou selar ${bossName} e romper o vórtice do Outro Lado antes da destruição total.`
+    },
+    {
+      id: "cena_14",
+      ato: 3,
+      titulo: `Epílogo & Selamento dos Arcos`,
+      tipo: "epilogo",
+      descricao: `O silêncio retorna às cinzas do confronto. A fumaça baixa enquanto os agentes contemplam as cicatrizes do paranormal.`,
+      objetivo: "Desfecho cinematográfico com o destino final de cada agente, o encerramento dos arcos e o relatório oficial para a Ordem."
+    }
+  ];
+}
+
 // ─── GERAÇÃO DE HISTÓRIA ─────────────────────────────────────────────────────
 function generateStory(themes = [], gameMode = {}) {
   const stories = STORIES_DB.historias || [];
@@ -223,6 +349,7 @@ function generateStory(themes = [], gameMode = {}) {
   }
 
   const story = pick(pool);
+  const richScenes = buildRichCampaignScenes(story, null);
 
   // Monta a estrutura final da sessão
   return {
@@ -242,6 +369,10 @@ function generateStory(themes = [], gameMode = {}) {
     finais:          story.finais,
     ato_atual:       1,
     cena_atual:      0,
+    cena_atual_idx:  0,
+    cenas_totais:    richScenes,
+    cena_atual_obj:  richScenes[0],
+    tipo_cena_atual: richScenes[0].tipo,
     pistas_reveladas:[],
     climax_ativado:  false,
     final_escolhido: null,
@@ -249,7 +380,7 @@ function generateStory(themes = [], gameMode = {}) {
 }
 
 function _fallbackStory() {
-  return {
+  const base = {
     id: "missao_paranormal",
     titulo: "Missão Paranormal",
     sinopse: "Uma ocorrência inexplicável requer investigação imediata.",
@@ -264,9 +395,22 @@ function _fallbackStory() {
     ato3: { titulo: "Clímax", cenas: ["Confronto final."] },
     climax: { descricao: "O confronto final se aproxima.", desafio_principal: "Sobreviver.", cd_ritual: 15, atributo_ritual: "vontade" },
     finais: [{ id: "vitoria", titulo: "Vitória", descricao: "Os agentes sobrevivem.", tom: "aliviante" }],
-    ato_atual: 1, cena_atual: 0, pistas_reveladas: [], climax_ativado: false, final_escolhido: null,
+  };
+  const richScenes = buildRichCampaignScenes(base, null);
+  return {
+    ...base,
+    ato_atual: 1,
+    cena_atual: 0,
+    cena_atual_idx: 0,
+    cenas_totais: richScenes,
+    cena_atual_obj: richScenes[0],
+    tipo_cena_atual: richScenes[0].tipo,
+    pistas_reveladas: [],
+    climax_ativado: false,
+    final_escolhido: null,
   };
 }
+
 
 // ─── GERAÇÃO DE POOL DE NPCs ─────────────────────────────────────────────────
 function generateNPCPool(storyData) {
@@ -495,14 +639,6 @@ async function processPlayerAction(action, session, diceResult) {
         if (diceResult.isCritical) {
           narration = `⭐ Revelação extraordinária!\n\n${narration}`;
         }
-        // Dreno moderado de Sanidade se exposto ao medo
-        if (Math.random() < 0.35 && (sh.san_current || 0) > 0) {
-          const sanLoss = roll(1, 2);
-          state_updates.san_current = Math.max(0, (sh.san_current || 0) - sanLoss);
-          state_updates.nex_increase = (state_updates.nex_increase || 0) + sanLoss;
-          narration += `\n\n[O vislumbre sobrenatural perturba sua mente: -${sanLoss} SAN | +${sanLoss}% NEX]`;
-          if (!cinematica) cinematica = { tipo: "dano_san", texto: `-${sanLoss} SAN — A mente vacila! (+${sanLoss}% NEX)`, valor: sanLoss, recurso_atual: state_updates.san_current, recurso_maximo: sh.san_max };
-        }
       }
     } else if (actionType === "social") {
       narration = processSocialAction(action, session, story);
@@ -517,12 +653,16 @@ async function processPlayerAction(action, session, diceResult) {
       narration = processGenericAction(action, session, story);
     }
 
-    // Progresso de cena local
+    // Progresso de cena local com 14 cenas ricas e taggeadas
     if (shouldAdvanceScene(session, action, diceResult)) {
       const nextScene = advanceScene(session, story);
       if (nextScene) {
-        narration += `\n\n📍 *${nextScene}*`;
-        state_updates.location = nextScene;
+        narration += `\n\n📍 *[CENA ${(story.cena_atual_idx || 0) + 1}/${story.cenas_totais ? story.cenas_totais.length : 14} — ${nextScene.tipo.toUpperCase()}]: ${nextScene.titulo}*\n${nextScene.descricao || ''}`;
+        state_updates.location = nextScene.titulo;
+        if (nextScene.tipo === "boss_climax") {
+          cinematica = { tipo: "boss", texto: `CONFRONTO FINAL: ${nextScene.titulo}`, valor: 100, recurso_atual: 100, recurso_maximo: 100 };
+          state_updates.nex_increase = (state_updates.nex_increase || 0) + 5;
+        }
       }
     }
   }
@@ -551,17 +691,18 @@ async function processPlayerAction(action, session, diceResult) {
     }
   }
 
-  // Condição de Vitória no Clímax (Ato 3)
+  // Condição de Vitória no Clímax / Boss Final (Ato 3)
   const currentPv = state_updates.pv_current ?? sh.pv_current;
   const currentSan = state_updates.san_current ?? sh.san_current;
+  const currentSceneObj = story?.cena_atual_obj || story?.cenas_totais?.[story?.cena_atual_idx || 0];
 
-  if (story?.ato_atual >= 3 && (story.climax_ativado || session.turn_count >= 10)) {
+  if ((story?.ato_atual >= 3 || currentSceneObj?.tipo === "boss_climax" || currentSceneObj?.tipo === "epilogo") && (story?.climax_ativado || session.turn_count >= 8)) {
     if (diceResult && diceResult.success && diceResult.total >= 14) {
       session.ended = true;
       session.victory = true;
       state_updates.nex_increase = (state_updates.nex_increase || 0) + 10;
-      cinematica = { tipo: "matar", texto: "Entidade Banida! Vitória da Ordem!", valor: 100, recurso_atual: 100, recurso_maximo: 100 };
-      narration += `\n\n🏆 VITÓRIA DA MISSÃO! Com determinação inabalável, o ritual de contenção é selado. A anomalia colapsa e a Ordo Realitas assegura mais um dia para a humanidade (+10% NEX de Sobrevivência ao Clímax!).`;
+      cinematica = { tipo: "matar", texto: "Boss Banido! Vitória da Ordem!", valor: 100, recurso_atual: 100, recurso_maximo: 100 };
+      narration += `\n\n${generateConcludingNarration(session, story)}`;
     }
   }
 
@@ -610,7 +751,12 @@ async function processPlayerAction(action, session, diceResult) {
     }
   }
 
-  // ─── Reconhecimento Dinâmico de Trilha Sonora (bgm_mood) ───────────────────
+  // ─── Reconhecimento Dinâmico de Trilha Sonora (bgm_mood) & Tipo de Cena ───
+  const activeScene = story?.cena_atual_obj || story?.cenas_totais?.[story?.cena_atual_idx || 0];
+  const scene_type = activeScene?.tipo || "investigacao";
+  const scene_title = activeScene?.titulo || "Investigação";
+  const scene_progress = story?.cenas_totais ? `${(story.cena_atual_idx || 0) + 1}/${story.cenas_totais.length}` : null;
+
   let bgm_mood = aiResult?.bgm_mood || null;
   if (session.ended && session.victory) {
     bgm_mood = "vitoria";
@@ -619,11 +765,11 @@ async function processPlayerAction(action, session, diceResult) {
   } else if (currentPv <= 0 || currentSan <= 0) {
     bgm_mood = "derrota";
   } else if (!bgm_mood) {
-    if (actionType === "combate" || session.current_entity) {
+    if (scene_type === "boss_climax" || scene_type === "combate_importante" || scene_type === "combate_comum") {
       bgm_mood = "batalha";
-    } else if (actionType === "fuga") {
+    } else if (scene_type === "perseguicao") {
       bgm_mood = "perseguicao";
-    } else if (diceResult?.isDisaster || (state_updates.san_current != null && state_updates.san_current < sh.san_current)) {
+    } else if (diceResult?.isDisaster) {
       bgm_mood = "tenso";
     } else {
       bgm_mood = "calmo";
@@ -633,6 +779,9 @@ async function processPlayerAction(action, session, diceResult) {
   return {
     narration: narration || "O ambiente permanece tenso. Aguardem o próximo movimento.",
     bgm_mood,
+    scene_type,
+    scene_title,
+    scene_progress,
     cinematica,
     dice_request,
     state_updates,
@@ -640,6 +789,7 @@ async function processPlayerAction(action, session, diceResult) {
     contextual_suggestions
   };
 }
+
 
 // ─── Classificação de Ação ───────────────────────────────────────────────────
 function classifyAction(action) {
@@ -918,29 +1068,28 @@ function processGenericAction(action, session, story) {
 
 // ─── Progressão da história ───────────────────────────────────────────────────
 function shouldAdvanceScene(session, action, diceResult) {
-  // Avança cena após sucessos importantes
-  if (diceResult?.success && diceResult.total >= 15) return Math.random() < 0.5;
-  if ((action || "").length > 50) return Math.random() < 0.3;
-  return Math.random() < 0.15;
+  // Avança de cena após resolução de testes importantes ou ações significativas
+  if (diceResult && diceResult.success) return true;
+  if ((action || "").length > 25) return Math.random() < 0.65;
+  return Math.random() < 0.45;
 }
 
 function advanceScene(session, story) {
-  if (!story) return null;
-  const ato = story.ato_atual || 1;
-  const atoData = story[`ato${ato}`];
-  if (!atoData) return null;
+  if (!story || !story.cenas_totais) return null;
+  const currentIdx = story.cena_atual_idx || 0;
 
-  const cenas = atoData.cenas || [];
-  const current = story.cena_atual || 0;
+  if (currentIdx < story.cenas_totais.length - 1) {
+    story.cena_atual_idx = currentIdx + 1;
+    const nextScene = story.cenas_totais[story.cena_atual_idx];
+    story.cena_atual_obj = nextScene;
+    story.tipo_cena_atual = nextScene.tipo;
+    story.ato_atual = nextScene.ato || (nextScene.tipo === "boss_climax" ? 3 : story.ato_atual);
 
-  if (current < cenas.length - 1) {
-    story.cena_atual = current + 1;
-    return cenas[current + 1];
-  } else if (ato < 3) {
-    story.ato_atual = ato + 1;
-    story.cena_atual = 0;
-    const nextAto = story[`ato${ato + 1}`];
-    return nextAto?.titulo ? `Ato ${ato + 1}: ${nextAto.titulo}` : null;
+    if (nextScene.tipo === "boss_climax") {
+      story.climax_ativado = true;
+    }
+
+    return nextScene;
   }
 
   return null;
@@ -949,12 +1098,41 @@ function advanceScene(session, story) {
 function checkClimaxConditions(session) {
   const story = session.world_data;
   if (!story || story.climax_ativado) return false;
-  const history = session.history || [];
-  // Ativa clímax após 15+ ações ou se todas as pistas foram reveladas
-  if (history.length >= 15 && story.ato_atual >= 3) return true;
-  const pistas = story.ato3?.cenas || [];
-  return story.pistas_reveladas?.length >= 3 && story.ato_atual >= 2;
+  const currentScene = story?.cena_atual_obj || story?.cenas_totais?.[story?.cena_atual_idx || 0];
+  return currentScene?.tipo === "boss_climax" || (story?.cena_atual_idx || 0) >= 12;
 }
+
+// ─── Narração Longa de Encerramento & Resolução de Arcos ───────────────────────
+function generateConcludingNarration(session, story) {
+  const chars = session.all_characters || [session.character_sheet];
+  const title = story?.titulo || "Missão Paranormal";
+  const loc = story?.local_principal || "o local da missão";
+  const entity = session.current_entity?.nome || "a Entidade Paranormal";
+
+  const charsArc = chars.map(c => {
+    const name = c.name || "O Agente";
+    const trauma = c.identity?.trauma || c.history || "as cicatrizes do terror";
+    const fear = c.identity?.medo || "o desconhecido";
+    const nex = c.nex || "5%";
+    const isAlive = (c.pv_current || 0) > 0 && (c.san_current || 0) > 0;
+
+    if (isAlive) {
+      return `• ${name} (${c.class || 'Agente'}): Sobreviveu ao pesadelo e agora carrega NEX ${nex}. Embora as visões de "${fear}" permaneçam sussurrando na escuridão, sua determinação foi o pilar que garantiu a vitória da equipe.`;
+    } else if ((c.san_current || 0) <= 0) {
+      return `• ${name} (${c.class || 'Agente'}): Teve sua mente irrevogavelmente fragmentada pelo horror incomensurável de ${entity}, tornando-se um testemunho eterno da fragilidade humana perante o Outro Lado.`;
+    } else {
+      return `• ${name} (${c.class || 'Agente'}): Tombou com honra durante o clímax, sacrificando-se para que seus companheiros pudessem desferir o golpe decisivo. Seu nome será gravado nos anais da Ordem.`;
+    }
+  }).join("\n\n");
+
+  return `🏆 VITÓRIA DA MISSÃO — ${title.toUpperCase()}\n\n` +
+    `Com um último esforço coordenado e o selamento dos símbolos arcanos, o vórtice do Outro Lado colapsa sobre si mesmo em um clarão ofuscante. Um silêncio sepulcral e gélido toma conta de ${loc}.\n\n` +
+    `A Membrana foi temporariamente restaurada. Os vestígios de ${entity} são contidos pela equipe de limpeza da Ordo Realitas, e os arquivos deste caso são lacrados sob sigilo absoluto de Nível 4.\n\n` +
+    `═══ O DESTINO DOS AGENTES & ENCERRAMENTO DOS ARCOS ═══\n\n` +
+    `${charsArc}\n\n` +
+    `As sirenes ao longe anunciam a chegada do comboio de extração. Mais uma vez, o mundo desperta sem saber que esteve a um passo do abismo.`;
+}
+
 
 // ─── Cinemática de Morte ─────────────────────────────────────────────────────
 function generateDeathCinematic(sh, session) {

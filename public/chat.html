@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IMaster RPG — Sessão Paranormal</title>
-  <meta name="description" content="IMaster RPG: Sessão imersiva de Ordem Paranormal com cartas arcanas 3D, combate tático e narrativa mística.">
+  <meta name="description"
+    content="IMaster RPG: Sessão imersiva de Ordem Paranormal com cartas arcanas 3D, combate tático e narrativa mística.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;600;700;800;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;600;700;800;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Fira+Code:wght@400;600&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=70">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="js/dice3d.js?v=70"></script>
 </head>
+
 <body class="chat-page">
 
   <!-- Barras de Letterbox Cinematográfico -->
@@ -53,8 +58,8 @@
         <div class="sp-avatar-frame">
           <img id="sh-avatar" class="sp-avatar-img" src="" alt="Retrato do Agente">
           <svg class="sp-avatar-ring" viewBox="0 0 100 100">
-            <circle class="sp-ring-track" cx="50" cy="50" r="46"/>
-            <circle class="sp-ring-glow" cx="50" cy="50" r="46"/>
+            <circle class="sp-ring-track" cx="50" cy="50" r="46" />
+            <circle class="sp-ring-glow" cx="50" cy="50" r="46" />
           </svg>
           <div class="sp-avatar-status-dot" id="sp-status-dot"></div>
         </div>
@@ -90,9 +95,9 @@
         <div class="sp-ring-unit res-group-pv" id="group-pv">
           <div class="sp-ring-wrap">
             <svg class="sp-ring-svg" viewBox="0 0 80 80">
-              <circle class="sp-ring-bg" cx="40" cy="40" r="33"/>
-              <circle class="sp-ring-fill sp-ring-pv" id="ring-pv" cx="40" cy="40" r="33"
-                stroke-dasharray="207.3" stroke-dashoffset="0"/>
+              <circle class="sp-ring-bg" cx="40" cy="40" r="33" />
+              <circle class="sp-ring-fill sp-ring-pv" id="ring-pv" cx="40" cy="40" r="33" stroke-dasharray="207.3"
+                stroke-dashoffset="0" />
             </svg>
             <div class="sp-ring-inner">
               <span class="sp-ring-delta" id="delta-pv"></span>
@@ -105,16 +110,18 @@
           <div class="sp-ring-label">VIDA</div>
           <!-- compatibilidade com renderSheet -->
           <span id="sh-pv" style="display:none"></span>
-          <div class="res-track" style="display:none"><div class="res-fill res-fill-pv" id="bar-pv"></div></div>
+          <div class="res-track" style="display:none">
+            <div class="res-fill res-fill-pv" id="bar-pv"></div>
+          </div>
         </div>
 
         <!-- PE -->
         <div class="sp-ring-unit res-group-pe" id="group-pe">
           <div class="sp-ring-wrap">
             <svg class="sp-ring-svg" viewBox="0 0 80 80">
-              <circle class="sp-ring-bg" cx="40" cy="40" r="33"/>
-              <circle class="sp-ring-fill sp-ring-pe" id="ring-pe" cx="40" cy="40" r="33"
-                stroke-dasharray="207.3" stroke-dashoffset="0"/>
+              <circle class="sp-ring-bg" cx="40" cy="40" r="33" />
+              <circle class="sp-ring-fill sp-ring-pe" id="ring-pe" cx="40" cy="40" r="33" stroke-dasharray="207.3"
+                stroke-dashoffset="0" />
             </svg>
             <div class="sp-ring-inner">
               <span class="sp-ring-delta" id="delta-pe"></span>
@@ -126,16 +133,18 @@
           <div class="sp-ring-icon">✦</div>
           <div class="sp-ring-label">ESFORÇO</div>
           <span id="sh-pe" style="display:none"></span>
-          <div class="res-track" style="display:none"><div class="res-fill res-fill-pe" id="bar-pe"></div></div>
+          <div class="res-track" style="display:none">
+            <div class="res-fill res-fill-pe" id="bar-pe"></div>
+          </div>
         </div>
 
         <!-- SAN -->
         <div class="sp-ring-unit res-group-san" id="group-san">
           <div class="sp-ring-wrap">
             <svg class="sp-ring-svg" viewBox="0 0 80 80">
-              <circle class="sp-ring-bg" cx="40" cy="40" r="33"/>
-              <circle class="sp-ring-fill sp-ring-san" id="ring-san" cx="40" cy="40" r="33"
-                stroke-dasharray="207.3" stroke-dashoffset="0"/>
+              <circle class="sp-ring-bg" cx="40" cy="40" r="33" />
+              <circle class="sp-ring-fill sp-ring-san" id="ring-san" cx="40" cy="40" r="33" stroke-dasharray="207.3"
+                stroke-dashoffset="0" />
             </svg>
             <div class="sp-ring-inner">
               <span class="sp-ring-delta" id="delta-san"></span>
@@ -147,7 +156,9 @@
           <div class="sp-ring-icon">☽</div>
           <div class="sp-ring-label">SANIDADE</div>
           <span id="sh-san" style="display:none"></span>
-          <div class="res-track" style="display:none"><div class="res-fill res-fill-san" id="bar-san"></div></div>
+          <div class="res-track" style="display:none">
+            <div class="res-fill res-fill-san" id="bar-san"></div>
+          </div>
         </div>
 
       </div>
@@ -236,7 +247,7 @@
        ÁREA CENTRAL DE NARRATIVA & AÇÃO
   ══════════════════════════════════════════════════════════ -->
   <main class="chat-main" id="chat-main">
-    
+
     <!-- Topbar Fixo & Imersivo -->
     <header class="chat-header">
       <div class="chat-header-brand">
@@ -246,7 +257,7 @@
 
       <div class="chat-header-status">
         <span class="system-indicator"></span>
-        <span class="system-status-text">ORDEM PARANORMAL v10</span>
+        <span class="system-status-text">RPG ATIVO</span>
       </div>
 
       <div class="chat-header-actions">
@@ -257,8 +268,11 @@
             <span class="audio-track-title" id="audio-current-title">Sessão Iniciada</span>
             <span class="audio-mood-badge" id="audio-current-mood">✦ Calmo</span>
           </div>
-          <button class="btn-audio-mute" id="audio-mute-btn" onclick="AudioManager.toggleMute()" title="Mutar/Desmutar Música">🔊</button>
-          <input type="range" class="audio-vol-slider" id="audio-vol-slider" min="0" max="1" step="0.05" value="0.4" onchange="AudioManager.setVolume(this.value)" oninput="AudioManager.setVolume(this.value)" title="Volume da Trilha Sonora">
+          <button class="btn-audio-mute" id="audio-mute-btn" onclick="AudioManager.toggleMute()"
+            title="Mutar/Desmutar Música">🔊</button>
+          <input type="range" class="audio-vol-slider" id="audio-vol-slider" min="0" max="1" step="0.05" value="0.4"
+            onchange="AudioManager.setVolume(this.value)" oninput="AudioManager.setVolume(this.value)"
+            title="Volume da Trilha Sonora">
         </div>
 
         <a href="index.html" class="menu-link" id="link-menu" onclick="AudioManager.stopMusic()">
@@ -306,7 +320,8 @@
         </div>
 
         <!-- CARTA 2: AGIR -->
-        <div class="magic-card card-action" id="card-action" onclick="openActionMenu()" title="Agir / Investigar / Mover">
+        <div class="magic-card card-action" id="card-action" onclick="openActionMenu()"
+          title="Agir / Investigar / Mover">
           <div class="magic-card-inner">
             <div class="card-glare"></div>
             <div class="card-corner card-corner-tl">
@@ -434,6 +449,68 @@
   </div>
 
   <!-- ══════════════════════════════════════════════════════════
+       MODAL DE SELEÇÃO DE ALVO (EM QUEM USAR AÇÃO/ITEM/HABILIDADE/AUXÍLIO)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="card-menu-overlay" id="target-menu" onclick="closeMenuIfOutside(event,'target-menu')">
+    <div class="card-menu-box target-menu-box">
+      <div class="card-menu-header">
+        <span class="card-menu-icon" id="target-action-icon">🎯</span>
+        <div class="card-menu-title-wrap">
+          <span class="card-menu-title" id="target-action-title">EM QUEM DIRECIONAR?</span>
+          <span class="card-menu-subtitle" id="target-action-sub">Selecione o destinatário da habilidade, item ou auxílio</span>
+        </div>
+        <button class="card-menu-close" onclick="closeMenu('target-menu')">✕</button>
+      </div>
+
+      <!-- Seletor de Tipo de Auxílio (Físico vs Psicológico) -->
+      <div id="target-auxilio-type-wrap" class="target-auxilio-type-wrap" style="display:none">
+        <div class="target-section-label">MODALIDADE DO AUXÍLIO:</div>
+        <div class="target-auxilio-buttons">
+          <button type="button" class="btn-auxilio-type active" id="btn-aux-fisico" onclick="selectAuxilioType('fisico')">
+            <span class="aux-icon">🛡</span>
+            <div class="aux-text">
+              <strong>Auxílio Físico</strong>
+              <span>Cobertura, força tática, primeiros socorros ou resgate</span>
+            </div>
+          </button>
+          <button type="button" class="btn-auxilio-type" id="btn-aux-psicologico" onclick="selectAuxilioType('psicologico')">
+            <span class="aux-icon">🧠</span>
+            <div class="aux-text">
+              <strong>Auxílio Psicológico</strong>
+              <span>Acalmar crise, quebrar transe do pânico ou suporte moral</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div class="card-menu-body target-menu-body" id="target-selection-body">
+        <div class="target-category-group" id="target-group-enemies">
+          <div class="target-section-label">⚔ AMEAÇAS & INIMIGOS NA CENA:</div>
+          <div class="target-options-grid" id="target-list-enemies"></div>
+        </div>
+
+        <div class="target-category-group" id="target-group-allies">
+          <div class="target-section-label">👥 AGENTES & ALIADOS:</div>
+          <div class="target-options-grid" id="target-list-allies"></div>
+        </div>
+
+        <div class="target-category-group" id="target-group-env">
+          <div class="target-section-label">📍 AMBIENTE / PONTO ESPECÍFICO:</div>
+          <div class="target-options-grid" id="target-list-env"></div>
+        </div>
+      </div>
+
+      <div class="target-footer">
+        <button class="arena-btn arena-btn-secondary" onclick="closeMenu('target-menu')">Cancelar</button>
+        <button class="arena-btn arena-btn-primary" id="btn-confirm-target" onclick="confirmTargetAndExecute()" disabled>Confirmar Ação ➔</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vinheta Dinâmica de Clima de Cena (Combate, Perseguição, Investigação) -->
+  <div id="scene-vignette-overlay" class="scene-vignette-overlay"></div>
+
+  <!-- ══════════════════════════════════════════════════════════
        CINEMÁTICA DE TROCA DE TURNO (Multiplayer)
   ══════════════════════════════════════════════════════════ -->
   <div class="turn-transition" id="turn-transition">
@@ -453,13 +530,17 @@
     <div class="initiative-arena-header">
       <div class="initiative-arena-sigil">⸸</div>
       <h2 class="initiative-arena-title">FASE DE INICIATIVA</h2>
-      <div class="initiative-arena-subtitle" id="arena-subtitle">Role 1d20 por agente. O maior resultado define a ordem. Em empate, os empatados rolam novamente!</div>
-      <div class="initiative-tiebreak-banner" id="initiative-tiebreak-banner">⚔ EMPATE DETECTADO — ROLANDO NOVAMENTE PARA OS EMPATADOS ⚔</div>
+      <div class="initiative-arena-subtitle" id="arena-subtitle">Role 1d20 por agente. O maior resultado define a ordem.
+        Em empate, os empatados rolam novamente!</div>
+      <div class="initiative-tiebreak-banner" id="initiative-tiebreak-banner">⚔ EMPATE DETECTADO — ROLANDO NOVAMENTE
+        PARA OS EMPATADOS ⚔</div>
     </div>
     <div class="initiative-players-grid" id="initiative-players-grid"></div>
     <div class="initiative-arena-actions" id="arena-actions">
-      <button class="arena-btn arena-btn-primary" id="arena-roll-all-btn" onclick="arenaRollAll()">✦ Rolar Todos os Dados</button>
-      <button class="arena-btn arena-btn-secondary" id="arena-confirm-btn" onclick="arenaConfirm()" disabled>✓ Confirmar Ordem & Iniciar</button>
+      <button class="arena-btn arena-btn-primary" id="arena-roll-all-btn" onclick="arenaRollAll()">✦ Rolar Todos os
+        Dados</button>
+      <button class="arena-btn arena-btn-secondary" id="arena-confirm-btn" onclick="arenaConfirm()" disabled>✓ Confirmar
+        Ordem & Iniciar</button>
     </div>
   </div>
 
@@ -550,7 +631,8 @@
     <div class="ending-modal ending-victory">
       <div class="ending-seal">⚔</div>
       <div class="ending-title" id="victory-title">MISSÃO CUMPRIDA</div>
-      <div class="ending-desc" id="victory-desc">A anomalia paranormal foi contida pela Ordo Realitas. A realidade permanece intacta por mais um dia graças à coragem e estratégia dos agentes.</div>
+      <div class="ending-desc" id="victory-desc">A anomalia paranormal foi contida pela Ordo Realitas. A realidade
+        permanece intacta por mais um dia graças à coragem e estratégia dos agentes.</div>
       <div class="ending-actions">
         <a href="index.html" class="arena-btn arena-btn-primary">Menu Principal</a>
         <a href="load.html" class="arena-btn arena-btn-secondary">Carregar Jogo</a>
@@ -562,7 +644,8 @@
     <div class="ending-modal ending-madness">
       <div class="ending-seal">⸸</div>
       <div class="ending-title" id="madness-title">ENLOUQUECIDO PELO PARANORMAL</div>
-      <div class="ending-desc" id="madness-desc">A mente do agente sucumbiu diante dos horrores indescritíveis do Outro Lado. A sanidade se esvaiu, e a percepção da realidade se fragmentou para sempre.</div>
+      <div class="ending-desc" id="madness-desc">A mente do agente sucumbiu diante dos horrores indescritíveis do Outro
+        Lado. A sanidade se esvaiu, e a percepção da realidade se fragmentou para sempre.</div>
       <div class="ending-actions">
         <a href="index.html" class="arena-btn arena-btn-primary">Menu Principal</a>
         <a href="load.html" class="arena-btn arena-btn-secondary">Tentar Novamente</a>
@@ -573,5 +656,5 @@
   <script src="js/audioManager.js?v=75"></script>
   <script src="js/chat.js?v=75"></script>
 </body>
-</html>
 
+</html>

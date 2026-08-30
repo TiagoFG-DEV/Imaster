@@ -86,7 +86,9 @@ function scrollBottom() {
       this.maxLife = 200 + Math.random() * 260;
     }
     step() {
-      this.y -= this.speed;
+      const st = document.body.getAttribute("data-scene-type") || "investigacao";
+      const mult = (st === "combate" || st === "boss" || st === "perseguicao") ? 2.0 : 1.0;
+      this.y -= this.speed * mult;
       this.x += this.drift;
       this.life++;
       const t = this.life / this.maxLife;
@@ -96,7 +98,14 @@ function scrollBottom() {
     draw() {
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(201,168,76,${this.opacity})`;
+      const st = document.body.getAttribute("data-scene-type") || "investigacao";
+      if (st === "combate" || st === "boss") {
+        ctx.fillStyle = `rgba(240, 60, 30, ${this.opacity * 1.6})`;
+      } else if (st === "perseguicao") {
+        ctx.fillStyle = `rgba(45, 150, 255, ${this.opacity * 1.5})`;
+      } else {
+        ctx.fillStyle = `rgba(50, 190, 110, ${this.opacity * 1.3})`;
+      }
       ctx.fill();
     }
   }
@@ -212,6 +221,12 @@ window.addEventListener("DOMContentLoaded", async () => {
   if (typeof AudioManager !== "undefined") {
     AudioManager.init();
     AudioManager.setMood("calmo");
+  }
+
+  if (intro.world_data?.tipo_cena_atual) {
+    applySceneAtmosphere(intro.world_data.tipo_cena_atual, intro.world_data.cena_atual_obj?.titulo);
+  } else {
+    applySceneAtmosphere("investigacao", "Chegada e Reconhecimento");
   }
 
   const initKey = "initiative_done_" + sessionId;
@@ -827,8 +842,7 @@ function setBar(key, cur, max) {
 
 function useSidebarItem(itemName) {
   if (isWaiting) return;
-  if (typeof AudioManager !== "undefined") AudioManager.playSFX("item");
-  enviarAction(`Usar item: ${itemName}`);
+  openTargetModal({ type: 'item', name: itemName });
 }
 
 function useSidebarAbility(abilityName, cost) {
@@ -838,8 +852,7 @@ function useSidebarAbility(abilityName, cost) {
     addMsg("system", `✦ Você está sem PE suficiente para usar ${abilityName} (Requer ${cost} PE).`);
     return;
   }
-  if (typeof AudioManager !== "undefined") AudioManager.playSFX("attack");
-  enviarAction(`Usar habilidade: ${abilityName}`);
+  openTargetModal({ type: 'habilidade', name: abilityName, cost: cost });
 }
 
 function renderTags(containerId, items, tagClass, currentPe = 999) {
@@ -1133,6 +1146,7 @@ async function narrateRound(actions) {
     if (data.narration) await addMsg("narrator", data.narration);
     if (data.cinematica) playCinematic(data.cinematica);
     if (data.sheet) renderSheet(data.sheet);
+    if (data.scene_type) applySceneAtmosphere(data.scene_type, data.scene_title, data.scene_progress);
     if (data.bgm_mood && typeof AudioManager !== "undefined") {
       AudioManager.setMood(data.bgm_mood);
     }
@@ -1228,8 +1242,7 @@ function openAttackMenu() {
 
 function selectAttack(nome, custo) {
   closeMenu("attack-menu");
-  const action = `Usar habilidade de combate: ${nome}`;
-  enviarAction(action);
+  openTargetModal({ type: 'ataque', name: nome, cost: custo });
 }
 
 function openActionMenu() {
@@ -1311,7 +1324,12 @@ function getDefaultActions(tab) {
 
 function selectAction(texto) {
   closeMenu("action-menu");
-  enviarAction(texto);
+  const lower = (texto || "").toLowerCase();
+  if (lower.includes("auxil") || lower.includes("socorro") || lower.includes("proteger") || lower.includes("psicol")) {
+    openTargetModal({ type: 'auxilio', name: texto });
+  } else {
+    enviarAction(texto);
+  }
 }
 
 function openItemMenu() {
@@ -1383,7 +1401,7 @@ function previewItem(idx) {
 
 function selectItem(nome, acao) {
   closeMenu("item-menu");
-  enviarAction(`Usar item: ${nome}${acao ? ` [Ação: ${acao}]` : ''}`);
+  openTargetModal({ type: 'item', name: nome, cost: acao });
 }
 
 function skipTurn() {
@@ -1399,6 +1417,178 @@ function closeMenu(id) {
 }
 function closeMenuIfOutside(e, id) {
   if (e.target === el(id)) closeMenu(id);
+}
+
+// ─── MOTOR DE SELEÇÃO DE DESTINATÁRIO / ALVO (TARGET MODAL) ────────────────────
+let pendingTargetAction = null;
+
+function openTargetModal(actionConfig) {
+  pendingTargetAction = {
+    type: actionConfig.type || 'habilidade',
+    name: actionConfig.name || 'Ação',
+    cost: actionConfig.cost || null,
+    auxilioType: 'fisico',
+    target: null
+  };
+
+  const modal = el("target-menu");
+  if (!modal) {
+    // Fallback se o modal não existir
+    enviarAction(actionConfig.name);
+    return;
+  }
+
+  const iconEl = el("target-action-icon");
+  const titleEl = el("target-action-title");
+  const subEl = el("target-action-sub");
+  const auxWrap = el("target-auxilio-type-wrap");
+  const confirmBtn = el("btn-confirm-target");
+
+  if (iconEl) iconEl.textContent = actionConfig.type === 'ataque' ? '⚔' : actionConfig.type === 'item' ? '🎒' : actionConfig.type === 'auxilio' ? '🛡' : '✨';
+  if (titleEl) titleEl.textContent = `DIRECIONAR: ${actionConfig.name.toUpperCase()}`;
+  if (subEl) subEl.textContent = `Selecione em quem você deseja aplicar esta ação.`;
+
+  const isAux = actionConfig.type === 'auxilio' || actionConfig.name.toLowerCase().includes('auxil') || actionConfig.name.toLowerCase().includes('socorro') || actionConfig.name.toLowerCase().includes('proteger');
+  if (auxWrap) {
+    auxWrap.style.display = isAux ? 'block' : 'none';
+  }
+
+  if (confirmBtn) confirmBtn.disabled = true;
+
+  // 1. Popula Inimigos na Cena
+  const enemiesList = el("target-list-enemies");
+  const story = introDataGlobal?.world_data;
+  const currentEntity = story?.climax?.boss_nome || "Entidade Principal da Cena";
+  const enemyOptions = [
+    { name: currentEntity, desc: "Ameaça central / Boss da missão", icon: "👹" },
+    { name: "Cultistas / Acólitos", desc: "Fanáticos armados em combate", icon: "🩸" },
+    { name: "Criatura / Aberração Menor", desc: "Monstro corrompido pelas sombras", icon: "🕷" },
+  ];
+
+  if (enemiesList) {
+    enemiesList.innerHTML = enemyOptions.map((e, idx) =>
+      `<button class="target-card-btn" id="target-enemy-${idx}" onclick="selectTargetOption('enemy', '${esc(e.name)}')">
+        <div class="target-card-icon">${e.icon}</div>
+        <div class="target-card-info">
+          <span class="target-card-name">${esc(e.name)}</span>
+          <span class="target-card-sub">${esc(e.desc)}</span>
+        </div>
+        <span class="target-card-check">✓</span>
+      </button>`
+    ).join("");
+  }
+
+  // 2. Popula Aliados & Você Mesmo
+  const alliesList = el("target-list-allies");
+  if (alliesList) {
+    alliesList.innerHTML = allCharacters.map((char, idx) => {
+      const isSelf = currentSheet && currentSheet.name === char.name;
+      const avatarSrc = getSafeAvatar(char.avatar_url, char.name);
+      return `<button class="target-card-btn" id="target-ally-${idx}" onclick="selectTargetOption('ally', '${esc(char.name)}')">
+        <img class="target-card-avatar" src="${avatarSrc}" alt="">
+        <div class="target-card-info">
+          <span class="target-card-name">${esc(char.name)}${isSelf ? ' (Você)' : ''}</span>
+          <span class="target-card-sub">${esc(char.class || 'Agente')} · ${char.pv_current ?? 0}/${char.pv_max ?? 0} PV</span>
+        </div>
+        <span class="target-card-check">✓</span>
+      </button>`;
+    }).join("");
+  }
+
+  // 3. Popula Ambiente / Objeto
+  const envList = el("target-list-env");
+  const envOptions = [
+    { name: "Ambiente / Barricada", desc: "Estrutura tática ou cobertura sólida", icon: "🧱" },
+    { name: "Altar / Símbolo Ritual", desc: "Ponto focal de contenção mística", icon: "⸸" },
+    { name: "Mecanismo / Fechadura", desc: "Painel ou passagem de fuga", icon: "⚙" },
+  ];
+  if (envList) {
+    envList.innerHTML = envOptions.map((env, idx) =>
+      `<button class="target-card-btn" id="target-env-${idx}" onclick="selectTargetOption('env', '${esc(env.name)}')">
+        <div class="target-card-icon">${env.icon}</div>
+        <div class="target-card-info">
+          <span class="target-card-name">${esc(env.name)}</span>
+          <span class="target-card-sub">${esc(env.desc)}</span>
+        </div>
+        <span class="target-card-check">✓</span>
+      </button>`
+    ).join("");
+  }
+
+  openMenu("target-menu");
+}
+
+function selectTargetOption(group, targetName) {
+  if (!pendingTargetAction) return;
+  pendingTargetAction.target = targetName;
+
+  document.querySelectorAll(".target-card-btn").forEach(btn => btn.classList.remove("selected"));
+  event.currentTarget?.classList.add("selected");
+
+  const confirmBtn = el("btn-confirm-target");
+  if (confirmBtn) confirmBtn.disabled = false;
+}
+
+function selectAuxilioType(type) {
+  if (!pendingTargetAction) return;
+  pendingTargetAction.auxilioType = type;
+
+  el("btn-aux-fisico")?.classList.toggle("active", type === "fisico");
+  el("btn-aux-psicologico")?.classList.toggle("active", type === "psicologico");
+}
+
+function confirmTargetAndExecute() {
+  if (!pendingTargetAction || !pendingTargetAction.target) return;
+  closeMenu("target-menu");
+
+  const { type, name, cost, auxilioType, target } = pendingTargetAction;
+  let formatted = "";
+
+  if (type === "ataque") {
+    if (typeof AudioManager !== "undefined") AudioManager.playSFX("attack");
+    formatted = `Atacar ${target} com: ${name}`;
+  } else if (type === "item") {
+    if (typeof AudioManager !== "undefined") AudioManager.playSFX("item");
+    formatted = `Usar item [${name}] em: ${target}`;
+  } else if (type === "auxilio" || name.toLowerCase().includes('auxil') || name.toLowerCase().includes('socorro') || name.toLowerCase().includes('proteger')) {
+    if (typeof AudioManager !== "undefined") AudioManager.playSFX("item");
+    const modalidade = auxilioType === "psicologico" ? "Auxílio Psicológico (suporte mental contra colapso)" : "Auxílio Físico (cobertura tática/primeiros socorros/defesa)";
+    formatted = `Prestar ${modalidade} para ${target}: ${name}`;
+  } else {
+    if (typeof AudioManager !== "undefined") AudioManager.playSFX("attack");
+    formatted = `Usar habilidade [${name}] direcionada a: ${target}${cost ? ` (${cost})` : ''}`;
+  }
+
+  pendingTargetAction = null;
+  enviarAction(formatted);
+}
+
+// ─── ATMOSFERA VISUAL DINÂMICA POR TIPO DE CENA ───────────────────────────────
+function applySceneAtmosphere(sceneType, sceneTitle, sceneProgress) {
+  const normType = (sceneType || "investigacao").toLowerCase();
+  let theme = "investigacao";
+  let bgmMood = "calmo";
+
+  if (normType.includes("boss") || normType.includes("climax")) {
+    theme = "boss";
+    bgmMood = "batalha";
+  } else if (normType.includes("combate") || normType.includes("batalha")) {
+    theme = "combate";
+    bgmMood = "batalha";
+  } else if (normType.includes("perseguicao") || normType.includes("fuga")) {
+    theme = "perseguicao";
+    bgmMood = "perseguicao";
+  } else if (normType.includes("epilogo") || normType.includes("vitoria")) {
+    theme = "investigacao";
+    bgmMood = "vitoria";
+  }
+
+  document.body.setAttribute("data-scene-type", theme);
+  document.body.className = document.body.className.replace(/theme-\w+/g, '').trim() + ` theme-${theme}`;
+
+  if (typeof AudioManager !== "undefined") {
+    AudioManager.setMood(bgmMood);
+  }
 }
 
 // ─── ENVIO DE AÇÃO PARA O MOTOR DO JOGO ───────────────────────────────────────
@@ -1454,6 +1644,7 @@ async function enviarAction(action) {
       return;
     }
     if (data.contextual_suggestions) currentSuggestions = data.contextual_suggestions;
+    if (data.scene_type) applySceneAtmosphere(data.scene_type, data.scene_title, data.scene_progress);
     if (data.bgm_mood && typeof AudioManager !== "undefined") {
       AudioManager.setMood(data.bgm_mood);
     }
@@ -1711,6 +1902,7 @@ async function confirmRoll() {
     if (data.contextual_suggestions && data.contextual_suggestions.length > 0) {
       currentSuggestions = data.contextual_suggestions;
     }
+    if (data.scene_type) applySceneAtmosphere(data.scene_type, data.scene_title, data.scene_progress);
     if (data.bgm_mood && typeof AudioManager !== "undefined") {
       AudioManager.setMood(data.bgm_mood);
     }
