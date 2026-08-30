@@ -1962,6 +1962,17 @@ async function confirmRoll() {
   activeDice3DInstances.forEach(inst => inst?.destroy?.());
   activeDice3DInstances = [];
 
+  if (pendingDiceReq?.isFreeRoll) {
+    const sh = getCurrentSheet();
+    const charName = sh?.name || "Agente";
+    const natVal = rollResult.best;
+    let badge = "";
+    if (rollResult.isCritical) badge = " 🌟 CRÍTICO!";
+    else if (rollResult.isDisaster) badge = " 💀 DESASTRE!";
+    addMsg("action", `🎲 [${charName}] Rolou um D20 livre: <strong>${rollResult.total}</strong> (Dado natural: ${natVal})${badge}`);
+    return;
+  }
+
   const action = pendingAction || "Ação";
   const sh = getCurrentSheet();
   const prevSheet = sh ? { ...sh } : null;
@@ -2724,6 +2735,37 @@ function openMapModal() {
 
   renderTacticalMap(mapData);
   initMapInteractions();
+}
+
+function closeMapModal() {
+  const overlay = el("map-overlay");
+  if (overlay) {
+    overlay.classList.remove("active");
+    overlay.style.display = "none";
+  }
+}
+
+function closeMapModalIfOutside(e) {
+  if (e.target === el("map-overlay")) closeMapModal();
+}
+
+function rollFreeD20() {
+  if (isWaiting) return;
+  const sh = getCurrentSheet();
+  const charName = sh?.name || "Agente";
+
+  const freeReq = {
+    label: "ROLAGEM LIVRE DE D20",
+    pending_narration: `Teste livre de D20 para ${charName}.`,
+    dice: "d20",
+    quantity: 1,
+    cd: 0,
+    pick: "highest",
+    allow_crits: true,
+    isFreeRoll: true
+  };
+  pendingAction = `[Rolagem Livre de D20]`;
+  showDiceModal(freeReq, pendingAction);
 }
 
 function renderTacticalMap(rooms) {
