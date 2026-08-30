@@ -367,12 +367,21 @@ async function processPlayerAction(action, session, diceResult) {
   }
 
   const stateContext = {
+    nome: sh.name,
+    classe: sh.class,
     inventario: sh.inventory,
     local: sh.current_location,
     historia_ato: story?.ato_atual || 1,
     pistas_reveladas: story?.pistas_reveladas || [],
     npcs_ativos: (story?.npcs_ativos || []).map(n => n.nome),
-    pv: `${sh.pv_current}/${sh.pv_max}`
+    pv_current: sh.pv_current,
+    pv_max: sh.pv_max,
+    pe_current: sh.pe_current,
+    pe_max: sh.pe_max,
+    san_current: sh.san_current,
+    san_max: sh.san_max,
+    status_effects: sh.status_effects || [],
+    habilidades: (sh.abilities || []).map(a => typeof a === 'string' ? a : `${a.nome}${a.custo_pe ? ` (${a.custo_pe} PE)` : ''}`)
   };
 
   let aiResult = null;
@@ -413,6 +422,17 @@ async function processPlayerAction(action, session, diceResult) {
       narration += `\n\n[Sistema: Role os dados para prosseguir]`;
     }
     contextual_suggestions = aiResult.contextual_suggestions || [];
+
+    // Mescla state_updates retornados pela IA (valores absolutos)
+    if (aiResult.state_updates) {
+      const su = aiResult.state_updates;
+      if (su.pv_current != null)  state_updates.pv_current  = clamp(su.pv_current,  0, sh.pv_max);
+      if (su.pe_current != null)  state_updates.pe_current  = clamp(su.pe_current,  0, sh.pe_max);
+      if (su.san_current != null) state_updates.san_current = clamp(su.san_current, 0, sh.san_max);
+      if (su.location)            state_updates.location    = su.location;
+      if (Array.isArray(su.status_add))    state_updates.status_add    = su.status_add;
+      if (Array.isArray(su.status_remove)) state_updates.status_remove = su.status_remove;
+    }
   } else {
     // ── Gasto Real de Pontos de Esforço (PE) em Habilidades e Rituais ──────────
     let peCost = 0;

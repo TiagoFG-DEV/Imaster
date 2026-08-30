@@ -1293,7 +1293,18 @@ function closeMenuIfOutside(e, id) {
 }
 
 // ─── ENVIO DE AÇÃO PARA O MOTOR DO JOGO ───────────────────────────────────────
-// ─── ENVIO DE AÇÃO PARA O MOTOR DO JOGO ───────────────────────────────────────
+// Helper: busca a ficha mais recente do servidor quando o endpoint não a retorna diretamente
+async function fetchSessionSheet() {
+  if (!sessionId) return null;
+  try {
+    const r = await fetch(`/api/session-state/${sessionId}`);
+    if (!r.ok) return null;
+    const d = await r.json();
+    if (d.all_characters) allCharacters = d.all_characters;
+    return d.sheet || null;
+  } catch { return null; }
+}
+
 async function enviarAction(action) {
   if (!action || !sessionId || isWaiting) return;
 
@@ -1310,30 +1321,31 @@ async function enviarAction(action) {
     });
     const data = await r.json();
 
-    if (data.error) { 
-      addMsg("error", data.error); 
+    if (data.error) {
+      addMsg("error", data.error);
       document.body.classList.remove("master-narrating");
-      return; 
+      return;
     }
     if (data.contextual_suggestions) currentSuggestions = data.contextual_suggestions;
 
-    if (data.sheet && prevSheet) {
-      checkAndTriggerStatCinematics(prevSheet, data.sheet);
-    }
+    // Sempre obter a ficha mais atual — preferir a retornada pela API
+    const latestSheet = data.sheet || (await fetchSessionSheet()) || sh;
+    if (prevSheet && latestSheet) checkAndTriggerStatCinematics(prevSheet, latestSheet);
 
     if (data.dice_request) {
       pendingAction = action;
+      if (latestSheet) renderSheet(latestSheet);
       showDiceModal(data.dice_request, action);
     } else {
       if (isMultiplayer) {
         const actionRec = { playerName: sh?.name || "Agente", action, diceResult: null };
-        if (data.sheet) renderSheet(data.sheet);
+        if (latestSheet) renderSheet(latestSheet);
         await advanceTurn(false, actionRec);
       } else {
         document.body.classList.add("master-narrating");
         if (data.narration) await addMsg("narrator", data.narration);
         if (data.cinematica) playCinematic(data.cinematica);
-        if (data.sheet) renderSheet(data.sheet);
+        if (latestSheet) renderSheet(latestSheet);
         scrollBottom();
 
         if (data.victory || (data.narration && data.narration.includes("VITÓRIA DA MISSÃO"))) {
@@ -1494,7 +1506,7 @@ function showResult(values, qty, cd, pickMode, sides) {
 
   let outcomeClass, outcomeText;
   if (!hasDT) {
-    outcomeClass = "neutral"; outcomeText = `🎲 Resultado: ${finalTotal}`;
+    outcomeClass = "neutral"; outcomeText = `Resultado: ${finalTotal}`;
   } else if (isCrit) {
     outcomeClass = "critical"; outcomeText = "CRÍTICO!";
   } else if (isDisaster) {
@@ -1563,21 +1575,21 @@ async function confirmRoll() {
       currentSuggestions = data.contextual_suggestions;
     }
 
-    if (data.sheet && prevSheet) {
-      checkAndTriggerStatCinematics(prevSheet, data.sheet);
-    }
+    // Sempre obter a ficha mais atual — preferir a retornada pela API
+    const latestSheet2 = data.sheet || (await fetchSessionSheet()) || sh;
+    if (prevSheet && latestSheet2) checkAndTriggerStatCinematics(prevSheet, latestSheet2);
 
     if (isMultiplayer) {
       const actionRec = { playerName: sh?.name || "Agente", action, diceResult: rollResult };
       const testOutcome = rollResult.isCritical ? "CRÍTICO!" : (rollResult.isDisaster ? "DESASTRE!" : (rollResult.success ? "Sucesso" : "Falha"));
       await addMsg("system", `✦ ${sh?.name || "Agente"} obteve ${rollResult.total} (${testOutcome})`);
-      if (data.sheet) renderSheet(data.sheet);
+      if (latestSheet2) renderSheet(latestSheet2);
       await advanceTurn(false, actionRec);
     } else {
       document.body.classList.add("master-narrating");
       if (data.narration) await addMsg("narrator", data.narration);
       if (data.cinematica) playCinematic(data.cinematica);
-      if (data.sheet) renderSheet(data.sheet);
+      if (latestSheet2) renderSheet(latestSheet2);
       scrollBottom();
 
       if (data.victory || (data.narration && data.narration.includes("VITÓRIA DA MISSÃO"))) {
