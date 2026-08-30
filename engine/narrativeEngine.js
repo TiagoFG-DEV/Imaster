@@ -369,6 +369,7 @@ async function processPlayerAction(action, session, diceResult) {
   const stateContext = {
     nome: sh.name,
     classe: sh.class,
+    nex: sh.nex || "5%",
     inventario: sh.inventory,
     local: sh.current_location,
     historia_ato: story?.ato_atual || 1,
@@ -423,12 +424,15 @@ async function processPlayerAction(action, session, diceResult) {
     }
     contextual_suggestions = aiResult.contextual_suggestions || [];
 
-    // Mescla state_updates retornados pela IA (valores absolutos)
+    // Mescla state_updates retornados pela IA (valores absolutos e incrementos)
     if (aiResult.state_updates) {
       const su = aiResult.state_updates;
       if (su.pv_current != null)  state_updates.pv_current  = clamp(su.pv_current,  0, sh.pv_max);
       if (su.pe_current != null)  state_updates.pe_current  = clamp(su.pe_current,  0, sh.pe_max);
       if (su.san_current != null) state_updates.san_current = clamp(su.san_current, 0, sh.san_max);
+      if (su.nex_increase != null && typeof su.nex_increase === "number" && su.nex_increase > 0) {
+        state_updates.nex_increase = su.nex_increase;
+      }
       if (su.location)            state_updates.location    = su.location;
       if (Array.isArray(su.status_add))    state_updates.status_add    = su.status_add;
       if (Array.isArray(su.status_remove)) state_updates.status_remove = su.status_remove;
@@ -495,8 +499,9 @@ async function processPlayerAction(action, session, diceResult) {
         if (Math.random() < 0.35 && (sh.san_current || 0) > 0) {
           const sanLoss = roll(1, 2);
           state_updates.san_current = Math.max(0, (sh.san_current || 0) - sanLoss);
-          narration += `\n\n[O vislumbre sobrenatural perturba sua mente: -${sanLoss} SAN]`;
-          if (!cinematica) cinematica = { tipo: "dano_san", texto: `-${sanLoss} SAN — A mente vacila!`, valor: sanLoss, recurso_atual: state_updates.san_current, recurso_maximo: sh.san_max };
+          state_updates.nex_increase = (state_updates.nex_increase || 0) + sanLoss;
+          narration += `\n\n[O vislumbre sobrenatural perturba sua mente: -${sanLoss} SAN | +${sanLoss}% NEX]`;
+          if (!cinematica) cinematica = { tipo: "dano_san", texto: `-${sanLoss} SAN — A mente vacila! (+${sanLoss}% NEX)`, valor: sanLoss, recurso_atual: state_updates.san_current, recurso_maximo: sh.san_max };
         }
       }
     } else if (actionType === "social") {
@@ -527,6 +532,7 @@ async function processPlayerAction(action, session, diceResult) {
     session.world_data.climax_ativado = true;
     const climaxDesc = story?.climax?.descricao || "";
     if (climaxDesc) narration += `\n\n⚡ *${climaxDesc}*`;
+    state_updates.nex_increase = (state_updates.nex_increase || 0) + 5;
     new_events.push("CLÍMAX ATIVADO");
   }
 
@@ -534,8 +540,9 @@ async function processPlayerAction(action, session, diceResult) {
   if (diceResult && diceResult.isDisaster) {
     const selfDmg = roll(1, 6) + 2;
     state_updates.pv_current = clamp((sh.pv_current || 0) - selfDmg, 0, sh.pv_max);
-    cinematica = { tipo: "dano_pv", texto: `-${selfDmg} PV — Consequência trágica!`, valor: selfDmg, recurso_atual: state_updates.pv_current, recurso_maximo: sh.pv_max };
-    narration += `\n\nO fracasso cobra seu preço. Você sofre ${selfDmg} de dano!`;
+    state_updates.nex_increase = (state_updates.nex_increase || 0) + 2;
+    cinematica = { tipo: "dano_pv", texto: `-${selfDmg} PV — Consequência trágica! (+2% NEX)`, valor: selfDmg, recurso_atual: state_updates.pv_current, recurso_maximo: sh.pv_max };
+    narration += `\n\nO fracasso cobra seu preço. Você sofre ${selfDmg} de dano! (+2% NEX por trauma paranormal)`;
   } else if (diceResult && diceResult.success && diceResult.dmg_results && diceResult.dmg_results.length > 0) {
     const dmg = diceResult.dmg_results.reduce((a,b)=>a+b, 0);
     if (dmg > 0) {
@@ -552,8 +559,9 @@ async function processPlayerAction(action, session, diceResult) {
     if (diceResult && diceResult.success && diceResult.total >= 14) {
       session.ended = true;
       session.victory = true;
+      state_updates.nex_increase = (state_updates.nex_increase || 0) + 10;
       cinematica = { tipo: "matar", texto: "Entidade Banida! Vitória da Ordem!", valor: 100, recurso_atual: 100, recurso_maximo: 100 };
-      narration += `\n\n🏆 VITÓRIA DA MISSÃO! Com determinação inabalável, o ritual de contenção é selado. A anomalia colapsa e a Ordo Realitas assegura mais um dia para a humanidade.`;
+      narration += `\n\n🏆 VITÓRIA DA MISSÃO! Com determinação inabalável, o ritual de contenção é selado. A anomalia colapsa e a Ordo Realitas assegura mais um dia para a humanidade (+10% NEX de Sobrevivência ao Clímax!).`;
     }
   }
 

@@ -23,6 +23,15 @@ const CLASS_BASES = {
   Comum:        { pe: 2 },
 };
 
+function parseNEX(val) {
+  if (typeof val === "number") return val;
+  if (typeof val === "string") {
+    const m = val.match(/(\d+)/);
+    if (m) return parseInt(m[1], 10);
+  }
+  return 5;
+}
+
 // ─── Aplica atualizações de estado ───────────────────────────────────────────
 function applyUpdates(session, updates, diceResult) {
   if (!updates) return;
@@ -33,7 +42,17 @@ function applyUpdates(session, updates, diceResult) {
   if (updates.pe_current != null) sh.pe_current = clamp(updates.pe_current, 0, sh.pe_max);
   if (updates.san_current != null) sh.san_current = clamp(updates.san_current, 0, sh.san_max);
   if (updates.location)  sh.current_location = updates.location;
-  if (updates.nex)       sh.nex = updates.nex;
+
+  // ─── Gerenciamento de NEX (Nível de Exposição Paranormal) ───────────────────
+  const curNex = parseNEX(sh.nex || "5%");
+  if (updates.nex_increase != null && typeof updates.nex_increase === "number" && updates.nex_increase > 0) {
+    const newNex = clamp(curNex + updates.nex_increase, 5, 99);
+    sh.nex = `${newNex}%`;
+    session.last_nex_increase = { from: curNex, to: newNex, delta: updates.nex_increase };
+  } else if (updates.nex) {
+    const parsed = parseNEX(updates.nex);
+    sh.nex = `${clamp(parsed, 5, 99)}%`;
+  }
 
   if (Array.isArray(updates.inventory_add)) {
     updates.inventory_add.forEach(i => {

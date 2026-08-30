@@ -579,7 +579,7 @@ async function loadActionsDB() {
 }
 
 // ─── RENDERIZAÇÃO DA FICHA ────────────────────────────────────────────────────
-let prevSheetStats = { pv: null, pe: null, san: null, name: null };
+let prevSheetStats = { pv: null, pe: null, san: null, nex: null, name: null };
 
 function showDelta(stat, delta) {
   if (!delta || delta === 0) return;
@@ -625,12 +625,26 @@ function renderSheet(sh) {
     if (prevSheetStats.san !== null && prevSheetStats.san !== sh.san_current) {
       showDelta("san", (sh.san_current ?? 0) - prevSheetStats.san);
     }
+    if (prevSheetStats.nex !== null && prevSheetStats.nex !== sh.nex) {
+      const oldN = parseInt(prevSheetStats.nex) || 5;
+      const newN = parseInt(sh.nex) || 5;
+      if (newN > oldN) {
+        addMsg("system", `✦ EXPOSIÇÃO PARANORMAL: ${sh.name || "Agente"} ➔ NEX aumentou para ${sh.nex} (+${newN - oldN}% de contato com o Outro Lado)!`);
+        const nb = el("nex-bar");
+        if (nb) {
+          nb.classList.remove("pulse-heal");
+          void nb.offsetWidth;
+          nb.classList.add("pulse-heal");
+        }
+      }
+    }
   }
 
   prevSheetStats = {
     pv: sh.pv_current,
     pe: sh.pe_current,
     san: sh.san_current,
+    nex: sh.nex || "5%",
     name: sh.name
   };
 
