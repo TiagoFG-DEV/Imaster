@@ -149,7 +149,10 @@ const PORTRAIT_MEN = Array.from({length: 99}, (_, i) => `https://randomuser.me/a
 const PORTRAIT_WOMEN = Array.from({length: 99}, (_, i) => `https://randomuser.me/api/portraits/women/${i+1}.jpg`);
 const PORTRAIT_ALL = [...PORTRAIT_MEN, ...PORTRAIT_WOMEN];
 
-function getRandomHumanPortrait() {
+function getRandomHumanPortrait(gender) {
+  const g = (gender || "").toLowerCase();
+  if (g === "feminino" || g === "female") return PORTRAIT_WOMEN[Math.floor(Math.random() * PORTRAIT_WOMEN.length)];
+  if (g === "masculino" || g === "male")  return PORTRAIT_MEN[Math.floor(Math.random() * PORTRAIT_MEN.length)];
   return PORTRAIT_ALL[Math.floor(Math.random() * PORTRAIT_ALL.length)];
 }
 
@@ -800,7 +803,8 @@ function rollName(i) {
 }
 
 function rollAvatar(i) {
-  const url = getRandomHumanPortrait();
+  const gender = state.characters[i]?.gender || "";
+  const url = getRandomHumanPortrait(gender);
   state.characters[i].avatar = url;
   const img = document.getElementById("char-avatar-img-" + i);
   if (img) img.src = url;
@@ -832,7 +836,7 @@ function randomizeCharacter(i) {
   char.gender = Math.random() > 0.5 ? "Masculino" : "Feminino";
   char.personality = RANDOM_PERSONALITIES[Math.floor(Math.random() * RANDOM_PERSONALITIES.length)];
   char.fear = RANDOM_FEARS[Math.floor(Math.random() * RANDOM_FEARS.length)];
-  char.avatar = getRandomHumanPortrait();
+  char.avatar = getRandomHumanPortrait(char.gender);
   char.inventory = JSON.parse(JSON.stringify(DEFAULT_CLASS_KITS[char.class] || []));
   const base = CLASS_BASES[char.class.toLowerCase()] || CLASS_BASES.combatente;
   char.skills = [...base.skills_default];
