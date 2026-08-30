@@ -170,6 +170,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         initiative_order: stateData.initiative_order || [],
         current_turn_index: stateData.current_turn_index || 0,
         visual_background: stateData.visual_background || null,
+        world_data:     stateData.world_data || loadData.world_data || null,
         history:        stateData.history || [],
         narration:      loadData.narration || "A missão continua.",
         isResume:       true
@@ -185,6 +186,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   introDataGlobal = intro;
+
   allCharacters   = intro.all_characters || (currentSheet ? [currentSheet] : []);
   allCharacters.forEach((c, i) => {
     c.player_index = i;
@@ -2475,38 +2477,249 @@ let panStartX = 0;
 let panStartY = 0;
 let mapInitialized = false;
 
+function getFallbackMap() {
+  return [
+    {
+      id: "loc_recepcao",
+      nome: "Recepção & Triagem",
+      tipo_comodo: "hall_amplo",
+      formato: "retangulo",
+      pos_x: 220, pos_y: 60, width: 240, height: 140,
+      descricao: "Balcão de atendimento revirado, computadores chiando e macas perto da entrada.",
+      conexoes: ["loc_corredor_central", "loc_estacionamento"],
+      portas: [
+        { alvo_id: "loc_corredor_central", direcao: "sul", trancada: false },
+        { alvo_id: "loc_estacionamento", direcao: "oeste", trancada: false }
+      ],
+      pontos_investigacao: [
+        { id: "pi_balcao", nome: "Balcão & Computadores", icone: "💻", cd: 12, atributo: "intelecto", sucesso: "Prontuários com lista de transferências para o subsolo.", falha: "Monitores estalando com interferência." },
+        { id: "pi_gaveta", nome: "Gaveteiro da Triagem", icone: "🗄️", cd: 10, atributo: "intelecto", sucesso: "Chave de bronze da Farmácia Central.", falha: "Apenas papéis rasgados." }
+      ],
+      gatilho: "investigacao",
+      trancado: false,
+      inicial: true
+    },
+    {
+      id: "loc_estacionamento",
+      nome: "Pátio & Ambulatório",
+      tipo_comodo: "area_externa",
+      formato: "retangulo",
+      pos_x: 30, pos_y: 60, width: 180, height: 140,
+      descricao: "Ambulâncias abandonadas com luzes piscando e poças escuras no asfalto.",
+      conexoes: ["loc_recepcao", "loc_guarita"],
+      portas: [
+        { alvo_id: "loc_recepcao", direcao: "leste", trancada: false },
+        { alvo_id: "loc_guarita", direcao: "sul", trancada: false }
+      ],
+      pontos_investigacao: [
+        { id: "pi_ambulancia", nome: "Ambulância nº 03", icone: "🚑", cd: 11, atributo: "intelecto", sucesso: "Kit de Primeiros Socorros (+PV) e lanterna tática UV.", falha: "Portas traseiras travadas por impacto." }
+      ],
+      gatilho: "investigacao",
+      trancado: false
+    },
+    {
+      id: "loc_guarita",
+      nome: "Guarita de Acesso",
+      tipo_comodo: "quarto_pequeno",
+      formato: "quadrado",
+      pos_x: 30, pos_y: 210, width: 180, height: 120,
+      descricao: "Cabine blindada com vidros trincados e painel de controle dos portões.",
+      conexoes: ["loc_estacionamento", "loc_corredor_central"],
+      portas: [
+        { alvo_id: "loc_estacionamento", direcao: "norte", trancada: false },
+        { alvo_id: "loc_corredor_central", direcao: "leste", trancada: true }
+      ],
+      pontos_investigacao: [
+        { id: "pi_painel_seguranca", nome: "Painel de Câmeras", icone: "📹", cd: 13, atributo: "intelecto", sucesso: "Gravação mostrando vultos arrastando corpos para a UTI.", falha: "Sinal estático." }
+      ],
+      gatilho: "investigacao",
+      trancado: false
+    },
+    {
+      id: "loc_corredor_central",
+      nome: "Corredor Central de Enfermarias",
+      tipo_comodo: "corredor_largo",
+      formato: "retangulo",
+      pos_x: 220, pos_y: 210, width: 360, height: 80,
+      descricao: "Corredor extenso com portas entreabertas. Luzes fluorescentes piscam emitindo zumbido.",
+      conexoes: ["loc_recepcao", "loc_guarita", "loc_enfermaria_oeste", "loc_farmacia", "loc_uti"],
+      portas: [
+        { alvo_id: "loc_recepcao", direcao: "norte", trancada: false },
+        { alvo_id: "loc_guarita", direcao: "oeste", trancada: true },
+        { alvo_id: "loc_enfermaria_oeste", direcao: "sul", trancada: false },
+        { alvo_id: "loc_farmacia", direcao: "leste", trancada: true },
+        { alvo_id: "loc_uti", direcao: "sul", trancada: false }
+      ],
+      pontos_investigacao: [
+        { id: "pi_parede_simbolos", nome: "Inscrições na Parede", icone: "🩸", cd: 14, atributo: "intelecto", sucesso: "Símbolos arcanos que revelam a fraqueza elemental da Entidade.", falha: "Piche escorrendo que queima os dedos." }
+      ],
+      gatilho: "investigacao",
+      trancado: false
+    },
+    {
+      id: "loc_farmacia",
+      nome: "Farmácia & Sedativos",
+      tipo_comodo: "sala_media",
+      formato: "quadrado",
+      pos_x: 590, pos_y: 210, width: 170, height: 130,
+      descricao: "Frascos de vidro quebrados e substâncias que evaporam em névoa arroxeada.",
+      conexoes: ["loc_corredor_central", "loc_escadaria_subsolo"],
+      portas: [
+        { alvo_id: "loc_corredor_central", direcao: "oeste", trancada: true },
+        { alvo_id: "loc_escadaria_subsolo", direcao: "sul", trancada: false }
+      ],
+      pontos_investigacao: [
+        { id: "pi_armario_remedios", nome: "Armário de Narcóticos", icone: "💊", cd: 12, atributo: "intelecto", sucesso: "Elixir Estabilizador (+SAN) e sedativo concentrado.", falha: "Frascos quebrados com líquido contaminado." }
+      ],
+      gatilho: "investigacao",
+      trancado: true,
+      minigame: "chaves"
+    },
+    {
+      id: "loc_enfermaria_oeste",
+      nome: "Enfermaria de Isolamento",
+      tipo_comodo: "quarto_pequeno",
+      formato: "retangulo",
+      pos_x: 220, pos_y: 300, width: 175, height: 130,
+      descricao: "Leitos vazios cobertos por lençóis encardidos. Manchas escuras nas janelas vedadas.",
+      conexoes: ["loc_corredor_central", "loc_ala_psiquiatrica"],
+      portas: [
+        { alvo_id: "loc_corredor_central", direcao: "norte", trancada: false },
+        { alvo_id: "loc_ala_psiquiatrica", direcao: "sul", trancada: true }
+      ],
+      pontos_investigacao: [
+        { id: "pi_diario_paciente", nome: "Diário Sob a Cama", icone: "📖", cd: 11, atributo: "intelecto", sucesso: "Páginas detalhando os cânticos ouvidos durante a madrugada.", falha: "Anotações ilegíveis cobertas de bolor." }
+      ],
+      gatilho: "combate_comum",
+      trancado: false
+    },
+    {
+      id: "loc_uti",
+      nome: "Centro de Terapia Intensiva (UTI)",
+      tipo_comodo: "sala_media",
+      formato: "retangulo",
+      pos_x: 405, pos_y: 300, width: 175, height: 130,
+      descricao: "Monitores cardíacos apitando em falso. Respiradores automáticos funcionam sozinhos.",
+      conexoes: ["loc_corredor_central", "loc_necroterio"],
+      portas: [
+        { alvo_id: "loc_corredor_central", direcao: "norte", trancada: false },
+        { alvo_id: "loc_necroterio", direcao: "sul", trancada: false }
+      ],
+      pontos_investigacao: [
+        { id: "pi_monitor_uti", nome: "Terminal da UTI", icone: "🫀", cd: 13, atributo: "intelecto", sucesso: "Fórmulas de infusão com sangue paranormal conectadas aos cilindros.", falha: "Queda brusca de tensão queima os circuitos." }
+      ],
+      gatilho: "combate_comum",
+      trancado: false
+    },
+    {
+      id: "loc_ala_psiquiatrica",
+      nome: "Ala Psiquiátrica Trancada",
+      tipo_comodo: "quarto_pequeno",
+      formato: "quadrado",
+      pos_x: 220, pos_y: 440, width: 175, height: 140,
+      descricao: "Porta de ferro maciço reforçada com três travas. Paredes acolchoadas em código.",
+      conexoes: ["loc_enfermaria_oeste", "loc_laboratorio_secreto"],
+      portas: [
+        { alvo_id: "loc_enfermaria_oeste", direcao: "norte", trancada: true },
+        { alvo_id: "loc_laboratorio_secreto", direcao: "leste", trancada: true }
+      ],
+      pontos_investigacao: [
+        { id: "pi_celda_08", nome: "Inscrições na Cela 08", icone: "🗝️", cd: 12, atributo: "intelecto", sucesso: "Chave Mestra do Subsolo oculta no forro acolchoado.", falha: "Paredes rasgadas sem nenhum objeto útil." }
+      ],
+      gatilho: "perseguicao",
+      trancado: true,
+      minigame: "chaves"
+    },
+    {
+      id: "loc_necroterio",
+      nome: "Necrotério & Frigorífico",
+      tipo_comodo: "sala_media",
+      formato: "retangulo",
+      pos_x: 405, pos_y: 440, width: 175, height: 140,
+      descricao: "Frio congelante que condensa a respiração. Gavetas de aço entreabertas.",
+      conexoes: ["loc_uti", "loc_laboratorio_secreto"],
+      portas: [
+        { alvo_id: "loc_uti", direcao: "norte", trancada: false },
+        { alvo_id: "loc_laboratorio_secreto", direcao: "sul", trancada: false }
+      ],
+      pontos_investigacao: [
+        { id: "pi_gaveta_legista", nome: "Mesa de Autópsia", icone: "🧊", cd: 13, atributo: "intelecto", sucesso: "Talismã de proteção contra o Outro Lado retirado de um corpo.", falha: "Instrumentos cirúrgicos enferrujados inutilizáveis." }
+      ],
+      gatilho: "combate_importante",
+      trancado: false
+    },
+    {
+      id: "loc_escadaria_subsolo",
+      nome: "Escadaria de Acesso ao Subsolo",
+      tipo_comodo: "corredor_vertical",
+      formato: "retangulo",
+      pos_x: 590, pos_y: 350, width: 170, height: 230,
+      descricao: "Degraus de concreto úmido descendo para a escuridão. O ar fica quente e sulfuroso.",
+      conexoes: ["loc_farmacia", "loc_laboratorio_secreto"],
+      portas: [
+        { alvo_id: "loc_farmacia", direcao: "norte", trancada: false },
+        { alvo_id: "loc_laboratorio_secreto", direcao: "oeste", trancada: false }
+      ],
+      pontos_investigacao: [
+        { id: "pi_corrimao_escada", nome: "Caixa de Chaves do Corrimão", icone: "🔦", cd: 10, atributo: "intelecto", sucesso: "Chave da Câmara do Altar e bateria reserva.", falha: "Teias grossas e degraus escorregadios." }
+      ],
+      gatilho: "perseguicao",
+      trancado: false
+    },
+    {
+      id: "loc_laboratorio_secreto",
+      nome: "Laboratório Secreto de Consciência",
+      tipo_comodo: "sala_ampla",
+      formato: "retangulo",
+      pos_x: 220, pos_y: 590, width: 360, height: 160,
+      descricao: "Equipamentos cirúrgicos acoplados a cilindros com fluido escuro pulsante.",
+      conexoes: ["loc_ala_psiquiatrica", "loc_necroterio", "loc_escadaria_subsolo", "loc_camara_ritual"],
+      portas: [
+        { alvo_id: "loc_ala_psiquiatrica", direcao: "norte", trancada: true },
+        { alvo_id: "loc_necroterio", direcao: "norte", trancada: false },
+        { alvo_id: "loc_escadaria_subsolo", direcao: "leste", trancada: false },
+        { alvo_id: "loc_camara_ritual", direcao: "sul", trancada: false }
+      ],
+      pontos_investigacao: [
+        { id: "pi_computador_central", nome: "Terminal Principal", icone: "🧬", cd: 14, atributo: "intelecto", sucesso: "Fórmula exata para quebrar a imunidade da Entidade Suprema.", falha: "Sobrecarga elétrica estala nos teclados." }
+      ],
+      gatilho: "combate_importante",
+      trancado: true,
+      minigame: "chaves"
+    },
+    {
+      id: "loc_camara_ritual",
+      nome: "Câmara do Ritual Abissal",
+      tipo_comodo: "santuario_boss",
+      formato: "hexagonal",
+      pos_x: 220, pos_y: 760, width: 360, height: 190,
+      descricao: "O epicentro da quebra da membrana. Vórtice sobrenatural sobre um altar colossal.",
+      conexoes: ["loc_laboratorio_secreto"],
+      portas: [
+        { alvo_id: "loc_laboratorio_secreto", direcao: "norte", trancada: false }
+      ],
+      pontos_investigacao: [
+        { id: "pi_altar_selamento", nome: "O Altar do Outro Lado", icone: "⸸", cd: 15, atributo: "intelecto", sucesso: "Ponto de ancoragem para o ritual de banimento final.", falha: "Pulso de choque que repele os agentes." }
+      ],
+      gatilho: "boss_climax",
+      trancado: false
+    }
+  ];
+}
+
 function openMapModal() {
   const overlay = el("map-overlay");
   if (!overlay) return;
   overlay.classList.add("active");
   overlay.style.display = "flex";
 
-  const mapData = introDataGlobal?.world_data?.mapa_locais || getFallbackMap();
+  const rawMap = introDataGlobal?.world_data?.mapa_locais;
+  const mapData = (rawMap && Array.isArray(rawMap) && rawMap.length >= 8) ? rawMap : getFallbackMap();
+  if (introDataGlobal?.world_data) {
+    introDataGlobal.world_data.mapa_locais = mapData;
+  }
   renderTacticalMap(mapData);
   initMapInteractions();
-}
-
-function closeMapModal() {
-  const overlay = el("map-overlay");
-  if (overlay) {
-    overlay.classList.remove("active");
-    overlay.style.display = "none";
-  }
-}
-
-function closeMapModalIfOutside(e) {
-  if (e.target === el("map-overlay")) closeMapModal();
-}
-
-function getFallbackMap() {
-  const sh = getCurrentSheet();
-  const current = sh?.current_location || "Recepção Central";
-  return [
-    { id: "loc_1", nome: current, formato: "retangulo", grid_x: 2, grid_y: 0, descricao: "Ponto de partida dos agentes.", conexoes: ["loc_2"], gatilho: "investigacao", inicial: true },
-    { id: "loc_2", nome: "Corredor de Acesso", formato: "quadrado", grid_x: 2, grid_y: 1, descricao: "Passagem conectando as alas.", conexoes: ["loc_1", "loc_3", "loc_4"], gatilho: "investigacao" },
-    { id: "loc_3", nome: "Ala dos Arquivos", formato: "quadrado", grid_x: 1, grid_y: 1, descricao: "Registros e segredos.", conexoes: ["loc_2"], gatilho: "investigacao", trancado: true, minigame: "chaves" },
-    { id: "loc_4", nome: "Câmara Subterrânea", formato: "hexagonal", grid_x: 2, grid_y: 2, descricao: "Santuário do Clímax.", conexoes: ["loc_2"], gatilho: "boss_climax" },
-  ];
 }
 
 function renderTacticalMap(rooms) {
@@ -2523,15 +2736,14 @@ function renderTacticalMap(rooms) {
 
   const roomMap = {};
   rooms.forEach((room, idx) => {
-    // Coordenadas contíguas baseadas em pos_x, pos_y e dimensões
-    const x = room.pos_x !== undefined ? room.pos_x : 100 + (idx % 3) * 230;
-    const y = room.pos_y !== undefined ? room.pos_y : 80 + Math.floor(idx / 3) * 160;
+    const x = room.pos_x !== undefined ? room.pos_x : 80 + (idx % 3) * 250;
+    const y = room.pos_y !== undefined ? room.pos_y : 60 + Math.floor(idx / 3) * 170;
     const w = room.width || 180;
     const h = room.height || 120;
     roomMap[room.id] = { x, y, w, h, room };
   });
 
-  // 1. Linhas de Paredes e Corredores de Conexão SVG
+  // 1. Linhas de Conexão SVG
   const drawnEdges = new Set();
   let linksHtml = "";
 
@@ -2580,7 +2792,7 @@ function renderTacticalMap(rooms) {
     nodeEl.style.top = `${pos.y}px`;
     nodeEl.style.width = `${pos.w}px`;
     nodeEl.style.height = `${pos.h}px`;
-    nodeEl.style.transform = "none"; // Posição contígua absoluta
+    nodeEl.style.transform = "none";
 
     // Pontos de investigação dentro da sala
     const pointsHtml = (room.pontos_investigacao || []).map(pi =>
@@ -2617,6 +2829,7 @@ function renderTacticalMap(rooms) {
 
   centerOnCurrentRoom(roomMap, currentLocName);
 }
+
 
 function centerOnCurrentRoom(roomMap, currentLocName) {
   const currentRoomEntry = Object.values(roomMap).find(e => e.room.nome === currentLocName) || Object.values(roomMap)[0];

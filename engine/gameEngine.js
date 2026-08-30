@@ -217,7 +217,9 @@ async function resumeSession(sessionId) {
     initiative_order: session.initiative_order || null,
     current_turn_index: session.current_turn_index || 0,
     visual_background: session.visual_background || null,
+    world_data: session.world_data || null,
     last_dice: session.last_dice,
+
     history: (session.history || []).filter(h => h.player && h.ai).map(h => ({
       player: h.player,
       ai: h.ai,
