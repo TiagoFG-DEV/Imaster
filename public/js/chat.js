@@ -176,8 +176,13 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   introDataGlobal = intro;
-  currentSheet    = intro.sheet;
   allCharacters   = intro.all_characters || (currentSheet ? [currentSheet] : []);
+  allCharacters.forEach((c, i) => {
+    c.player_index = i;
+  });
+  if (currentSheet && currentSheet.player_index === undefined) {
+    currentSheet.player_index = 0;
+  }
   gameMode        = intro.game_mode || { tipo: "individual" };
   initiativeOrder = intro.initiative_order || [];
   currentTurnIdx  = intro.current_turn_index || 0;
@@ -235,7 +240,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 });
 
 // ─── FICHAS NO PAINEL LATERAL ─────────────────────────────────────────────────
-// ─── FICHAS NO PAINEL LATERAL ─────────────────────────────────────────────────
 function renderCharacterSwitcher() {
   const switcher = el("character-switcher");
   if (switcher) switcher.style.display = "none";
@@ -253,15 +257,41 @@ function renderCharacterSwitcher() {
   const currentActiveTurnChar = initiativeOrder[currentTurnIdx]?.sheet || currentSheet;
   const charsHtml = allCharacters.map((char, i) => {
     const isTurn = currentActiveTurnChar && currentActiveTurnChar.name === char.name;
+    const isInspected = currentSheet && currentSheet.name === char.name;
     const avatarSrc = getSafeAvatar(char.avatar_url, char.name);
-    return `<button class="btn-char-sheet${isTurn ? " btn-char-active" : ""}" onclick="inspectCharSheet(${i})" title="Inspecionar Dossiê de ${esc(char.name)}">
-      <img class="btn-char-avatar" src="${avatarSrc}" alt="">
+
+    const pvCur = char.pv_current ?? 0;
+    const pvMax = char.pv_max || 1;
+    const pvPct = Math.min(100, Math.max(0, Math.round((pvCur / pvMax) * 100)));
+
+    const isDying = pvCur <= 0;
+    const isMad = (char.san_current ?? 0) <= 0;
+    const isWounded = pvCur < Math.floor(pvMax * 0.4);
+
+    let statusBadge = "";
+    if (isDying) statusBadge = `<span class="char-mini-status dying" title="Morrendo">☠</span>`;
+    else if (isMad) statusBadge = `<span class="char-mini-status mad" title="Colapso Mental">🌀</span>`;
+    else if (isWounded) statusBadge = `<span class="char-mini-status wounded" title="Ferido Gravemente">❤</span>`;
+
+    return `<button class="btn-char-sheet${isTurn ? " btn-char-active" : ""}${isInspected ? " btn-char-inspected" : ""}" onclick="inspectCharSheet(${i})" title="Inspecionar Dossiê de ${esc(char.name)}">
+      <div class="btn-char-avatar-wrap">
+        <img class="btn-char-avatar" src="${avatarSrc}" alt="">
+        ${statusBadge}
+      </div>
       <div class="btn-char-info">
-        <span class="btn-char-name">${esc(char.name)}</span>
-        <span class="btn-char-class">${esc(char.class || 'Comum')}</span>
+        <div class="btn-char-header">
+          <span class="btn-char-name">${esc(char.name)}</span>
+          <span class="btn-char-pv-text" style="color:${isDying ? 'var(--red3)' : (isWounded ? 'var(--orange2)' : 'var(--green3)')}">
+            ${pvCur}/${char.pv_max || 0} PV
+          </span>
+        </div>
+        <div class="btn-char-mini-bar-track">
+          <div class="btn-char-mini-bar-fill" style="width:${pvPct}%;background:${isDying ? 'var(--red3)' : (isWounded ? 'var(--orange2)' : 'var(--green3)')}"></div>
+        </div>
+        <span class="btn-char-class">${esc(char.class || 'Comum')} · ${char.nex || '5%'} NEX</span>
       </div>
       ${isTurn ? '<span class="btn-char-turn-badge">TURNO</span>' : ''}
-      <span class="btn-char-inspect-icon">◈</span>
+      <span class="btn-char-inspect-icon" title="Examinar Dossiê">◈</span>
     </button>`;
   }).join("");
 
@@ -506,12 +536,12 @@ async function arenaConfirm() {
 
   const sorted = [...arenaData].sort((a, b) => b.die - a.die);
 
-  const playerResults = sorted.map(e => ({
+  const playerResults = sorted.map((e, idx) => ({
     tipo: "jogador",
     nome: e.char.name,
     iniciativa: e.die,
     sheet: e.char,
-    player_index: e.char.player_index
+    player_index: e.char.player_index !== undefined ? e.char.player_index : idx
   }));
 
   // NPCs também recebem 1d20 puro sem empates com os jogadores
@@ -771,6 +801,7 @@ function renderSheet(sh) {
   }
 
   renderFullSheet(sh);
+  renderCharacterSwitcher();
 }
 
 function setBar(key, cur, max) {

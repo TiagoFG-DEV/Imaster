@@ -5327,13 +5327,45 @@ body[class*="theme-"] .res-fill-pv {
   box-shadow: 0 0 14px rgba(201, 168, 76, 0.25);
 }
 
+.btn-char-sheet.btn-char-inspected {
+  border-color: var(--gold2);
+  box-shadow: 0 0 10px rgba(201, 168, 76, 0.35);
+}
+
+.btn-char-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
 .btn-char-avatar {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   object-fit: cover;
   border: 1.5px solid var(--gold);
-  flex-shrink: 0;
+  display: block;
+}
+
+.char-mini-status {
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  font-size: 10px;
+  line-height: 1;
+  background: #08060c;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  padding: 1px;
+}
+
+.char-mini-status.dying {
+  border-color: var(--red3);
+  animation: pulseRed 1s infinite;
+}
+
+.char-mini-status.mad {
+  border-color: var(--violet3);
+  animation: pulseViolet 1s infinite;
 }
 
 .btn-char-info {
@@ -5343,9 +5375,16 @@ body[class*="theme-"] .res-fill-pv {
   flex: 1;
 }
 
+.btn-char-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+}
+
 .btn-char-name {
   font-family: var(--font-t);
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--text);
   white-space: nowrap;
@@ -5353,8 +5392,30 @@ body[class*="theme-"] .res-fill-pv {
   text-overflow: ellipsis;
 }
 
-.btn-char-class {
+.btn-char-pv-text {
+  font-family: var(--font-m);
   font-size: 9.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.btn-char-mini-bar-track {
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  margin: 3px 0 2px;
+  overflow: hidden;
+}
+
+.btn-char-mini-bar-fill {
+  height: 100%;
+  transition: width .3s ease;
+  border-radius: 2px;
+}
+
+.btn-char-class {
+  font-size: 9px;
   color: var(--gold-d);
   text-transform: uppercase;
   letter-spacing: .8px;
@@ -5378,6 +5439,7 @@ body[class*="theme-"] .res-fill-pv {
   opacity: .7;
   transition: opacity .2s;
 }
+
 
 .btn-char-sheet:hover .btn-char-inspect-icon {
   opacity: 1;
