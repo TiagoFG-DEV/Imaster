@@ -598,6 +598,22 @@ function renderSheet(sh) {
   if (!sh) return;
   currentSheet = sh;
 
+  // ─── WRITE-BACK: sincroniza a ficha atualizada em allCharacters e initiativeOrder ───
+  // Garante que dados recebidos da API nunca sejam perdidos por um renderSheet
+  // subsequente com snapshot antigo
+  const idx = sh.player_index;
+  if (idx !== undefined && idx !== null) {
+    if (allCharacters[idx]) {
+      Object.assign(allCharacters[idx], sh);
+    }
+    // Atualiza o snapshot em initiativeOrder para que getCurrentSheet leia o dado correto
+    initiativeOrder.forEach(entry => {
+      if (entry.tipo === 'jogador' && entry.player_index === idx && entry.sheet) {
+        Object.assign(entry.sheet, sh);
+      }
+    });
+  }
+
   // Detecta alterações nos recursos e ativa deltas flutuantes
   if (prevSheetStats.name === sh.name) {
     if (prevSheetStats.pv !== null && prevSheetStats.pv !== sh.pv_current) {
@@ -974,8 +990,13 @@ function updateTurnUI() {
     }).join("");
   }
 
-  if (current.tipo === "jogador" && current.sheet) {
-    renderSheet(current.sheet);
+  // Usa a ficha VIVA de allCharacters (atualizada pelo backend) e não o
+  // snapshot estático que foi guardado no momento da iniciativa
+  if (current.tipo === "jogador") {
+    const liveSheet = (current.player_index !== undefined && allCharacters[current.player_index])
+      ? allCharacters[current.player_index]
+      : current.sheet;
+    if (liveSheet) renderSheet(liveSheet);
   }
   renderCharacterSwitcher();
 
@@ -1325,8 +1346,26 @@ async function fetchSessionSheet() {
     const r = await fetch(`/api/session-state/${sessionId}`);
     if (!r.ok) return null;
     const d = await r.json();
-    if (d.all_characters) allCharacters = d.all_characters;
-    return d.sheet || null;
+
+    // Merge nos objetos existentes em vez de substituir o array inteiro
+    // Preserva as referências que initiativeOrder e getCurrentSheet usam
+    if (d.all_characters && Array.isArray(d.all_characters)) {
+      d.all_characters.forEach((incoming, i) => {
+        if (allCharacters[i]) {
+          Object.assign(allCharacters[i], incoming);
+        } else {
+          allCharacters[i] = incoming;
+        }
+        // Propaga para initiativeOrder também
+        initiativeOrder.forEach(entry => {
+          if (entry.tipo === 'jogador' && entry.player_index === i && entry.sheet) {
+            Object.assign(entry.sheet, incoming);
+          }
+        });
+      });
+    }
+
+    return d.sheet || (allCharacters[0] || null);
   } catch { return null; }
 }
 
@@ -2051,7 +2090,14 @@ function setWaiting(v) {
 function getCurrentSheet() {
   if (isMultiplayer && initiativeOrder.length > 0) {
     const cur = initiativeOrder[currentTurnIdx];
-    return (cur?.tipo === "jogador" && cur?.sheet) ? cur.sheet : currentSheet;
+    if (cur?.tipo === "jogador") {
+      // Preferir ficha viva de allCharacters em vez do snapshot de iniciativa
+      if (cur.player_index !== undefined && allCharacters[cur.player_index]) {
+        return allCharacters[cur.player_index];
+      }
+      return cur.sheet || currentSheet;
+    }
+    return currentSheet;
   }
   return currentSheet;
 }
