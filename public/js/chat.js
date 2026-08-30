@@ -770,7 +770,7 @@ function useSidebarAbility(abilityName, cost) {
 function renderTags(containerId, items, tagClass, currentPe = 999) {
   const c = el(containerId);
   if (!c) return;
-  if (!items.length) { c.innerHTML = `<span class="tag-empty">—</span>`; return; }
+  if (!items.length) { c.innerHTML = `<span class="sp-tag-empty tag-empty">—</span>`; return; }
 
   c.innerHTML = items.map(item => {
     if (tagClass === "item") {

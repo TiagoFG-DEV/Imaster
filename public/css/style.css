@@ -1975,7 +1975,7 @@ body.master-narrating .chat-box {
   100% { filter: brightness(1); }
 }
 
-
+.btn-full-sheet {
   width: 100%;
   padding: 11px 16px;
   background: linear-gradient(135deg, rgba(201, 168, 76, 0.15), rgba(201, 168, 76, 0.05));
@@ -1994,6 +1994,7 @@ body.master-narrating .chat-box {
   gap: 8px;
   transition: all .25s ease;
 }
+
 
 .btn-full-sheet:hover {
   background: var(--gold);
