@@ -38,11 +38,11 @@ REGRAS OBRIGATÓRIAS:
    - INTELECTO (INT): Investigar pistas forenses, decifrar documentos/códigos, analisar rituais e mecanismos.
    - PRESENÇA (PRE): Resistir ao medo do Outro Lado (Vontade/Sanidade), liderança tática, interrogar testemunhas.
 3. INVESTIGAÇÃO SEM CRÍTICO/DESASTRE PUNITIVO: Em testes de busca e investigação em pontos de cenário (armários, gavetas, computadores, paredes), NÃO existe dano ou perda de sanidade por 'desastre' ou 'crítico'. O resultado é estritamente binário: Conseguiu encontrar pistas/itens/puzzles (rolagem >= CD) ou Não conseguiu encontrar pistas adicionais (rolagem < CD).
-4. DANO DE SANIDADE É RARO E EXCLUSIVO DE HORROR EXTREMO: NUNCA reduza Sanidade (san_current) por investigar ambientes escuros, encontrar pistas macabras, ler livros ou ouvir ruídos. Dano de Sanidade é reservado EXCLUSIVAMENTE para choques psicológicos brutais:
-   - Presenciar assassinatos de culto ou sacrifícios humanos ocorrendo na frente dos agentes (-2 a -4 SAN).
-   - Ataque mental direto de uma entidade ou revelação de sua forma alienígena total (-3 a -6 SAN).
-   - Desastres em testes de Vontade contra o Outro Lado (-2 a -4 SAN).
-   - Em investigações e ações normais, DEIXE san_current como null.
+4. DANO DE SANIDADE É RESTRITO A QUASE-DANO FÍSICO TRAUMÁTICO OU ATAQUE PSÍQUICO DIRETO: Dano de sanidade NUNCA pode acontecer do nada ou por meras descrições de ambiente/clima. Ele tem que ser gerado EXCLUSIVAMENTE por:
+   - Golpes mortais devastadores que quase deceparam/mataram o personagem por um triz (quase deu dano físico letal, gerando choque e pavor psicológico violento ao invés de carne cortada: -1 a -3 SAN).
+   - Ataque psíquico direto disparado por uma criatura/entidade contra a mente do agente (-2 a -4 SAN).
+   - Presenciar um aliado caindo inconsciente sangrando (PV <= 0) na sua frente (-2 SAN).
+   - Em todas as outras situações (exploração, andar pelos cômodos, ler papéis), DEIXE san_current como null.
 5. DANO FÍSICO REALISTA: Aplique redução em pv_current quando o personagem for atingido em combate, cair em armadilha ou sofrer dano físico direto (-3 a -8 PV).
 6. Se o personagem usar habilidade com custo de PE informado no contexto, reduza pe_current.
 7. Se o personagem se curar ou receber auxílio psicológico/físico, aumente os valores correspondentes (nunca ultrapassar o máximo).

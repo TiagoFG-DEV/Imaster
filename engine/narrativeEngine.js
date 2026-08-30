@@ -433,11 +433,11 @@ function generateStoryLocationMap(story, entity) {
           { alvo_id: "loc_escadaria_subsolo", direcao: "sul", trancada: false }
         ],
         pontos_investigacao: [
-          { id: "pi_armario_remedios", nome: "Armário de Narcóticos", icone: "💊", cd: 12, atributo: "intelecto", sucesso: "Elixir Estabilizador (+SAN) e sedativo concentrado.", falha: "Frascos quebrados com líquido contaminado." }
+          { id: "pi_armario_remedios", nome: "Armário de Narcóticos", icone: "💊", cd: 12, atributo: "intelecto", sucesso: "Chave Mestra da Ala Psiquiátrica e Elixir Estabilizador (+SAN).", falha: "Frascos quebrados com líquido contaminado." }
         ],
         gatilho: "investigacao",
         trancado: true,
-        minigame: "chaves"
+        chave_necessaria: "Chave de bronze da Farmácia Central"
       },
       {
         id: "loc_enfermaria_oeste",
@@ -492,7 +492,7 @@ function generateStoryLocationMap(story, entity) {
         ],
         gatilho: "perseguicao",
         trancado: true,
-        minigame: "chaves"
+        chave_necessaria: "Chave Mestra da Ala Psiquiátrica"
       },
       {
         id: "loc_necroterio",
@@ -549,7 +549,7 @@ function generateStoryLocationMap(story, entity) {
         ],
         gatilho: "combate_importante",
         trancado: true,
-        minigame: "chaves"
+        chave_necessaria: "Chave Mestra do Subsolo"
       },
       {
         id: "loc_camara_ritual",
@@ -603,7 +603,7 @@ function generateStoryLocationMap(story, entity) {
           { alvo_id: "loc_milharal_profundo", direcao: "sul", trancada: false }
         ],
         pontos_investigacao: [
-          { id: "pi_espantalho", nome: "O Espantalho Negro", icone: "🌾", cd: 11, atributo: "intelecto", sucesso: "Roupas rasgadas com chave de ferro do celeiro presa no peito.", falha: "Palha podre que se desfaz." }
+          { id: "pi_espantalho", nome: "O Espantalho Negro", icone: "🌾", cd: 11, atributo: "intelecto", sucesso: "Chave de Ferro do Celeiro presa sob a palha escura.", falha: "Palha podre que se desfaz." }
         ],
         gatilho: "perseguicao",
         trancado: false
@@ -659,11 +659,11 @@ function generateStoryLocationMap(story, entity) {
           { alvo_id: "loc_cemiterio_familiar", direcao: "sul", trancada: false }
         ],
         pontos_investigacao: [
-          { id: "pi_bancada_ferramentas", nome: "Bancada de Trabalho", icone: "🪓", cd: 12, atributo: "intelecto", sucesso: "Machado de Caça reforçado (+Ataque) e pé de cabra.", falha: "Ferramentas enferrujadas quebradas." }
+          { id: "pi_bancada_ferramentas", nome: "Bancada de Trabalho", icone: "🪓", cd: 12, atributo: "intelecto", sucesso: "Chave de Ferro do Alçapão e Machado de Caça (+Ataque).", falha: "Ferramentas enferrujadas quebradas." }
         ],
         gatilho: "combate_comum",
         trancado: true,
-        minigame: "chaves"
+        chave_necessaria: "Chave de Ferro do Celeiro"
       },
       {
         id: "loc_cozinha_despensa",
@@ -761,7 +761,7 @@ function generateStoryLocationMap(story, entity) {
         ],
         gatilho: "investigacao",
         trancado: true,
-        minigame: "chaves"
+        chave_necessaria: "Chave de Ferro do Alçapão"
       },
       {
         id: "loc_santuario_rural",
@@ -815,7 +815,7 @@ function generateStoryLocationMap(story, entity) {
           { alvo_id: "loc_entrada", direcao: "leste", trancada: false }
         ],
         pontos_investigacao: [
-          { id: "pi_porta_malas", nome: "Porta-malas do Furgão", icone: "🧰", cd: 11, atributo: "intelecto", sucesso: "Kit de Arrombamento e pés de cabra.", falha: "Vazio com manchas de óleo queimado." }
+          { id: "pi_porta_malas", nome: "Porta-malas do Furgão", icone: "🧰", cd: 11, atributo: "intelecto", sucesso: "Chave dos Arquivos & Kit de Arrombamento.", falha: "Vazio com manchas de óleo queimado." }
         ],
         gatilho: "investigacao",
         trancado: false
@@ -856,7 +856,7 @@ function generateStoryLocationMap(story, entity) {
         ],
         gatilho: "investigacao",
         trancado: true,
-        minigame: "chaves"
+        chave_necessaria: "Chave dos Arquivos & Kit de Arrombamento"
       },
       {
         id: "loc_ala_leste",
@@ -890,7 +890,7 @@ function generateStoryLocationMap(story, entity) {
           { alvo_id: "loc_escadaria_subsolo", direcao: "leste", trancada: false }
         ],
         pontos_investigacao: [
-          { id: "pi_porta_blindada", nome: "Painel Biométrico", icone: "🔒", cd: 13, atributo: "intelecto", sucesso: "Cartão de acesso nível 3 esquecido por um guarda.", falha: "Alarme mudo ativado." }
+          { id: "pi_porta_blindada", nome: "Painel Biométrico", icone: "🔒", cd: 13, atributo: "intelecto", sucesso: "Cartão de Acesso Nível 3 esquecido por um guarda.", falha: "Alarme mudo ativado." }
         ],
         gatilho: "perseguicao",
         trancado: false
@@ -950,7 +950,7 @@ function generateStoryLocationMap(story, entity) {
         ],
         gatilho: "combate_importante",
         trancado: true,
-        minigame: "chaves"
+        chave_necessaria: "Cartão de Acesso Nível 3"
       },
       {
         id: "loc_altar_boss",
@@ -1348,15 +1348,19 @@ async function processPlayerAction(action, session, diceResult) {
   const currentSan = state_updates.san_current ?? sh.san_current;
   const currentSceneObj = story?.cena_atual_obj || story?.cenas_totais?.[story?.cena_atual_idx || 0];
 
-  if ((story?.ato_atual >= 3 || currentSceneObj?.tipo === "boss_climax" || currentSceneObj?.tipo === "epilogo") && (story?.climax_ativado || session.turn_count >= 8)) {
+  // ─── Condição de Vitória Estrita no Clímax / Boss Final (Ato 3) ────────────
+  // O Mestre NUNCA pode encerrar sem o combate decisivo no Boss Final e o Epílogo
+  const isBossScene = currentSceneObj?.tipo === "boss_climax" || session.world_data?.tipo_cena_atual === "boss_climax";
+  if (isBossScene && (story?.climax_ativado || session.world_data?.climax_ativado)) {
     if (diceResult && diceResult.success && diceResult.total >= 14) {
       session.ended = true;
       session.victory = true;
       state_updates.nex_increase = (state_updates.nex_increase || 0) + 10;
-      cinematica = { tipo: "matar", texto: "Boss Banido! Vitória da Ordem!", valor: 100, recurso_atual: 100, recurso_maximo: 100 };
+      cinematica = { tipo: "matar", texto: "Boss Final Banido! Vitória da Ordem!", valor: 100, recurso_atual: 100, recurso_maximo: 100 };
       narration += `\n\n${generateConcludingNarration(session, story)}`;
     }
   }
+
 
   // ─── Verificação de Crises com Timer de 3 Rodadas (Morte e Insanidade) ───
   if (currentPv <= 0) {

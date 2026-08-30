@@ -324,7 +324,9 @@ function inspectCharSheet(index) {
   currentSheet = targetChar;
   renderSheet(targetChar);
   renderCharacterSwitcher();
+  if (el("sh-location")) el("sh-location").textContent = targetChar.current_location || "Desconhecido";
 }
+
 
 function openCharSheet(index) {
   const targetChar = allCharacters[index];
@@ -1274,6 +1276,28 @@ function showActionTab(tab) {
 
   let html = "";
 
+  // Checagem de Emergência Médica / Psicológica de Aliados
+  const endangeredAllies = (allCharacters || []).filter(c => (c.pv_current ?? 1) <= 0 || (c.san_current ?? 1) <= 0);
+  if (endangeredAllies.length > 0) {
+    html += `<div style="width:100%;background:linear-gradient(135deg, rgba(239,68,68,0.25), rgba(40,10,20,0.95));border:1.5px solid var(--red3);border-radius:8px;padding:8px 10px;margin-bottom:8px;">
+      <div style="font-size:10.5px;color:#fca5a5;font-weight:700;letter-spacing:1px;font-family:var(--font-t);display:flex;align-items:center;gap:6px;">
+        <span>🚨 EMERGÊNCIA — COMPANHEIRO EM PERIGO:</span>
+      </div>
+      ${endangeredAllies.map(a => {
+        const isDying = (a.pv_current ?? 0) <= 0;
+        const alertType = isDying ? `☠ ${esc(a.name)} está MORRENDO!` : `🌀 ${esc(a.name)} em COLAPSO MENTAL!`;
+        const actionText = isDying ? `Prestar Auxílio Físico para ${a.name}: Primeiros Socorros Urgentes` : `Prestar Auxílio Psicológico para ${a.name}: Suporte Mental Urgente`;
+        const btnLabel = isDying ? `✚ Socorrer (Físico)` : `🧠 Estabilizar (Psico)`;
+        return `<div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;gap:8px;">
+          <span style="font-size:11.5px;color:#fff;">${alertType}</span>
+          <button class="menu-action-btn" style="padding:4px 10px;font-size:11px;background:var(--red3);color:#fff;border:none;margin:0;cursor:pointer;" onclick="enviarAction('${esc(actionText)}')">
+            ${btnLabel}
+          </button>
+        </div>`;
+      }).join("")}
+    </div>`;
+  }
+
   if (tab === "locais") {
     const sh = getCurrentSheet();
     const mapData = introDataGlobal?.world_data?.mapa_locais || getFallbackMap();
@@ -1545,10 +1569,11 @@ function openTargetModal(actionConfig) {
 
   const modal = el("target-menu");
   if (!modal) {
-    // Fallback se o modal não existir
     enviarAction(actionConfig.name);
     return;
   }
+
+  const isAux = actionConfig.type === 'auxilio' || actionConfig.name.toLowerCase().includes('auxil') || actionConfig.name.toLowerCase().includes('socorro') || actionConfig.name.toLowerCase().includes('proteger');
 
   const iconEl = el("target-action-icon");
   const titleEl = el("target-action-title");
@@ -1556,79 +1581,84 @@ function openTargetModal(actionConfig) {
   const auxWrap = el("target-auxilio-type-wrap");
   const confirmBtn = el("btn-confirm-target");
 
-  if (iconEl) iconEl.textContent = actionConfig.type === 'ataque' ? '⚔' : actionConfig.type === 'item' ? '🎒' : actionConfig.type === 'auxilio' ? '🛡' : '✨';
-  if (titleEl) titleEl.textContent = `DIRECIONAR: ${actionConfig.name.toUpperCase()}`;
-  if (subEl) subEl.textContent = `Selecione em quem você deseja aplicar esta ação.`;
+  const groupEnemies = el("target-group-enemies");
+  const groupAllies = el("target-group-allies");
+  const groupEnv = el("target-group-env");
 
-  const isAux = actionConfig.type === 'auxilio' || actionConfig.name.toLowerCase().includes('auxil') || actionConfig.name.toLowerCase().includes('socorro') || actionConfig.name.toLowerCase().includes('proteger');
-  if (auxWrap) {
-    auxWrap.style.display = isAux ? 'block' : 'none';
+  if (isAux) {
+    if (iconEl) iconEl.textContent = "🛡️";
+    if (titleEl) titleEl.textContent = "PRESTAR AUXÍLIO AO COMPANHEIRO";
+    if (subEl) subEl.textContent = "Selecione o agente e a modalidade de auxílio necessária";
+    if (auxWrap) auxWrap.style.display = "block";
+    if (groupEnemies) groupEnemies.style.display = "none";
+    if (groupEnv) groupEnv.style.display = "none";
+    if (groupAllies) groupAllies.style.display = "block";
+  } else {
+    if (iconEl) iconEl.textContent = actionConfig.type === 'ataque' ? '⚔' : actionConfig.type === 'item' ? '🎒' : '✨';
+    if (titleEl) titleEl.textContent = `DIRECIONAR: ${actionConfig.name.toUpperCase()}`;
+    if (subEl) subEl.textContent = `Selecione em quem você deseja aplicar esta ação.`;
+    if (auxWrap) auxWrap.style.display = "none";
+    if (groupEnemies) groupEnemies.style.display = "block";
+    if (groupEnv) groupEnv.style.display = "block";
+    if (groupAllies) groupAllies.style.display = "block";
   }
 
   if (confirmBtn) confirmBtn.disabled = true;
 
-  // 1. Popula Inimigos na Cena
-  const enemiesList = el("target-list-enemies");
-  const story = introDataGlobal?.world_data;
-  const currentEntity = story?.climax?.boss_nome || "Entidade Principal da Cena";
-  const enemyOptions = [
-    { name: currentEntity, desc: "Ameaça central / Boss da missão", icon: "👹" },
-    { name: "Cultistas / Acólitos", desc: "Fanáticos armados em combate", icon: "🩸" },
-    { name: "Criatura / Aberração Menor", desc: "Monstro corrompido pelas sombras", icon: "🕷" },
-  ];
-
-  if (enemiesList) {
-    enemiesList.innerHTML = enemyOptions.map((e, idx) =>
-      `<button class="target-card-btn" id="target-enemy-${idx}" onclick="selectTargetOption('enemy', '${esc(e.name)}')">
-        <div class="target-card-icon">${e.icon}</div>
-        <div class="target-card-info">
-          <span class="target-card-name">${esc(e.name)}</span>
-          <span class="target-card-sub">${esc(e.desc)}</span>
-        </div>
-        <span class="target-card-check">✓</span>
-      </button>`
-    ).join("");
-  }
-
-  // 2. Popula Aliados & Você Mesmo
+  // Popula Aliados com Status de Crise
   const alliesList = el("target-list-allies");
   if (alliesList) {
-    alliesList.innerHTML = allCharacters.map((char, idx) => {
-      const isSelf = currentSheet && currentSheet.name === char.name;
+    const sh = getCurrentSheet();
+    const candidateAllies = isAux ? allCharacters.filter(c => c.name !== sh?.name) : allCharacters;
+    const finalAllies = candidateAllies.length > 0 ? candidateAllies : allCharacters;
+
+    alliesList.innerHTML = finalAllies.map((char, idx) => {
+      const isSelf = sh && sh.name === char.name;
       const avatarSrc = getSafeAvatar(char.avatar_url, char.name);
-      return `<button class="target-card-btn" id="target-ally-${idx}" onclick="selectTargetOption('ally', '${esc(char.name)}')">
+      const isDying = (char.pv_current ?? 1) <= 0;
+      const isMad = (char.san_current ?? 1) <= 0;
+      let crisisTag = "";
+      if (isDying) crisisTag = `<span style="color:#ef4444;font-size:10px;font-weight:700;"> ☠ MORRENDO!</span>`;
+      else if (isMad) crisisTag = `<span style="color:#a855f7;font-size:10px;font-weight:700;"> 🌀 COLAPSO MENTAL!</span>`;
+
+      return `<button class="target-card-btn${isDying || isMad ? ' crisis' : ''}" id="target-ally-${idx}" onclick="selectTargetOption('ally', '${esc(char.name)}')">
         <img class="target-card-avatar" src="${avatarSrc}" alt="">
         <div class="target-card-info">
-          <span class="target-card-name">${esc(char.name)}${isSelf ? ' (Você)' : ''}</span>
-          <span class="target-card-sub">${esc(char.class || 'Agente')} · ${char.pv_current ?? 0}/${char.pv_max ?? 0} PV</span>
+          <span class="target-card-name">${esc(char.name)}${isSelf ? ' (Você)' : ''}${crisisTag}</span>
+          <span class="target-card-sub">${esc(char.class || 'Agente')} · ${char.pv_current ?? 0}/${char.pv_max ?? 0} PV · ${char.san_current ?? 0}/${char.san_max ?? 0} SAN</span>
         </div>
         <span class="target-card-check">✓</span>
       </button>`;
     }).join("");
   }
 
-  // 3. Popula Ambiente / Objeto
-  const envList = el("target-list-env");
-  const envOptions = [
-    { name: "Ambiente / Barricada", desc: "Estrutura tática ou cobertura sólida", icon: "🧱" },
-    { name: "Altar / Símbolo Ritual", desc: "Ponto focal de contenção mística", icon: "⸸" },
-    { name: "Mecanismo / Fechadura", desc: "Painel ou passagem de fuga", icon: "⚙" },
-  ];
-  if (envList) {
-    envList.innerHTML = envOptions.map((env, idx) =>
-      `<button class="target-card-btn" id="target-env-${idx}" onclick="selectTargetOption('env', '${esc(env.name)}')">
-        <div class="target-card-icon">${env.icon}</div>
-        <div class="target-card-info">
-          <span class="target-card-name">${esc(env.name)}</span>
-          <span class="target-card-sub">${esc(env.desc)}</span>
-        </div>
-        <span class="target-card-check">✓</span>
-      </button>`
-    ).join("");
+  // Popula Inimigos na Cena se não for auxílio
+  if (!isAux) {
+    const enemiesList = el("target-list-enemies");
+    const story = introDataGlobal?.world_data;
+    const currentEntity = story?.climax?.boss_nome || "Entidade Principal da Cena";
+    const enemyOptions = [
+      { name: currentEntity, desc: "Ameaça central / Boss da missão", icon: "👹" },
+      { name: "Cultistas / Acólitos", desc: "Fanáticos armados em combate", icon: "🩸" },
+      { name: "Criatura / Aberração Menor", desc: "Monstro corrompido pelas sombras", icon: "🕷" },
+    ];
+    if (enemiesList) {
+      enemiesList.innerHTML = enemyOptions.map((e, idx) =>
+        `<button class="target-card-btn" id="target-enemy-${idx}" onclick="selectTargetOption('enemy', '${esc(e.name)}')">
+          <div class="target-card-icon">${e.icon}</div>
+          <div class="target-card-info">
+            <span class="target-card-name">${esc(e.name)}</span>
+            <span class="target-card-sub">${esc(e.desc)}</span>
+          </div>
+          <span class="target-card-check">✓</span>
+        </button>`
+      ).join("");
+    }
   }
 
   openMenu("target-menu");
 }
+
 
 function selectTargetOption(group, targetName) {
   if (!pendingTargetAction) return;
