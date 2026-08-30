@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IMaster RPG — Sessão Paranormal</title>
+  <meta name="description" content="IMaster RPG: Sessão imersiva de Ordem Paranormal com cartas arcanas 3D, combate tático e narrativa mística.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;600;700;800;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=65">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/dice3d.js?v=65"></script>
+</head>
+<body class="chat-page">
+
+  <!-- Barras de Letterbox Cinematográfico -->
+  <div class="cinema-bar-top"></div>
+  <div class="cinema-bar-bottom"></div>
+
+  <!-- Lightbox para Imagens -->
+  <div class="img-lightbox-overlay" id="img-lightbox" onclick="closeLightbox()">
+    <button class="img-lightbox-close" onclick="closeLightbox()">✕</button>
+    <img class="img-lightbox-img" id="img-lightbox-img" src="" alt="Imagem ampliada">
+  </div>
+
+  <!-- Canvas Atmosférico de Partículas Místicas -->
+  <canvas id="atmosphere-canvas" class="atmosphere-canvas"></canvas>
+
+  <!-- ══════════════════════════════════════════════════════════
+       PAINEL LATERAL — DOSSIÊ DO AGENTE (Controlado pelo Mestre)
+  ══════════════════════════════════════════════════════════ -->
+  <aside id="sheet-panel" class="sheet-panel">
+    
+    <!-- Seletor de Fichas (Modo Multiplayer) -->
+    <div id="character-switcher" class="character-switcher" style="display:none"></div>
+
+    <!-- Indicador Dinâmico de Turno -->
+    <div id="turn-indicator" class="turn-indicator" style="display:none">
+      <div class="turn-indicator-label">VEZ ATUAL</div>
+      <div class="turn-indicator-name" id="turn-name">—</div>
+      <div class="turn-indicator-bar" id="turn-bar"></div>
+    </div>
+
+    <!-- Cabeçalho do Agente (Identidade & Aura) -->
+    <div class="sheet-identity-block">
+      <div class="sheet-avatar-wrap">
+        <img id="sh-avatar" class="sheet-avatar" src="" alt="Retrato do Agente">
+        <div class="sheet-avatar-glow"></div>
+      </div>
+      <div class="sheet-identity-info">
+        <div class="sheet-agent-badge">AGENTE ORDO REALITAS</div>
+        <div class="sheet-agent-name" id="sh-name">—</div>
+        <div class="sheet-agent-class-row">
+          <span class="sheet-agent-class" id="sh-class">—</span>
+          <span class="sheet-location-pill" title="Localização Atual">
+            <span class="location-dot"></span>
+            <span id="sh-location">Desconhecido</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEX & Exposição Paranormal -->
+    <div class="sheet-block sheet-nex-block">
+      <div class="sheet-block-header">
+        <span class="sheet-block-label">EXPOSIÇÃO PARANORMAL</span>
+        <span class="nex-val" id="sh-nex">5%</span>
+      </div>
+      <div class="nex-bar-track">
+        <div class="nex-bar-fill" id="nex-bar" style="width:5%"></div>
+      </div>
+      <div class="status-effects-row" id="sh-status-row"></div>
+    </div>
+
+    <!-- Medidores de Recursos Vitais (PV, PE, SAN) -->
+    <div class="sheet-block sheet-vitals-block">
+      <div class="sheet-block-label">RECURSOS VITAIS</div>
+      <div class="res-bars">
+        
+        <!-- PV -->
+        <div class="res-bar-group res-group-pv">
+          <div class="res-bar-header">
+            <div class="res-title"><span class="res-icon">❤</span> <span class="res-name">PONTOS DE VIDA</span></div>
+            <span class="res-val" id="sh-pv">—</span>
+          </div>
+          <div class="res-track"><div class="res-fill res-fill-pv" id="bar-pv"></div></div>
+        </div>
+
+        <!-- PE -->
+        <div class="res-bar-group res-group-pe">
+          <div class="res-bar-header">
+            <div class="res-title"><span class="res-icon">✦</span> <span class="res-name">PONTOS DE ESFORÇO</span></div>
+            <span class="res-val" id="sh-pe">—</span>
+          </div>
+          <div class="res-track"><div class="res-fill res-fill-pe" id="bar-pe"></div></div>
+        </div>
+
+        <!-- SAN -->
+        <div class="res-bar-group res-group-san">
+          <div class="res-bar-header">
+            <div class="res-title"><span class="res-icon">☽</span> <span class="res-name">SANIDADE</span></div>
+            <span class="res-val" id="sh-san">—</span>
+          </div>
+          <div class="res-track"><div class="res-fill res-fill-san" id="bar-san"></div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Relação de Atributos (Runas) -->
+    <div class="sheet-block sheet-attrs-block">
+      <div class="sheet-block-label">ATRIBUTOS BASE</div>
+      <div class="attr-grid-sheet">
+        <div class="attr-cell"><div class="attr-cell-val" id="at-agi">0</div><div class="attr-cell-name">AGI</div></div>
+        <div class="attr-cell"><div class="attr-cell-val" id="at-for">0</div><div class="attr-cell-name">FOR</div></div>
+        <div class="attr-cell"><div class="attr-cell-val" id="at-int">0</div><div class="attr-cell-name">INT</div></div>
+        <div class="attr-cell"><div class="attr-cell-val" id="at-pre">0</div><div class="attr-cell-name">PRE</div></div>
+        <div class="attr-cell"><div class="attr-cell-val" id="at-vig">0</div><div class="attr-cell-name">VIG</div></div>
+      </div>
+    </div>
+
+    <!-- Habilidades & Rituais -->
+    <div class="sheet-block" id="abilities-block">
+      <div class="sheet-block-label">HABILIDADES & RITUAIS</div>
+      <div class="tag-list" id="sh-abilities"><span class="tag-empty">—</span></div>
+    </div>
+
+    <!-- Perícias Treinadas -->
+    <div class="sheet-block">
+      <div class="sheet-block-label">PERÍCIAS TREINADAS</div>
+      <div class="tag-list" id="sh-skills"><span class="tag-empty">—</span></div>
+    </div>
+
+    <!-- Inventário & Equipamentos -->
+    <div class="sheet-block">
+      <div class="sheet-block-label">INVENTÁRIO</div>
+      <div class="tag-list inv-list" id="sh-inventory"><span class="tag-empty">Vazio</span></div>
+    </div>
+
+    <!-- Lista de Agentes na Missão (Multiplayer) -->
+    <div class="sheet-block sheet-full-btn-wrap" id="sheet-full-btn-wrap" style="display:none"></div>
+
+  </aside>
+
+  <!-- ══════════════════════════════════════════════════════════
+       ÁREA CENTRAL DE NARRATIVA & AÇÃO
+  ══════════════════════════════════════════════════════════ -->
+  <main class="chat-main" id="chat-main">
+    
+    <!-- Topbar Fixo & Imersivo -->
+    <header class="chat-header">
+      <div class="chat-header-brand">
+        <span class="header-seal">⸸</span>
+        <span class="chat-title">IMaster <span class="chat-sub">RPG</span></span>
+      </div>
+
+      <div class="chat-header-status">
+        <span class="system-indicator"></span>
+        <span class="system-status-text">ORDEM PARANORMAL v10</span>
+      </div>
+
+      <div class="chat-header-actions">
+        <a href="index.html" class="menu-link" id="link-menu">
+          <span class="menu-link-icon">⊞</span> Menu Principal
+        </a>
+      </div>
+    </header>
+
+    <!-- Transmissão do Mestre & Diálogo (Scroll Suave) -->
+    <div id="chat" class="chat-box"></div>
+
+    <!-- Sugestões Contextuais (Chips Místicos) -->
+    <div id="suggestions-wrap" class="suggestions-wrap" style="display:none">
+      <div class="suggestions-label"><span class="sigil-dot">✦</span> Sugestões de Ação do Mestre:</div>
+      <div id="suggestions-grid" class="suggestions-grid"></div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         CARTAS DE AÇÃO 3D (BARALHO ARCANO DOCKADO NO RODAPÉ)
+    ══════════════════════════════════════════════════════════ -->
+    <div id="action-cards-area" class="action-cards-area">
+      <div class="action-cards-grid" id="action-cards-grid">
+
+        <!-- CARTA 1: ATACAR -->
+        <div class="magic-card card-attack" id="card-attack" onclick="openAttackMenu()" title="Atacar / Combate">
+          <div class="magic-card-inner">
+            <div class="card-glare"></div>
+            <div class="card-corner card-corner-tl">
+              <span class="corner-suit">⚔</span>
+              <span class="corner-rank">I</span>
+            </div>
+            <div class="card-corner card-corner-br">
+              <span class="corner-suit">⚔</span>
+              <span class="corner-rank">I</span>
+            </div>
+            <div class="card-art-frame">
+              <div class="card-suit">⚔</div>
+            </div>
+            <div class="card-info">
+              <div class="card-name">ATACAR</div>
+              <div class="card-desc">Combate & Habilidades</div>
+            </div>
+            <div class="card-border-glow"></div>
+          </div>
+        </div>
+
+        <!-- CARTA 2: AGIR -->
+        <div class="magic-card card-action" id="card-action" onclick="openActionMenu()" title="Agir / Investigar / Mover">
+          <div class="magic-card-inner">
+            <div class="card-glare"></div>
+            <div class="card-corner card-corner-tl">
+              <span class="corner-suit">◈</span>
+              <span class="corner-rank">II</span>
+            </div>
+            <div class="card-corner card-corner-br">
+              <span class="corner-suit">◈</span>
+              <span class="corner-rank">II</span>
+            </div>
+            <div class="card-art-frame">
+              <div class="card-suit">◈</div>
+            </div>
+            <div class="card-info">
+              <div class="card-name">AGIR</div>
+              <div class="card-desc">Explorar · Social · Mover</div>
+            </div>
+            <div class="card-border-glow"></div>
+          </div>
+        </div>
+
+        <!-- CARTA 3: ITEM -->
+        <div class="magic-card card-item" id="card-item" onclick="openItemMenu()" title="Inventário & Itens">
+          <div class="magic-card-inner">
+            <div class="card-glare"></div>
+            <div class="card-corner card-corner-tl">
+              <span class="corner-suit">⊞</span>
+              <span class="corner-rank">III</span>
+            </div>
+            <div class="card-corner card-corner-br">
+              <span class="corner-suit">⊞</span>
+              <span class="corner-rank">III</span>
+            </div>
+            <div class="card-art-frame">
+              <div class="card-suit">⊞</div>
+            </div>
+            <div class="card-info">
+              <div class="card-name">ITEM</div>
+              <div class="card-desc">Equipamentos & Rituais</div>
+            </div>
+            <div class="card-border-glow"></div>
+          </div>
+        </div>
+
+        <!-- CARTA 4: SILÊNCIO -->
+        <div class="magic-card card-skip" id="card-skip" onclick="skipTurn()" title="Aguardar / Passar Turno">
+          <div class="magic-card-inner">
+            <div class="card-glare"></div>
+            <div class="card-corner card-corner-tl">
+              <span class="corner-suit">☽</span>
+              <span class="corner-rank">IV</span>
+            </div>
+            <div class="card-corner card-corner-br">
+              <span class="corner-suit">☽</span>
+              <span class="corner-rank">IV</span>
+            </div>
+            <div class="card-art-frame">
+              <div class="card-suit">☽</div>
+            </div>
+            <div class="card-info">
+              <div class="card-name">SILÊNCIO</div>
+              <div class="card-desc">Observar & Aguardar</div>
+            </div>
+            <div class="card-border-glow"></div>
+          </div>
+        </div>
+
+      </div><!-- /#action-cards-grid -->
+    </div><!-- /#action-cards-area -->
+
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════════
+       GRIMÓRIOS & MENUS FLUTUANTES (Backdrop Blur & Suavidade)
+  ══════════════════════════════════════════════════════════ -->
+
+  <!-- MENU DE ATAQUE -->
+  <div class="card-menu-overlay" id="attack-menu" onclick="closeMenuIfOutside(event,'attack-menu')">
+    <div class="card-menu-panel" id="attack-panel">
+      <div class="card-menu-header">
+        <span class="card-menu-icon">⚔</span>
+        <div class="card-menu-title-wrap">
+          <span class="card-menu-title">MANOBRAS DE ATAQUE</span>
+          <span class="card-menu-subtitle">Selecione uma habilidade ou ataque desarmado</span>
+        </div>
+        <button class="card-menu-close" id="btn-close-attack" onclick="closeMenu('attack-menu')">✕</button>
+      </div>
+      <div class="card-menu-body" id="attack-list"></div>
+    </div>
+  </div>
+
+  <!-- MENU DE AÇÕES -->
+  <div class="card-menu-overlay" id="action-menu" onclick="closeMenuIfOutside(event,'action-menu')">
+    <div class="card-menu-panel" id="action-panel">
+      <div class="card-menu-header">
+        <span class="card-menu-icon">◈</span>
+        <div class="card-menu-title-wrap">
+          <span class="card-menu-title">AÇÕES GERAIS</span>
+          <span class="card-menu-subtitle">Interaja com o cenário, NPCs ou reposicione-se</span>
+        </div>
+        <button class="card-menu-close" id="btn-close-action" onclick="closeMenu('action-menu')">✕</button>
+      </div>
+      <div class="card-menu-tabs" id="action-tabs">
+        <button class="card-tab active" id="tab-exploracao" onclick="showActionTab('exploracao')">◈ Explorar</button>
+        <button class="card-tab" id="tab-social" onclick="showActionTab('social')">✦ Social</button>
+        <button class="card-tab" id="tab-movimento" onclick="showActionTab('movimento')">► Mover</button>
+      </div>
+      <div class="card-menu-body" id="action-list"></div>
+    </div>
+  </div>
+
+  <!-- MENU DE ITENS / INVENTÁRIO -->
+  <div class="card-menu-overlay" id="item-menu" onclick="closeMenuIfOutside(event,'item-menu')">
+    <div class="card-menu-panel" id="item-panel">
+      <div class="card-menu-header">
+        <span class="card-menu-icon">⊞</span>
+        <div class="card-menu-title-wrap">
+          <span class="card-menu-title">INVENTÁRIO DO AGENTE</span>
+          <span class="card-menu-subtitle">Itens, equipamentos e consumíveis paranormais</span>
+        </div>
+        <button class="card-menu-close" id="btn-close-item" onclick="closeMenu('item-menu')">✕</button>
+      </div>
+      <div class="card-menu-body" id="item-list"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       CINEMÁTICA DE TROCA DE TURNO (Multiplayer)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="turn-transition" id="turn-transition">
+    <div class="turn-transition-inner">
+      <div class="turn-transition-label" id="tt-label">VEZ DE AGIR</div>
+      <div class="turn-transition-name" id="tt-name">—</div>
+      <div class="turn-transition-class" id="tt-class">—</div>
+      <div class="turn-transition-icon" id="tt-icon">⸸</div>
+      <div class="turn-transition-order" id="tt-order"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       ARENA DE INICIATIVA (2d20 com Desempate Suave)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="initiative-arena" id="initiative-arena">
+    <div class="initiative-arena-header">
+      <div class="initiative-arena-sigil">⸸</div>
+      <h2 class="initiative-arena-title">FASE DE INICIATIVA</h2>
+      <div class="initiative-arena-subtitle" id="arena-subtitle">Role 2d20 por agente. O maior resultado define a ordem cronológica do combate. Em empate, o 2º dado desempata!</div>
+      <div class="initiative-tiebreak-banner" id="initiative-tiebreak-banner">⚔ EMPATE DETECTADO — DESEMPATANDO PELO 2º DADO ⚔</div>
+    </div>
+    <div class="initiative-players-grid" id="initiative-players-grid"></div>
+    <div class="initiative-arena-actions" id="arena-actions">
+      <button class="arena-btn arena-btn-primary" id="arena-roll-all-btn" onclick="arenaRollAll()">✦ Rolar Todos os Dados</button>
+      <button class="arena-btn arena-btn-secondary" id="arena-confirm-btn" onclick="arenaConfirm()" disabled>✓ Confirmar Ordem & Iniciar</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       MODAL DE ROLAGEM DE DADOS (3D & FÍSICA)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="dice-overlay" id="dice-overlay">
+    <div class="dice-modal">
+      <div class="dice-modal-top">
+        <div class="dice-modal-label" id="modal-label">TESTE DE PERÍCIA</div>
+        <div class="dice-modal-sub" id="modal-sub"></div>
+      </div>
+      <div class="dice-stage" id="dice-stage"></div>
+      <div class="dice-result-area">
+        <div class="dice-result-label">RESULTADO FINAL</div>
+        <div class="dice-result-total" id="dice-total">—</div>
+        <div class="dice-result-outcome" id="dice-outcome"></div>
+      </div>
+      <button class="btn btn-primary dice-confirm-btn" id="dice-confirm" onclick="confirmRoll()" disabled>
+        Confirmar e Continuar
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       MODAL DE FICHA COMPLETA (DOSSIÊ INTEGRAL)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="sheet-overlay" id="sheet-overlay" onclick="closeFullSheetIfOutside(event)">
+    <div class="sheet-full-modal" id="sheet-full-modal">
+      <button class="sheet-full-close" id="btn-close-fullsheet" onclick="closeFullSheet()">✕</button>
+
+      <div class="sfm-header">
+        <div class="sfm-avatar-wrap">
+          <img id="sfm-avatar" class="sfm-avatar" src="" alt="Retrato">
+        </div>
+        <div class="sfm-header-info">
+          <div class="sfm-sigil">⸸ ORDO REALITAS — FICHA DE AGENTE</div>
+          <div class="sfm-name" id="sfm-name">—</div>
+          <div class="sfm-class-nex"><span id="sfm-class">—</span> · NEX <span id="sfm-nex">5%</span></div>
+        </div>
+      </div>
+
+      <div class="sfm-grid">
+        <!-- Coluna 1 -->
+        <div class="sfm-col">
+          <div class="sfm-section">
+            <div class="sfm-section-title">IDENTIDADE PESSOAL</div>
+            <div class="sfm-identity-rows" id="sfm-identity"></div>
+          </div>
+          <div class="sfm-section">
+            <div class="sfm-section-title">RECURSOS ATUAIS</div>
+            <div class="sfm-resources" id="sfm-resources"></div>
+          </div>
+          <div class="sfm-section">
+            <div class="sfm-section-title">ATRIBUTOS INVESTIGATIVOS</div>
+            <div class="sfm-attrs" id="sfm-attrs"></div>
+          </div>
+        </div>
+        <!-- Coluna 2 -->
+        <div class="sfm-col">
+          <div class="sfm-section">
+            <div class="sfm-section-title">ORIGEM & ANTECEDENTES</div>
+            <div class="sfm-text" id="sfm-origin"></div>
+          </div>
+          <div class="sfm-section">
+            <div class="sfm-section-title">HABILIDADES ESPECIAIS & RITUAIS</div>
+            <div class="sfm-abilities" id="sfm-abilities"></div>
+          </div>
+          <div class="sfm-section">
+            <div class="sfm-section-title">PERÍCIAS TREINADAS</div>
+            <div class="sfm-tags" id="sfm-skills"></div>
+          </div>
+          <div class="sfm-section">
+            <div class="sfm-section-title">INVENTÁRIO CARREGADO</div>
+            <div class="sfm-tags" id="sfm-inventory"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       OVERLAY DE CINEMÁTICA DRAMÁTICA (Dano, Morte, Sanidade)
+  <!-- ══════════════════════════════════════════════════════════
+       OVERLAYS DE FINAIS DA MISSÃO (Vitória / Insanidade)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="ending-overlay" id="victory-overlay">
+    <div class="ending-modal ending-victory">
+      <div class="ending-seal">⚔</div>
+      <div class="ending-title" id="victory-title">MISSÃO CUMPRIDA</div>
+      <div class="ending-desc" id="victory-desc">A anomalia paranormal foi contida pela Ordo Realitas. A realidade permanece intacta por mais um dia graças à coragem e estratégia dos agentes.</div>
+      <div class="ending-actions">
+        <a href="index.html" class="arena-btn arena-btn-primary">Menu Principal</a>
+        <a href="load.html" class="arena-btn arena-btn-secondary">Carregar Jogo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="ending-overlay" id="madness-overlay">
+    <div class="ending-modal ending-madness">
+      <div class="ending-seal">⸸</div>
+      <div class="ending-title" id="madness-title">ENLOUQUECIDO PELO PARANORMAL</div>
+      <div class="ending-desc" id="madness-desc">A mente do agente sucumbiu diante dos horrores indescritíveis do Outro Lado. A sanidade se esvaiu, e a percepção da realidade se fragmentou para sempre.</div>
+      <div class="ending-actions">
+        <a href="index.html" class="arena-btn arena-btn-primary">Menu Principal</a>
+        <a href="load.html" class="arena-btn arena-btn-secondary">Tentar Novamente</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/chat.js?v=65"></script>
+</body>
+</html>

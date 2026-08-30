@@ -1,0 +1,164 @@
+{
+  "_instrucao_ao_mestre": "Este arquivo contém as REGRAS OFICIAIS de dados de Ordem Paranormal RPG. Siga-as à risca.",
+
+  "regra_central": {
+    "dado_principal": "d20",
+    "formula_CORRETA": "Quantidade de d20 = valor_do_atributo (NÃO é 1 + atributo)",
+    "ERRO_COMUM_A_EVITAR": "Não some +1 ao atributo para calcular dados. Força 3 = rola 3d20, não 4d20.",
+    "exemplos_corretos": [
+      "Atributo 1 (média humana) → rola 1d20",
+      "Atributo 2 → rola 2d20, pega o maior",
+      "Atributo 3 → rola 3d20, pega o maior",
+      "Atributo 4 (pós NEX) → rola 4d20, pega o maior",
+      "Atributo 5 (máximo) → rola 5d20, pega o maior"
+    ],
+    "atributo_zero": {
+      "regra": "Atributo 0 → rola 2d20 e pega o PIOR resultado (desvantagem)",
+      "descricao": "Personagem abaixo da média humana — está em desvantagem nessa área"
+    },
+    "atributo_negativo": {
+      "regra": "Atributo -1 → rola 3d20 e pega o PIOR resultado",
+      "descricao": "Incapacidade severa nessa área"
+    },
+    "treinado_bonus": "+5 ao resultado final quando o personagem é Treinado na perícia usada",
+    "selecao_resultado": "Sempre pegue o MAIOR resultado entre todos os d20 rolados (exceto nos casos de desvantagem)"
+  },
+
+  "resultados_especiais": {
+    "acerto_critico": {
+      "gatilho": "Resultado natural de 20 em qualquer d20 (antes de somar bônus)",
+      "efeito": "Sucesso automático com efeito excepcional. Para ataques: role os dados de dano duas vezes e some.",
+      "narracao": "O Mestre DEVE narrar um sucesso além do esperado — algo extraordinário acontece"
+    },
+    "desastre": {
+      "gatilho": "TODOS os d20 mostram resultado natural de 1 (Desastre = todos mostram 1, não apenas um)",
+      "efeito": "Falha catastrófica com consequência grave além da simples falha",
+      "efeito_armas_fogo": "Ao Desastre com arma de fogo: além da falha, o personagem PERDE 1 munição daquela arma",
+      "narracao": "O Mestre narra uma complicação séria — algo piora visivelmente"
+    }
+  },
+
+  "classes_de_dificuldade": {
+    "descricao": "CD = Dificuldade Alvo definida pelo Mestre. O jogador precisa igualar ou superar.",
+    "tabela": [
+      { "cd": 10, "label": "Fácil",           "exemplo": "Arrombar porta velha, escalar cerca baixa, lembrar fato comum" },
+      { "cd": 15, "label": "Moderada",         "exemplo": "Escalar muro, rastrear pegadas, tratar ferimento, persuadir NPC relutante" },
+      { "cd": 20, "label": "Difícil",          "exemplo": "Escalar parede lisa, perceber emboscada, convencer inimigo hostil" },
+      { "cd": 25, "label": "Muito Difícil",    "exemplo": "Façanha atlética extrema, enganar especialista, resistir a horror puro" },
+      { "cd": 30, "label": "Épico/Paranormal", "exemplo": "Proeza sobre-humana, resistir a poder paranormal de alta intensidade" }
+    ]
+  },
+
+  "quando_exigir_teste": {
+    "regra_de_ouro": "Pergunte: 'Essa ação tem resultado incerto E tem consequência real em caso de falha?'",
+    "exige_teste": [
+      "Atacar ou ferir qualquer ser",
+      "Tentar persuadir, intimidar ou enganar alguém que possa resistir",
+      "Escalar, saltar, correr em situação de perigo real",
+      "Arrombar, forçar, destruir objeto resistente com risco de falha",
+      "Investigar, rastrear, perceber algo oculto",
+      "Realizar primeiros socorros em pressão (combate, personagem morrendo)",
+      "Resistir a efeito paranormal, medo, veneno ou dano mental",
+      "Usar habilidade técnica em situação de risco (hackear, desarmar)",
+      "Realizar ritual paranormal"
+    ],
+    "nao_exige_teste": [
+      "Caminhar por local sem obstáculos nem ameaça",
+      "Abrir porta destrancada em local seguro",
+      "Falar com NPC amigável sem intenção de manipular",
+      "Pegar objeto acessível sem risco",
+      "Ações cotidianas sem risco ou oposição direta"
+    ]
+  },
+
+  "mapa_atributo_pericia": {
+    "descricao": "Cada Perícia tem um Atributo base que define quantos d20 são rolados",
+    "Agilidade": ["Acrobacia", "Crime", "Furtividade", "Iniciativa", "Pilotagem", "Pontaria", "Reflexos"],
+    "Forca":     ["Atletismo", "Luta"],
+    "Intelecto": ["Atualidades", "Ciências", "Investigação", "Medicina", "Ocultismo", "Profissão", "Sobrevivência", "Tática", "Tecnologia"],
+    "Presenca":  ["Atuação", "Diplomacia", "Enganação", "Intimidação", "Intuição", "Percepção", "Religião", "Vontade"],
+    "Vigor":     ["Fortitude"]
+  },
+
+  "dados_de_dano": {
+    "descricao": "Dados de dano usados quando ataque é bem-sucedido",
+    "armas": [
+      { "arma": "Soco / Ataque desarmado",        "dado": "1d4",  "bonus_atributo": null, "nota": "Pode causar dano não-letal" },
+      { "arma": "Faca / Arma pequena",             "dado": "1d4",  "bonus_atributo": "Força" },
+      { "arma": "Pistola (Calibre Médio)",         "dado": "1d6",  "bonus_atributo": null },
+      { "arma": "Espada / Arma média corpo a corpo","dado": "1d8", "bonus_atributo": "Força" },
+      { "arma": "Pistola pesada / Revólver (CG)",  "dado": "1d8",  "bonus_atributo": null },
+      { "arma": "Espingarda (Calibre Médio)",       "dado": "1d12", "bonus_atributo": null, "nota": "Alcance curto" },
+      { "arma": "Rifle / Carabina (Calibre Médio)","dado": "1d12", "bonus_atributo": null },
+      { "arma": "Metralhadora leve",               "dado": "2d4",  "bonus_atributo": null },
+      { "arma": "Metralhadora média",              "dado": "2d6",  "bonus_atributo": null },
+      { "arma": "Metralhadora pesada",             "dado": "2d8",  "bonus_atributo": null },
+      { "arma": "Granada / Explosivo",             "dado": "4d6",  "bonus_atributo": null, "area": true },
+      { "arma": "Ataque paranormal leve",          "dado": "1d6",  "bonus_atributo": "Presença" },
+      { "arma": "Ataque paranormal pesado",        "dado": "2d6",  "bonus_atributo": "Presença" }
+    ],
+    "critico": "Em acerto crítico (20 natural), role os dados de dano duas vezes e some os resultados"
+  },
+
+  "testes_de_sanidade": {
+    "descricao": "Pedidos ao encontrar horrores paranormais, cenas grotescas ou eventos traumatizantes",
+    "atributo_base": "Presença",
+    "quantidade_dados": "Valor de Presença do personagem (Presença 2 = 2d20)",
+    "pericias_relacionadas": ["Vontade (resistir ao horror)", "Religião (racionalizar o sobrenatural)"],
+    "perdas_por_situacao": [
+      { "gravidade": "Leve",     "exemplo": "Ver rastro de sangue, ouvir vozes, encontrar objeto perturbador", "perda": "1d4 SAN" },
+      { "gravidade": "Moderada", "exemplo": "Ver cadáver mutilado, encontrar entidade menor, testemunhar ritual", "perda": "1d6 SAN" },
+      { "gravidade": "Grave",    "exemplo": "Ver entidade poderosa, sofrer ataque paranormal, testemunhar morte violenta de aliado", "perda": "1d8 SAN" },
+      { "gravidade": "Extrema",  "exemplo": "Encontrar entidade de alto poder, ver o Outro Lado diretamente", "perda": "2d6 SAN" }
+    ],
+    "efeitos_por_percentual_perdido": [
+      { "san_restante_pct": "75-100%", "efeito": "Personagem está bem. Leve desconforto." },
+      { "san_restante_pct": "50-74%",  "efeito": "PERTURBADO: -2 em testes de Presença. Pesadelos noturnos." },
+      { "san_restante_pct": "25-49%",  "efeito": "ABALADO: -4 em testes de Presença. Comportamento errático possível." },
+      { "san_restante_pct": "1-24%",   "efeito": "BEIRA DO COLAPSO: Surtos de loucura temporários. O Mestre pode narrar comportamento irracional." },
+      { "san_restante_pct": "0",       "efeito": "ENLOUQUECIDO: Personagem perde o controle. Passa a ser interpretado pelo Mestre como NPC até estabilização." }
+    ],
+    "recuperacao_san": "Descanso longo (8h) sem contato paranormal: recupera 1d6 SAN. Tratamento médico/psicológico pode acelerar."
+  },
+
+  "iniciativa": {
+    "descricao": "Determina a ordem de ações em combate",
+    "formula": "Role (valor de Agilidade) d20, pegue o maior resultado + valor de Agilidade",
+    "empate": "Em empate, o personagem com maior Agilidade age primeiro. Se ainda empatado, decide quem preferir."
+  },
+
+  "combate": {
+    "estrutura_do_turno": {
+      "acao_padrao": "1 por turno — atacar, usar habilidade ativa, realizar ritual, usar item complexo",
+      "acao_de_movimento": "1 por turno — deslocar até a velocidade base (9m / 3 quadrados padrão)",
+      "acao_livre": "Ilimitadas — falar, soltar objeto, pequenas interações",
+      "reacao": "1 por RODADA (não por turno) — esquivar, bloquear, contra-atacar quando permitido",
+      "substituicao": "A ação padrão pode ser substituída por mais uma ação de movimento"
+    },
+    "defesa": {
+      "formula": "Defesa = 10 + valor de Agilidade + bônus de armadura",
+      "esquiva": "Se Treinado em Reflexos: como reação, some o bônus de Reflexos (+5) à Defesa contra UM ataque. Declare ANTES do atacante rolar.",
+      "bloqueio": "Se Treinado em Fortitude: como reação, reduza o dano recebido pelo bônus de Fortitude (+5). Declare APÓS saber o dano."
+    },
+    "ataque": {
+      "formula": "Role (valor do atributo da arma) d20, pega o maior, some +5 se Treinado na perícia de ataque",
+      "comparar_com": "Resultado de ataque vs. Defesa do alvo",
+      "acerto": "Resultado ≥ Defesa = acerto. Role os dados de dano.",
+      "modificador_forca_dano": "Em ataques corpo a corpo: some o valor de Força ao dano"
+    },
+    "estados": {
+      "machucado":  "PV ≤ 50% do máximo. Sem penalidade mecânica, mas o Mestre DEVE narrar sinais físicos.",
+      "morrendo":   "PV = 0. Personagem cai incapacitado. A cada turno, faz teste de Vigor (CD 15) ou piora. 3 falhas = morte.",
+      "estabilizado": "Alguém usa Medicina (CD 15) no personagem Morrendo. Ele para de piorar mas permanece inconsciente.",
+      "morto":      "3 falhas no estado Morrendo sem estabilização, ou dano igual ao PV máximo em um único ataque."
+    }
+  },
+
+  "instrucoes_ao_mestre": {
+    "transparencia": "SEMPRE diga ao jogador qual atributo, qual perícia, a CD e quantos dados rolar ANTES de narrar o resultado",
+    "aguardar_resultado": "NUNCA narre o resultado de ação que exige teste ANTES do jogador rolar os dados",
+    "apos_rolar": "Com o resultado em mãos, narre a consequência proporcionalmente à margem de sucesso ou falha",
+    "sucesso_parcial": "Resultado entre CD-1 e CD+2 pode ser narrado como sucesso parcial com complicação leve",
+    "destacar_critico": "Crítico (20 natural) e Desastre (todos 1s) SEMPRE merecem narração especial e dramática"
+  }
+}

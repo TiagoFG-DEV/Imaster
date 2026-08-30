@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>IMaster — Escolher Temática</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+.theme-page { overflow-y:auto; height:100vh; background:var(--bg); }
+.theme-container { position:relative; z-index:1; max-width:820px; margin:0 auto; padding:40px 24px 80px; display:flex; flex-direction:column; gap:28px; }
+.theme-title { font-family:var(--font-d); font-size:clamp(20px,4.5vw,34px); color:var(--gold); letter-spacing:4px; text-align:center; }
+.theme-sub { text-align:center; font-size:14px; color:var(--text-d); letter-spacing:1px; margin-top:-16px; line-height:1.7; }
+.theme-counter { text-align:center; font-size:12px; letter-spacing:2px; color:var(--text-d); text-transform:uppercase; }
+.theme-counter span { color:var(--gold2); font-family:var(--font-t); }
+.theme-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px;
+}
+.theme-card {
+  background:var(--surf); border:1px solid var(--border); border-radius:var(--r);
+  padding:18px 14px; cursor:pointer; transition:all var(--trans);
+  display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center;
+  user-select:none; position:relative; overflow:hidden;
+}
+.theme-card::before {
+  content:''; position:absolute; inset:0; opacity:0;
+  background:radial-gradient(ellipse at 50% 0%, var(--gold-g) 0%, transparent 70%);
+  transition:opacity var(--trans);
+}
+.theme-card:hover { border-color:var(--gold-d); transform:translateY(-2px); }
+.theme-card:hover::before { opacity:1; }
+.theme-card.selected {
+  border-color:var(--gold); background:rgba(201,168,76,.07);
+  box-shadow:0 0 0 1px rgba(201,168,76,.2), 0 4px 20px rgba(201,168,76,.12);
+}
+.theme-card.selected::before { opacity:1; }
+.theme-card.disabled { opacity:.3; cursor:not-allowed; transform:none !important; }
+.theme-card.disabled:hover { border-color:var(--border); }
+.theme-card.disabled.selected { opacity:1; cursor:pointer; }
+.theme-icon { font-size:30px; line-height:1; }
+.theme-name { font-family:var(--font-t); font-size:11px; color:var(--gold); letter-spacing:2px; text-transform:uppercase; }
+.theme-desc { font-size:11px; color:var(--text-d); line-height:1.5; }
+.theme-badge {
+  position:absolute; top:7px; right:7px; width:18px; height:18px;
+  background:var(--gold); border-radius:50%; font-size:10px; color:#0a0a0c;
+  font-family:var(--font-t); font-weight:700; display:none;
+  align-items:center; justify-content:center;
+}
+.theme-card.selected .theme-badge { display:flex; }
+
+.master-decide {
+  background:var(--surf); border:1px solid var(--border); border-radius:var(--r);
+  padding:18px 20px; cursor:pointer; transition:all var(--trans);
+  display:flex; align-items:center; gap:16px;
+}
+.master-decide:hover { border-color:var(--gold-d); background:rgba(201,168,76,.04); }
+.master-decide.selected { border-color:var(--gold); background:rgba(201,168,76,.07); }
+.master-decide-icon { font-size:28px; flex-shrink:0; }
+.master-decide-text { display:flex; flex-direction:column; gap:3px; }
+.master-decide-title { font-family:var(--font-t); font-size:13px; color:var(--gold); letter-spacing:1px; }
+.master-decide-sub { font-size:13px; color:var(--text-d); line-height:1.5; }
+
+.selected-themes {
+  background:var(--surf); border:1px solid var(--border); border-radius:var(--r);
+  padding:14px 18px; min-height:48px;
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+}
+.selected-theme-chip {
+  background:rgba(201,168,76,.12); border:1px solid var(--gold-d);
+  border-radius:20px; padding:4px 12px;
+  font-family:var(--font-t); font-size:11px; color:var(--gold); letter-spacing:1px;
+  display:flex; align-items:center; gap:6px;
+}
+.selected-theme-chip button {
+  background:none; border:none; color:var(--gold-d);
+  font-size:13px; padding:0; line-height:1; cursor:pointer; transition:color var(--trans);
+  font-family:inherit;
+}
+.selected-theme-chip button:hover { color:var(--gold); }
+.empty-selection { color:var(--text-m); font-size:13px; font-style:italic; }
+
+.divider-line {
+  height:1px; background:linear-gradient(90deg,transparent,var(--border),transparent);
+  margin:4px 0;
+}
+.section-label {
+  font-size:9px; letter-spacing:4px; color:var(--text-d); text-transform:uppercase;
+}
+</style>
+</head>
+<body class="theme-page">
+<div class="create-bg"><div class="create-overlay"></div></div>
+
+<div class="theme-container">
+  <a href="index.html" class="back-link" id="theme-back-link">⟵ Voltar</a>
+  <h1 class="theme-title">⸸ Escolher Temática</h1>
+  <p class="theme-sub">Escolha até 3 temas que vão definir o tom da sua história.<br>O Mestre combinará os temas para criar uma aventura única.</p>
+
+  <div class="section-label">Deixar o Mestre decidir</div>
+  <div class="master-decide" id="master-card" onclick="toggleMaster()">
+    <div class="master-decide-icon">🎲</div>
+    <div class="master-decide-text">
+      <div class="master-decide-title">O Mestre Escolhe</div>
+      <div class="master-decide-sub">O Mestre selecionará 2 temas aleatórios que combine bem com o perfil do seu personagem e a atmosfera de Ordem Paranormal.</div>
+    </div>
+  </div>
+
+  <div class="divider-line"></div>
+  <div class="section-label">Ou escolha manualmente (máximo 3 temas)</div>
+
+  <div class="theme-grid" id="theme-grid"></div>
+
+  <div>
+    <div class="section-label" style="margin-bottom:8px">Temas selecionados</div>
+    <div class="selected-themes" id="selected-display">
+      <span class="empty-selection">Nenhum tema selecionado</span>
+    </div>
+  </div>
+
+  <div class="theme-counter">
+    Temas selecionados: <span id="count-display">0</span> / 3
+  </div>
+
+  <button id="btn-next" class="btn btn-primary btn-full" onclick="goNext()" disabled>
+    <span>→</span> Criar Personagem
+  </button>
+</div>
+
+<script src="js/theme.js"></script>
+</body>
+</html>

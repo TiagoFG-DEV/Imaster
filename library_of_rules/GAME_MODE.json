@@ -1,0 +1,51 @@
+{
+  "_instrucao_ao_mestre": [
+    "Este JSON descreve o modo de jogo configurado pelos jogadores ANTES da sessão começar.",
+    "O Mestre DEVE ler este JSON durante a geração do personagem (Fase 1) e do mundo (Fase 3).",
+    "Em modo MULTIPLAYER ou CUSTOM, todos os personagens jogadores devem aparecer na história.",
+    "NPCs fixos definidos pelo jogador no modo CUSTOM são personagens obrigatórios na trama.",
+    "O Mestre cria fichas separadas para cada personagem definido na lista 'personagens'.",
+    "Na narração de abertura, posicione TODOS os personagens jogadores na mesma cena inicial.",
+    "NPCs customizados devem ter papel ativo na trama — nunca são figurantes."
+  ],
+
+  "modos": {
+    "individual": {
+      "descricao": "Jogo solo. Um único jogador com um único personagem.",
+      "regras_mestre": [
+        "Gere a história focada em UM personagem.",
+        "Todos os NPCs giram em torno deste personagem.",
+        "Tensão e drama personalizados ao personagem único."
+      ]
+    },
+    "multiplayer_local": {
+      "descricao": "2 a 10 jogadores no mesmo dispositivo, com fichas separadas. O Mestre narra para todos.",
+      "regras_mestre": [
+        "Gere fichas completas para CADA personagem da lista 'personagens'.",
+        "A história deve incluir motivações para TODOS os personagens estarem juntos.",
+        "Na abertura, posicione todos os personagens na mesma cena.",
+        "Cada personagem tem sua individualidade — personalidades diferentes podem gerar tensão interna.",
+        "Em testes, peça que cada jogador role para seu personagem.",
+        "O grupo age como equipe, mas cada um tem agência própria."
+      ]
+    },
+    "custom": {
+      "descricao": "Modo avançado: o jogador define personagens E NPCs com papéis obrigatórios na trama.",
+      "regras_mestre": [
+        "Gere fichas para todos os personagens jogadores da lista 'personagens'.",
+        "NPCs definidos em 'npcs_fixos' são OBRIGATÓRIOS na história — crie fichas de NPC completas para eles.",
+        "Use a 'descricao' de cada NPC como prompt para criar sua personalidade, aparência e papel.",
+        "NPCs fixos devem ter motivação própria que os conecta à trama principal.",
+        "O jogador que definiu um NPC pode interagir com ele como se fosse um aliado ou conhecido.",
+        "Não contradiga o nome ou descrição fornecidos pelo jogador para os NPCs fixos."
+      ]
+    }
+  },
+
+  "instrucoes_ficha_multiplayer": {
+    "para_cada_personagem": "Crie uma ficha completa com identidade, atributos, perícias e habilidades coerentes entre si.",
+    "coesao_do_grupo": "Os personagens devem ter motivo narrativo para estar juntos — ex: amigos, colegas da Ordem, sobreviventes do mesmo evento.",
+    "diversidade": "Evite criar personagens muito similares em classe e atributos. Varie as especialidades.",
+    "abertura_multipla": "Na narração de abertura, mencione todos os personagens por nome e descreva brevemente o que cada um está fazendo no momento inicial."
+  }
+}

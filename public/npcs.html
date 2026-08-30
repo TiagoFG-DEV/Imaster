@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>IMaster — NPCs da Sessão</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+.npcs-page { overflow-y:auto; height:100vh; background:var(--bg); }
+.npcs-bg   { position:fixed; inset:0; z-index:0;
+  background:radial-gradient(ellipse at 20% 60%, rgba(74,32,128,.12) 0%, transparent 55%),
+             radial-gradient(ellipse at 80% 20%, rgba(120,40,20,.10) 0%, transparent 50%); }
+.npcs-container {
+  position:relative; z-index:1;
+  max-width:700px; margin:0 auto;
+  padding:40px 24px 100px;
+  display:flex; flex-direction:column; gap:28px;
+}
+
+/* ── HEADER ── */
+.npcs-title { font-family:var(--font-d); font-size:clamp(20px,4.5vw,32px); color:var(--gold); letter-spacing:4px; text-align:center; }
+.npcs-sub   { text-align:center; font-size:14px; color:var(--text-d); letter-spacing:1px; line-height:1.7; }
+
+/* ── SUMMARY BOX ── */
+.npcs-summary {
+  background:var(--surf); border:1px solid var(--border); border-radius:var(--r2);
+  padding:16px 20px; display:flex; flex-direction:column; gap:8px;
+}
+.npcs-summary-label { font-size:9px; letter-spacing:3px; color:var(--text-d); text-transform:uppercase; }
+.npcs-summary-players { display:flex; flex-wrap:wrap; gap:6px; }
+.npcs-player-chip {
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(201,168,76,.08); border:1px solid var(--gold-d);
+  border-radius:20px; padding:4px 12px; font-size:12px;
+  font-family:var(--font-t); color:var(--gold); letter-spacing:.5px;
+}
+.npcs-player-chip-class { color:var(--text-d); font-size:11px; }
+
+/* ── NPC LIST ── */
+.npc-list { display:flex; flex-direction:column; gap:12px; }
+
+.npc-card {
+  background:var(--surf); border:1px solid var(--border); border-radius:var(--r2);
+  padding:18px 20px; position:relative;
+  display:flex; flex-direction:column; gap:12px;
+  animation:fadeSlideIn .22s ease;
+}
+@keyframes fadeSlideIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+
+.npc-card-header { display:flex; align-items:center; gap:12px; }
+.npc-num {
+  font-family:var(--font-d); font-size:22px; color:var(--pur3);
+  width:28px; flex-shrink:0; opacity:.7;
+}
+.npc-name-input {
+  flex:1; background:var(--surf2); border:1px solid var(--border);
+  border-radius:var(--r); padding:10px 14px; outline:none;
+  font-family:var(--font-b); font-size:16px; color:var(--text);
+  transition:border-color var(--trans);
+}
+.npc-name-input:focus { border-color:var(--gold-d); }
+.npc-name-input::placeholder { color:var(--text-m); font-style:italic; }
+
+.npc-remove {
+  width:32px; height:32px; background:transparent;
+  border:1px solid var(--border2); border-radius:var(--r);
+  color:var(--text-m); font-size:14px; flex-shrink:0;
+  transition:all var(--trans); display:flex; align-items:center; justify-content:center;
+}
+.npc-remove:hover { border-color:var(--red2); color:var(--red3); background:rgba(156,40,40,.1); }
+
+.npc-role-row { display:flex; gap:8px; }
+.npc-role-btn {
+  flex:1; padding:6px 4px; background:var(--surf2); border:1px solid var(--border2);
+  border-radius:var(--r); font-family:var(--font-t); font-size:9px;
+  letter-spacing:1.5px; text-transform:uppercase; color:var(--text-d);
+  cursor:pointer; transition:all var(--trans); text-align:center;
+}
+.npc-role-btn:hover { border-color:var(--border); color:var(--text2); }
+.npc-role-btn.active-aliado    { border-color:var(--green2); color:var(--green3); background:rgba(31,106,60,.12); }
+.npc-role-btn.active-neutro    { border-color:var(--gold-d);  color:var(--gold);  background:rgba(201,168,76,.08); }
+.npc-role-btn.active-antagonista{ border-color:var(--red2);   color:var(--red3);  background:rgba(156,40,40,.12); }
+
+.npc-desc-input {
+  width:100%; background:var(--surf2); border:1px solid var(--border);
+  border-radius:var(--r); padding:10px 14px; outline:none;
+  font-family:var(--font-b); font-size:15px; color:var(--text);
+  resize:vertical; min-height:72px; max-height:180px; line-height:1.55;
+  transition:border-color var(--trans);
+}
+.npc-desc-input:focus { border-color:var(--pur2); }
+.npc-desc-input::placeholder { color:var(--text-m); font-style:italic; }
+.npc-desc-hint { font-size:11px; color:var(--text-m); margin-top:-6px; line-height:1.5; }
+
+/* ── ADICIONAR NPC ── */
+.add-npc-btn {
+  display:flex; align-items:center; gap:10px;
+  background:transparent; border:1px dashed var(--border);
+  border-radius:var(--r2); padding:16px 20px; cursor:pointer;
+  transition:all var(--trans); color:var(--text-d); font-family:var(--font-t);
+  font-size:12px; letter-spacing:2px; text-transform:uppercase;
+  width:100%;
+}
+.add-npc-btn:hover { border-color:var(--pur2); color:var(--pur3); background:rgba(74,32,128,.05); }
+.add-npc-plus { font-size:22px; color:var(--pur3); line-height:1; }
+
+/* ── BOTTOM ACTIONS ── */
+.npcs-actions {
+  position:fixed; bottom:0; left:0; right:0;
+  background:linear-gradient(to top, var(--bg) 70%, transparent);
+  padding:20px 24px 28px; display:flex; flex-direction:column;
+  align-items:center; gap:10px; z-index:10;
+}
+.npcs-actions-inner { max-width:700px; width:100%; display:flex; flex-direction:column; gap:10px; }
+.npcs-skip { color:var(--text-d); font-size:12px; letter-spacing:1px; background:none; border:none; cursor:pointer; font-family:var(--font-t); text-transform:uppercase; transition:color var(--trans); }
+.npcs-skip:hover { color:var(--gold); }
+</style>
+</head>
+<body class="npcs-page">
+<div class="npcs-bg"></div>
+
+<div class="npcs-container">
+  <a href="mode.html" class="back-link" style="align-self:flex-start">⟵ Voltar</a>
+  <h1 class="npcs-title">⸸ NPCs da Sessão</h1>
+  <p class="npcs-sub">Adicione personagens com papéis obrigatórios na história. O Mestre usará suas descrições para criá-los.</p>
+
+  <!-- Resumo dos personagens criados -->
+  <div class="npcs-summary" id="summary-box">
+    <div class="npcs-summary-label">Personagens Jogadores</div>
+    <div class="npcs-summary-players" id="summary-players"></div>
+  </div>
+
+  <!-- Lista de NPCs -->
+  <div class="npc-list" id="npc-list"></div>
+
+  <!-- Botão adicionar -->
+  <button class="add-npc-btn" id="add-btn" onclick="addNPC()">
+    <span class="add-npc-plus">+</span>
+    Adicionar NPC à história
+  </button>
+</div>
+
+<!-- Ações fixas no rodapé -->
+<div class="npcs-actions">
+  <div class="npcs-actions-inner">
+    <button class="btn btn-primary btn-full" onclick="advance()">
+      ✦ Iniciar com estes NPCs
+    </button>
+    <button class="npcs-skip" onclick="skip()">
+      Pular — sem NPCs customizados
+    </button>
+  </div>
+</div>
+
+<script src="js/npcs.js"></script>
+</body>
+</html>

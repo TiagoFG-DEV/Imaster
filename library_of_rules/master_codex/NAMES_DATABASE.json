@@ -1,0 +1,17 @@
+{
+  "_descricao": "Banco de nomes para geração aleatória de personagens. Separados por gênero e perfil.",
+  "masculino": {
+    "combatente": ["Rafael Almeida","Bruno Ferreira","Marcos Costa","Diego Souza","André Carvalho","Thiago Lima","Felipe Rodrigues","Eduardo Santos","Lucas Pereira","Ricardo Gomes","Caio Martins","Vitor Barbosa","Jonathan Nunes","Leandro Castro","Henrique Alves","Patrick Silva","Guilherme Oliveira","Davi Fernandes","Rodrigo Nascimento","Alan Monteiro"],
+    "especialista": ["Lucas Rodrigues","Diego Souza","Gabriel Torres","Mateus Vieira","Augusto Faria","Renato Cunha","Sérgio Dias","Paulo Araújo","Fábio Campos","Marcos Lima","Ivan Azevedo","Roberto Freitas","Claudio Melo","Enzo Rocha","Pietro Rios","Samuel Lopes","Gustavo Mendes","Igor Pinto","Nathan Silveira","Leandro Assis"],
+    "ocultista": ["Arthur Nunes","Caio Alves","Eduardo Pereira","Renato Moraes","Felipe Andrade","Sebastião Borges","Valentim Cruz","Gaspar Ramos","Davi Fonseca","Tiago Queiroz","Leonardo Braga","Heitor Magalhães","Murilo Prado","Cauã Teixeira","Vicente Araújo","Bento Leal","Elias Mota","Elton Correia","Márcio Sousa","Gilberto Cavalcante"],
+    "comum": ["Pedro Carvalho","Ricardo Gomes","Antônio Lima","Carlos Souza","José Santos","João Oliveira","Alexandre Ferreira","Roberto Costa","Mário Rodrigues","Fernando Almeida","Nelson Pereira","Osvaldo Martins","Everaldo Cruz","Willian Macedo","Cláudio Lopes","Gilson Barros","Valdir Teles","Nilton Abreu","Ademir Fontes","Vanderlei Mendes"]
+  },
+  "feminino": {
+    "combatente": ["Juliana Santos","Ana Lima","Carla Mendes","Bruna Ferreira","Priscila Costa","Tatiana Rodrigues","Viviane Alves","Camila Souza","Patricia Lima","Roberta Nunes","Fernanda Monteiro","Mariana Castro","Larissa Barbosa","Aline Cavalcante","Beatriz Torres","Isabela Guimarães","Nataly Freitas","Renata Campos","Simone Araújo","Débora Azevedo"],
+    "especialista": ["Ana Lima","Carla Mendes","Natalia Silva","Vanessa Pereira","Amanda Rocha","Cristina Oliveira","Mariana Torres","Luísa Faria","Débora Azevedo","Helena Cunha","Vitória Dias","Ingrid Melo","Larissa Rios","Samantha Lopes","Yasmin Pinto","Livia Assis","Marina Vieira","Bianca Silveira","Raíssa Monteiro","Gabriela Fonseca"],
+    "ocultista": ["Camila Pereira","Sabrina Castro","Natalia Silva","Helena Moraes","Elisa Andrade","Valentina Cruz","Leticia Borges","Mirela Ramos","Isadora Queiroz","Raquel Braga","Sophia Magalhães","Gabriela Prado","Laila Teixeira","Yasmin Araújo","Aurora Leal","Clara Mota","Livia Correia","Ines Sousa","Cecilia Cavalcante","Ondina Carvalho"],
+    "comum": ["Fernanda Oliveira","Sandra Rodrigues","Maria Santos","Rosa Lima","Celia Costa","Sônia Almeida","Fátima Pereira","Tereza Martins","Aparecida Cruz","Antônia Macedo","Marta Lopes","Rosane Barros","Irene Teles","Cleide Abreu","Nilda Fontes","Neide Mendes","Ruth Cardoso","Dalva Rocha","Lindalva Torres","Solange Vieira"]
+  },
+  "sobrenomes_extras": ["Albuquerque","Vasconcelos","Montenegro","Lacerda","Figueiredo","Coutinho","Vasconcellos","Drummond","Alcântara","Nogueira","Paiva","Holanda","Medeiros","Alencar","Guimarães","Machado","Xavier","Pimentel","Rezende","Salgado"],
+  "apelidos_operacionais": ["Fantasma","Sombra","Falcão","Cobra","Lobo","Raposa","Corvo","Víbora","Tempestade","Eclipse","Cinza","Espectro","Ferrão","Névoa","Tigre","Onça","Gavião","Coruja","Lince","Pantera"]
+}

@@ -1,0 +1,114 @@
+{
+  "_instrucao": [
+    "Este JSON instrui o Mestre a gerar 4 sugestões de ação contextual para o jogador.",
+    "As sugestões devem refletir a PERSONALIDADE, ORIGEM, ATRIBUTOS e HABILIDADES do personagem.",
+    "Cada sugestão deve ser uma ação concreta e crível para aquele personagem específico na cena atual.",
+    "NUNCA repita sugestões. NUNCA sugira ações impossíveis dado o contexto da cena.",
+    "Varie os tipos: 1 ação de combate/tensão, 1 de investigação/observação, 1 social/interpretação, 1 livre/criativa.",
+    "Baseie-se na personalidade: um personagem cauteloso sugere explorar com cuidado; um impulsivo sugere agir direto.",
+    "Considere o estado atual: PV baixo sugere ações defensivas; SAN baixa sugere ações instáveis.",
+    "Considere habilidades: se tem Luta alta, ofereça opção de combate refinado; se tem Investigação, ofereça pista.",
+    "Sugestões devem ser curtas: 3-8 palavras. Acionáveis imediatamente."
+  ],
+
+  "tipos_de_sugestao": {
+    "combate_tensao": {
+      "descricao": "Ação direta de confronto, fuga ou sobrevivência física",
+      "exemplos": [
+        "Atacar o inimigo de frente",
+        "Recuar e se proteger",
+        "Usar o ambiente como arma",
+        "Lançar objeto para distrair",
+        "Sacar a arma e apontar"
+      ]
+    },
+    "investigacao_observacao": {
+      "descricao": "Examinar, deduzir, procurar pistas ou avaliar situação",
+      "exemplos": [
+        "Examinar o corpo com cuidado",
+        "Procurar saídas alternativas",
+        "Analisar os rastros no chão",
+        "Escutar os sons ao redor",
+        "Inspecionar o objeto estranho"
+      ]
+    },
+    "social_interpretacao": {
+      "descricao": "Falar, persuadir, mentir, intimidar ou conectar com NPCs",
+      "exemplos": [
+        "Tentar convencer o suspeito",
+        "Gritar para chamar atenção",
+        "Fingir ser aliado do inimigo",
+        "Pedir ajuda ao civil próximo",
+        "Ameaçar para obter informação"
+      ]
+    },
+    "criativo_livre": {
+      "descricao": "Ação inesperada, criativa ou que usa habilidade especial",
+      "exemplos": [
+        "Usar ritual de proteção agora",
+        "Improvisar armadilha com os itens",
+        "Tentar negociar com a entidade",
+        "Sacrificar item para distrair",
+        "Observar tudo antes de agir"
+      ]
+    }
+  },
+
+  "regras_por_personalidade": {
+    "direto_impulsivo": "Priorize ações de ação imediata e combate. Evite sugestões passivas.",
+    "cauteloso_estrategico": "Priorize observação e planejamento. Inclua pelo menos 1 ação de espera ou análise.",
+    "carismatico_social": "Inclua pelo menos 2 opções de interação social ou persuasão.",
+    "ocultista_estudioso": "Inclua pelo menos 1 opção envolvendo ritual, conhecimento paranormal ou análise oculta.",
+    "sobrevivente_comum": "Priorize ações práticas de sobrevivência. Evite heróismo exagerado."
+  },
+
+  "regras_por_estado": {
+    "pv_critico": "Se PV < 25% do máximo: pelo menos 1 sugestão de fuga, cura ou cobertura.",
+    "san_critica": "Se SAN < 25% do máximo: sugestões mais instáveis, erráticas ou desesperadas.",
+    "em_combate": "Todas as 4 sugestões devem ser acionáveis em 1 turno de combate.",
+    "investigacao": "Favoreça sugestões de coleta de informação e análise de pistas.",
+    "social": "Favoreça sugestões de diálogo, persuasão e manipulação."
+  },
+
+  "formato_de_resposta": {
+    "descricao": "O Mestre deve retornar um JSON com o campo 'suggestions' contendo 4 objetos",
+    "exemplo": {
+      "suggestions": [
+        {
+          "texto": "Atacar o inimigo diretamente",
+          "tipo": "combate_tensao",
+          "icon": "⚔",
+          "requer_teste": true,
+          "atributo": "forca"
+        },
+        {
+          "texto": "Examinar a sala em busca de pistas",
+          "tipo": "investigacao_observacao",
+          "icon": "🔍",
+          "requer_teste": false,
+          "atributo": null
+        },
+        {
+          "texto": "Tentar negociar com a criatura",
+          "tipo": "social_interpretacao",
+          "icon": "💬",
+          "requer_teste": true,
+          "atributo": "presenca"
+        },
+        {
+          "texto": "Usar ritual de proteção",
+          "tipo": "criativo_livre",
+          "icon": "🌑",
+          "requer_teste": false,
+          "atributo": null
+        }
+      ]
+    },
+    "regras_do_icon": {
+      "combate_tensao": "⚔ ou 🏃 ou 🛡",
+      "investigacao_observacao": "🔍 ou 👁 ou 🗺",
+      "social_interpretacao": "💬 ou 🎭 ou 🤝",
+      "criativo_livre": "✨ ou 🌑 ou ⚡ ou 🎲"
+    }
+  }
+}

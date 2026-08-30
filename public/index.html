@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>IMaster RPG — Ordem Paranormal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;700;900&family=Cinzel+Decorative:wght@400;700;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=40">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body class="menu-page">
+  <!-- Cenário 3D: D20 Sol Central com Planetas Orbitantes -->
+  <div id="three-solar-container" class="menu-bg"></div>
+  <div class="menu-overlay"></div>
+
+  <!-- Interface Central do Menu -->
+  <div class="menu-container">
+    <div class="menu-logo">
+      <div class="logo-rune">⸸</div>
+      <h1>IMaster</h1>
+      <p class="logo-sub">Motor de RPG • Narrado por IA</p>
+    </div>
+    <div class="menu-actions">
+      <button class="btn btn-primary" onclick="goCreate()"><span>✦</span> Nova História</button>
+      <button class="btn btn-ghost" onclick="goLoad()"><span>⊞</span> Carregar Jogo</button>
+    </div>
+    <p class="menu-version">v1.0 — Ordem Paranormal</p>
+  </div>
+
+  <script src="js/dice3d.js?v=40"></script>
+  <script src="js/index.js?v=40"></script>
+</body>
+
+</html>

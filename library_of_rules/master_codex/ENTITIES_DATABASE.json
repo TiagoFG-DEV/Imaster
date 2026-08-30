@@ -1,0 +1,168 @@
+{
+  "_descricao": "Entidades paranormais do universo Ordem Paranormal para uso em combate e cenas.",
+  "entidades": [
+    {
+      "id": "assombracao_simples",
+      "nome": "Assombração",
+      "tipo": "Morto-Vivo",
+      "nivel": "basico",
+      "pv": 20, "defesa": 12, "iniciativa_bonus": 1,
+      "ataques": [{"nome": "Toque Frio", "bonus": 2, "dano": "1d6 frio + 1d4 SAN", "tipo": "paranormal"}],
+      "resistencias": ["não sente medo", "imune a veneno e doença"],
+      "fraquezas": ["sal", "rituais de banimento", "objetos sagrados (+2 dano)"],
+      "habilidades_especiais": ["Manifestação: pode se tornar intangível por 1 rodada (3 PE)", "Sussurro do Além: 1d4 SAN em área (CD Vontade 12)"],
+      "descricao": "Eco de um espírito que não aceita a morte. Geralmente preso a um local ou objeto.",
+      "cinematica_entrada": "O ar esfria subitamente. Os objetos começam a vibrar. Uma forma translúcida emerge — humana, mas distorcida.",
+      "cinematica_morte": "A assombração grita uma última vez — um som que existe além do som — e se dissipa como neblina ao sol.",
+      "encontro_descricao": "A temperatura caiu. Os hairs nos braços levantaram. E então você a viu — ou melhor, sentiu. Presente e ausente ao mesmo tempo."
+    },
+    {
+      "id": "sombra_rastejante",
+      "nome": "Sombra Rastejante",
+      "tipo": "Manifestação Sombria",
+      "nivel": "basico",
+      "pv": 15, "defesa": 13, "iniciativa_bonus": 3,
+      "ataques": [{"nome": "Garras de Trevas", "bonus": 3, "dano": "1d8", "tipo": "sombra"}, {"nome": "Envolver", "bonus": 1, "dano": "1d4 por rodada, imobilizado", "tipo": "sombra"}],
+      "resistencias": ["imune a dano de armas não-paranormais na escuridão total", "invisível em ambientes de pouca luz"],
+      "fraquezas": ["luz direta (vulnerável)", "fogo (dano duplo)", "sal em área"],
+      "habilidades_especiais": ["Fundido nas Sombras: se torna difícil de atingir em penumbra (Defesa +4)", "Pavor das Trevas: presença causa 1d4 SAN por rodada de combate"],
+      "descricao": "Criatura feita de escuridão pura do Outro Lado. Prefere ambientes de pouca luz.",
+      "cinematica_entrada": "A luz fraqueja. As sombras da parede começam a se mover independente da fonte de luz. Uma delas tem dentes.",
+      "cinematica_morte": "A sombra se encolhe e encolhe até virar um ponto de escuridão — e então desaparece com um assobio.",
+      "encontro_descricao": "Você percebeu que sua sombra estava no lugar errado. Aí percebeu que não era a sua sombra."
+    },
+    {
+      "id": "serphus_magna",
+      "nome": "Serphus Magna",
+      "tipo": "Grande Entidade",
+      "nivel": "elite",
+      "pv": 80, "defesa": 16, "iniciativa_bonus": 2,
+      "ataques": [
+        {"nome": "Tentáculo Psíquico", "bonus": 5, "dano": "2d8 + 2d6 SAN", "tipo": "psíquico"},
+        {"nome": "Grito do Abismo", "bonus": 4, "dano": "2d6 SAN em área 10m", "tipo": "som paranormal"},
+        {"nome": "Drenagem Mental", "bonus": 3, "dano": "2d4 (drena PE do alvo)", "tipo": "paranormal"}
+      ],
+      "resistencias": ["imune a dano de armas comuns sem encantamento", "resistência 5 a fogo e frio"],
+      "fraquezas": ["rituais de banimento de alto círculo", "sangue de vítima que resiste (CD 15 de Vontade)"],
+      "habilidades_especiais": [
+        "Presença Perturbadora: 2d6 SAN ao ver pela primeira vez (CD 16)",
+        "Regeneração: recupera 5 PV por rodada",
+        "Controle Mental: (5 PE) CD 18 de Vontade ou aliado age contra o grupo por 1d4 rodadas"
+      ],
+      "descricao": "Uma das entidades mais poderosas do Outro Lado. Raramente se manifesta completamente — preferindo agir através de hospedeiros.",
+      "cinematica_entrada": "Algo impossível está acontecendo. A geometria do espaço está errada. O ar tem gosto de metal e vácuo. E então, de um ângulo que não deveria existir, ela entra.",
+      "cinematica_morte": "O Serphus Magna não morre — é banido. O processo é lento e violento. Ele grita em frequências que machucam e, enquanto some, olha para cada um dos agentes como se estivesse memorizando os rostos.",
+      "encontro_descricao": "Você soube que era grande antes de ver. O simples fato de existir no mesmo espaço que isso está te custando algo."
+    },
+    {
+      "id": "lobisomem",
+      "nome": "Lobisomem",
+      "tipo": "Amaldiçoado",
+      "nivel": "intermediario",
+      "pv": 45, "defesa": 14, "iniciativa_bonus": 4,
+      "ataques": [
+        {"nome": "Garras", "bonus": 5, "dano": "2d6+3", "tipo": "fisico"},
+        {"nome": "Mordida", "bonus": 4, "dano": "1d8+3 + transmissão (CD Fortitude 15)", "tipo": "fisico_paranormal"}
+      ],
+      "resistencias": ["regeneração 3 PV/rodada (exceto prata)", "resistência 5 a dano físico comum"],
+      "fraquezas": ["prata (vulnerável, dano duplo)", "wolfsbane (acônito) — enfraquece (CD Fortitude 12 ou -2 em tudo)"],
+      "habilidades_especiais": [
+        "Fúria: +3 dano quando abaixo de 50% PV",
+        "Farejador: detecta agentes escondidos automaticamente a 30m",
+        "Rugido: 1d6 SAN em área 15m (CD Vontade 13)"
+      ],
+      "descricao": "Humano amaldiçoado que se transforma em criatura híbrida. Ainda tem algum resquício da personalidade humana durante a transformação.",
+      "cinematica_entrada": "Os gritos vieram antes dele. Depois o silêncio — o pior silêncio possível. Então as pranchas do assoalho racharam sob o peso de algo que não deveria existir.",
+      "cinematica_morte": "O lobisomem cai. Na forma humana. Um rosto que vocês podem até reconhecer — ou reconhecerão quando pesquisarem. Havia uma pessoa aqui. Agora há um caso.",
+      "encontro_descricao": "Corrida, impacto, garras. O que vocês sabem: é rápido, é forte, e se importa muito em matar vocês."
+    },
+    {
+      "id": "vampiro_moderno",
+      "nome": "Vampiro",
+      "tipo": "Não-Morto Superior",
+      "nivel": "intermediario",
+      "pv": 55, "defesa": 15, "iniciativa_bonus": 5,
+      "ataques": [
+        {"nome": "Golpe Sobrenatural", "bonus": 5, "dano": "1d8+4", "tipo": "fisico"},
+        {"nome": "Mordida", "bonus": 4, "dano": "1d6+2 + drena 1d4 PV (vampiro recupera)", "tipo": "paranormal"},
+        {"nome": "Hipnose", "bonus": 3, "dano": "sem dano — alvo fica imóvel 1d4 rodadas (CD Vontade 16)", "tipo": "mental"}
+      ],
+      "resistencias": ["imune a veneno e doença", "regeneração 2 PV/rodada", "resistência 3 a dano físico"],
+      "fraquezas": ["luz solar direta (vulnerável)", "estacas no coração (incapacita)", "alho (penalidade -2 em todos os testes)", "água benta (3d6 dano)"],
+      "habilidades_especiais": [
+        "Charme Vampírico: CD 14 de Vontade por rodada ou aliado fica amigável",
+        "Forma de Névoa: (4 PE) torna-se intangível por até 3 rodadas",
+        "Salto Sobrenatural: pode mover até 20m verticalmente"
+      ],
+      "descricao": "Morto-vivo de alto poder, geralmente de origem nobre ou culta. Inteligente, calculista e paciente. Existe há décadas ou séculos.",
+      "cinematica_entrada": "Ele não entrou pela porta. Simplesmente estava lá — e sua ausência anterior parecia impossível considerando o tanto que preenchia o espaço.",
+      "cinematica_morte": "O vampiro não grita. Não implora. Apenas enfrenta o sol nascente (ou o que o matou) com uma dignidade que faz tudo parecer muito pesado.",
+      "encontro_descricao": "Aquela sensação de ser observado antes de vê-lo. A convicção irracional de que você deveria se aproximar. E então a realidade: dentes."
+    },
+    {
+      "id": "mumia_ambulante",
+      "nome": "Múmia",
+      "tipo": "Morto-Vivo",
+      "nivel": "intermediario",
+      "pv": 50, "defesa": 13, "iniciativa_bonus": 0,
+      "ataques": [
+        {"nome": "Golpe Pesado", "bonus": 4, "dano": "2d8+2", "tipo": "fisico"},
+        {"nome": "Maldição do Deserto", "bonus": 3, "dano": "1d6 SAN + envelhecimento acelerado (1d4 anos)", "tipo": "maldição"}
+      ],
+      "resistencias": ["resistência 5 a dano físico", "imune a veneno, paralisia, sono"],
+      "fraquezas": ["fogo (vulnerável)", "símbolos egípcios de banimento", "destruir o artefato vinculado"],
+      "habilidades_especiais": [
+        "Maldição Vinculada: alvos que tocam o artefato recebem -2 em tudo permanente até ritual de cura",
+        "Aura de Deserto: 5m ao redor causa calor extremo (1d4/rodada)"
+      ],
+      "descricao": "Morto-vivo vinculado a um artefato ou local. Não age por si — executa a vontade de quem a invocou ou de uma entidade.",
+      "cinematica_entrada": "O cheiro de areia e especiarias antigas chegou primeiro. Depois o som — passos pesados, deliberados, que não tinham pressa nenhuma.",
+      "cinematica_morte": "As bandagens se desfazem em pó. O artefato que a mantinha se parte. O que resta é um esqueleto de milênios que finalmente pode descansar.",
+      "encontro_descricao": "Há algo de errado com o silêncio dessa coisa. Está morta há três mil anos. Mas se move com propósito."
+    },
+    {
+      "id": "possuidora",
+      "nome": "Possuidora",
+      "tipo": "Parasita Mental",
+      "nivel": "intermediario",
+      "pv": 30, "defesa": 14, "iniciativa_bonus": 3,
+      "ataques": [
+        {"nome": "Tentativa de Possessão", "bonus": 4, "dano": "sem dano — CD Vontade 17 ou agente fica possuído por 1d4 rodadas", "tipo": "mental"},
+        {"nome": "Golpe Psíquico", "bonus": 3, "dano": "1d6 + 1d4 SAN", "tipo": "psiquico"}
+      ],
+      "resistencias": ["imune a dano físico na forma natural (intangível)", "só pode ser atingida por ataques paranormais ou enquanto possuindo alguém"],
+      "fraquezas": ["expulsão forçada por ritual (CD Ocultismo 15)", "vínculo psíquico: quem resistiu à possessão causa dano +2 nela"],
+      "habilidades_especiais": [
+        "Possessão: assume controle de um agente (ver ataques)",
+        "Copiar: usa todas as habilidades do possuído",
+        "Multiplicidade: pode possuir dois alvos simultaneamente (5 PE)"
+      ],
+      "descricao": "Entidade que existe apenas ao habitar corpos. Não tem forma física própria — e anseia por uma.",
+      "cinematica_entrada": "Nenhuma entrada visível. Apenas a percepção, lenta e aterrorizante, de que algo que estava dentro de vocês saiu — e agora está dentro de outra pessoa.",
+      "cinematica_morte": "A possuidora é expulsa em uma explosão de luz paranormal. O possuído cai, exausto. A entidade se desintegra como fumaça em vento.",
+      "encontro_descricao": "Não é um monstro que você pode ver e atirar. É mais difícil que isso: é algo que está usando sua equipe como arma."
+    },
+    {
+      "id": "criatura_aquatica",
+      "nome": "Criatura das Profundezas",
+      "tipo": "Entidade Aquática",
+      "nivel": "intermediario",
+      "pv": 40, "defesa": 14, "iniciativa_bonus": 2,
+      "ataques": [
+        {"nome": "Garras Anfíbias", "bonus": 4, "dano": "1d8+2", "tipo": "fisico"},
+        {"nome": "Abocanhar", "bonus": 5, "dano": "2d6+3 (pega o alvo)", "tipo": "fisico"},
+        {"nome": "Gritar do Abismo", "bonus": 2, "dano": "1d8 SAN em área", "tipo": "som"}
+      ],
+      "resistencias": ["anfíbio: velocidade dobrada na água", "visão no escuro", "resistência 3 a frio"],
+      "fraquezas": ["sal em grandes quantidades", "fogo", "desidratação progressiva fora da água"],
+      "habilidades_especiais": [
+        "Arrasto: ao acertar abocanhar, tenta puxar vítima para água profunda",
+        "Camuflagem Aquática: invisível em água turva"
+      ],
+      "descricao": "Entidade que vive em corpos d'água. Não se manifesta aleatoriamente — algo ou alguém a invocou ou perturbou.",
+      "cinematica_entrada": "A superfície da água se partiu de forma errada. Não como algo saindo — como algo enorme se aproximando de baixo.",
+      "cinematica_morte": "Ela afunda para as profundezas que a criaram. A água fecha sobre ela. O lago, rio ou oceano volta à normalidade — aparente.",
+      "encontro_descricao": "Você ficou com os pés na água por exatamente 0.4 segundos a mais do que deveria."
+    }
+  ]
+}

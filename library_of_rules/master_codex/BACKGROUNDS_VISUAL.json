@@ -1,0 +1,101 @@
+{
+  "_descricao": "Temas visuais para backgrounds dinâmicos da HUD. Cada sessão recebe um tema único.",
+  "backgrounds": [
+    {
+      "id": "neblina_sanguinea",
+      "nome": "Neblina Sanguínea",
+      "descricao": "Vermelho e escuridão. Para histórias de combate e horror físico.",
+      "gradient_css": "radial-gradient(ellipse at 20% 80%, rgba(140,20,20,.25) 0%, transparent 55%), radial-gradient(ellipse at 80% 15%, rgba(80,10,10,.20) 0%, transparent 50%)",
+      "accent_color": "#c84040",
+      "particle_color": "#8a2020",
+      "border_accent": "rgba(200,64,64,.3)",
+      "glow_color": "rgba(200,40,40,.4)",
+      "temas_recomendados": ["Horror","Combate","Terror"],
+      "icon": "🩸"
+    },
+    {
+      "id": "abismo_cosmico",
+      "nome": "Abismo Cósmico",
+      "descricao": "Roxo e negro profundo. Para histórias lovecraftianas e horror cósmico.",
+      "gradient_css": "radial-gradient(ellipse at 40% 60%, rgba(60,10,120,.22) 0%, transparent 55%), radial-gradient(ellipse at 70% 20%, rgba(20,5,80,.18) 0%, transparent 50%)",
+      "accent_color": "#7040b8",
+      "particle_color": "#4a2080",
+      "border_accent": "rgba(112,64,184,.3)",
+      "glow_color": "rgba(80,20,160,.4)",
+      "temas_recomendados": ["Horror Cósmico","Ocultismo","Entidades"],
+      "icon": "🌌"
+    },
+    {
+      "id": "floresta_maldita",
+      "nome": "Floresta Maldita",
+      "descricao": "Verde escuro e marrom. Para histórias rurais e de natureza paranormal.",
+      "gradient_css": "radial-gradient(ellipse at 25% 75%, rgba(10,60,20,.22) 0%, transparent 55%), radial-gradient(ellipse at 75% 25%, rgba(40,80,10,.18) 0%, transparent 50%)",
+      "accent_color": "#2a9152",
+      "particle_color": "#1f6a3c",
+      "border_accent": "rgba(42,145,82,.3)",
+      "glow_color": "rgba(20,100,40,.4)",
+      "temas_recomendados": ["Folclore","Rural","Natureza","Amazônia"],
+      "icon": "🌲"
+    },
+    {
+      "id": "cidade_corrupta",
+      "nome": "Cidade Corrupta",
+      "descricao": "Azul e cinza. Para histórias urbanas, corporativas e de conspiração.",
+      "gradient_css": "radial-gradient(ellipse at 30% 70%, rgba(20,50,100,.20) 0%, transparent 55%), radial-gradient(ellipse at 75% 20%, rgba(10,30,80,.16) 0%, transparent 50%)",
+      "accent_color": "#2e72b8",
+      "particle_color": "#1e4d7c",
+      "border_accent": "rgba(46,114,184,.3)",
+      "glow_color": "rgba(20,60,180,.4)",
+      "temas_recomendados": ["Conspiração","Urbano","Corporativo","Tecnologia"],
+      "icon": "🏙️"
+    },
+    {
+      "id": "veu_onirico",
+      "nome": "Véu Onírico",
+      "descricao": "Dourado e branco suave. Para histórias místicas e de sonhos.",
+      "gradient_css": "radial-gradient(ellipse at 50% 50%, rgba(120,90,20,.18) 0%, transparent 60%), radial-gradient(ellipse at 80% 80%, rgba(80,60,10,.14) 0%, transparent 50%)",
+      "accent_color": "#e8c96a",
+      "particle_color": "#c9a84c",
+      "border_accent": "rgba(201,168,76,.4)",
+      "glow_color": "rgba(200,160,50,.4)",
+      "temas_recomendados": ["Sonhos","Místico","Temporal","Aldeia"],
+      "icon": "✨"
+    },
+    {
+      "id": "mar_profundo",
+      "nome": "Mar Profundo",
+      "descricao": "Azul-verde das profundezas. Para histórias aquáticas e de horror marítimo.",
+      "gradient_css": "radial-gradient(ellipse at 35% 65%, rgba(5,60,80,.24) 0%, transparent 55%), radial-gradient(ellipse at 70% 30%, rgba(10,40,60,.18) 0%, transparent 50%)",
+      "accent_color": "#0e9aa7",
+      "particle_color": "#0a7882",
+      "border_accent": "rgba(14,154,167,.3)",
+      "glow_color": "rgba(5,120,140,.4)",
+      "temas_recomendados": ["Aquático","Porto","Lovecraftiano","Costa"],
+      "icon": "🌊"
+    },
+    {
+      "id": "cinzas_do_caos",
+      "nome": "Cinzas do Caos",
+      "descricao": "Laranja e cinza. Para histórias pós-conflito e ambientes industriais.",
+      "gradient_css": "radial-gradient(ellipse at 40% 70%, rgba(120,60,10,.20) 0%, transparent 55%), radial-gradient(ellipse at 65% 25%, rgba(80,30,5,.16) 0%, transparent 50%)",
+      "accent_color": "#e07830",
+      "particle_color": "#8a4010",
+      "border_accent": "rgba(180,100,30,.3)",
+      "glow_color": "rgba(160,80,10,.4)",
+      "temas_recomendados": ["Industrial","Pós-apocalíptico","Conflito"],
+      "icon": "🔥"
+    },
+    {
+      "id": "prata_fantasma",
+      "nome": "Prata Fantasmal",
+      "descricao": "Prateado e branco-azulado. Para histórias de fantasmas e mortos-vivos.",
+      "gradient_css": "radial-gradient(ellipse at 30% 60%, rgba(60,70,100,.20) 0%, transparent 55%), radial-gradient(ellipse at 75% 25%, rgba(40,50,80,.16) 0%, transparent 50%)",
+      "accent_color": "#8899cc",
+      "particle_color": "#5566aa",
+      "border_accent": "rgba(136,153,204,.3)",
+      "glow_color": "rgba(100,120,200,.35)",
+      "temas_recomendados": ["Fantasmas","Mortos-Vivos","Cemitério","Assombração"],
+      "icon": "👻"
+    }
+  ]
+}

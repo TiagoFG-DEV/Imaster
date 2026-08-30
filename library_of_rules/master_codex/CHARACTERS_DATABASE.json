@@ -1,0 +1,58 @@
+{
+  "_descricao": "Banco de personagens pré-construídos: origens, personalidades, aparências, traumas e traits para geração aleatória.",
+  "origens": [
+    {"id":"ex_policial","nome":"Ex-Policial","descricao":"Serviu na PMERJ/PMSP por anos antes de algo paranormal mudar tudo. Sabe interrogar, investigar e atirar.","pericias_bonus":["Luta","Intimidação","Investigação"],"CD_mod":{"aliados_policiais":-5,"criminosos_enganacao":5},"frase":"'Vi muita coisa estranha no serviço. Mas isso aqui... isso não é normal.'"},
+    {"id":"medico","nome":"Médico","descricao":"Formado em medicina, acreditava na ciência até encontrar algo que a ciência não explica.","pericias_bonus":["Medicina","Ciências","Intuição"],"CD_mod":{"civis_feridos":-0,"medicina_equipamento":-5},"frase":"'Pacientes que não deveriam estar vivos. Mortos que não deveriam se mover. Vi os dois.'"},
+    {"id":"jornalista","nome":"Jornalista","descricao":"Repórter investigativo que foi longe demais em uma matéria. O que encontrou mudou tudo.","pericias_bonus":["Investigação","Enganação","Percepção"],"CD_mod":{"informacoes_publicas":-5,"intimidar_com_publicidade":-5},"frase":"'Existem verdades que nunca saem no jornal. Eu sei. Eu vi.'"},
+    {"id":"militar","nome":"Ex-Militar","descricao":"Veterano com experiência em combate real. Disciplinado, estratégico, raramente entra em pânico.","pericias_bonus":["Pontaria","Tática","Fortitude"],"CD_mod":{"postos_controle":-5,"protocolo_seguranca":-5},"frase":"'Servi em zonas de guerra. Mas nenhuma me preparou para o que está aí fora.'"},
+    {"id":"detetive","nome":"Detetive Particular","descricao":"Trabalha com casos que a polícia ignora. Especialista em vigilância, análise e rastrear pessoas.","pericias_bonus":["Investigação","Percepção","Furtividade"],"CD_mod":{"rastrear_pessoas":-5},"frase":"'O caso parecia simples. Pessoa desaparecida. Mas os desaparecidos... eles voltam diferentes.'"},
+    {"id":"professor","nome":"Professor Universitário","descricao":"Especialista acadêmico em história, antropologia ou religião. Conhece lendas e rituais antigos.","pericias_bonus":["Ocultismo","História","Religião"],"CD_mod":{"identificar_rituais":-5,"academicos":-5},"frase":"'Estudei isso em livros por décadas. Nunca imaginei que fosse real.'"},
+    {"id":"hacker","nome":"Hacker","descricao":"Especialista em sistemas e tecnologia. Vive nas sombras digitais, onde descobriu algo muito mais sinistro.","pericias_bonus":["Tecnologia","Crime","Investigação"],"CD_mod":{"invadir_sistemas":-5,"eletronica":-5},"frase":"'Hackear um sistema corporativo é fácil. Mas encontrei arquivos que não deveriam existir.'"},
+    {"id":"ocultista_formado","nome":"Ocultista Formado","descricao":"Estudou o paranormal por escolha própria. Tem rituais memorizados e sabe como dialogar com entidades menores.","pericias_bonus":["Ocultismo","Religião","Vontade"],"CD_mod":{"entidades_menores_dialogo":0,"identificar_desconhecidos":-5},"frase":"'Passei anos buscando provas. Agora tenho provas demais.'"},
+    {"id":"enfermeiro","nome":"Enfermeiro de Pronto-Socorro","descricao":"Viu o pior que humanos podem fazer uns aos outros. Agora vê o pior que o paranormal pode fazer.","pericias_bonus":["Medicina","Fortitude","Intuição"],"CD_mod":{"estabilizar_aliado":-3},"frase":"'Plantão triplo no pronto-socorro. Nada me preparou para estabilizar alguém que já estava morto.'"},
+    {"id":"ex_padre","nome":"Ex-Padre / Ex-Religiosa","descricao":"Abandonou a fé organizada, mas não o conhecimento. Sabe exorcismos, bênçãos e história eclesiástica.","pericias_bonus":["Religião","Vontade","Diplomacia"],"CD_mod":{"entidades_religiosas":-5,"comunidades_religiosas":-5},"frase":"'Rezei por décadas. A resposta que recebi não era o que esperava.'"},
+    {"id":"seguranca_privada","nome":"Segurança Privada","descricao":"Protegia executivos e instalações. Profissional de combate com visão estratégica e sangue frio.","pericias_bonus":["Pontaria","Percepção","Intimidação"],"CD_mod":{},"frase":"'Meu trabalho é proteger. Mas como protejo alguém de algo que não posso ver?'"},
+    {"id":"bombeiro","nome":"Bombeiro","descricao":"Acostumado com situações de crise. Lida com medo e pânico profissionalmente. Sabe salvamentos e rescisão.","pericias_bonus":["Atletismo","Medicina","Fortitude"],"CD_mod":{"situacoes_de_crise":-3},"frase":"'Entrei em um incêndio que não queimava madeira. Queimava sombras.'"},
+    {"id":"pescador","nome":"Pescador / Trabalhador Rural","descricao":"Viveu longe da cidade. Conhece lugares que os mapas não mostram. Viu coisas nas águas e florestas.","pericias_bonus":["Sobrevivência","Percepção","Atletismo"],"CD_mod":{"ambientes_rurais":-5},"frase":"'Lá no fundo do rio tem algo. Sempre teve. Os velhos sabem, mas não falam.'"},
+    {"id":"fotografo","nome":"Fotógrafo / Artista","descricao":"Capta o que outros ignoram. Olha com atenção para detalhes. Sua câmera flagrou algo impossível.","pericias_bonus":["Percepção","Investigação","Atuação"],"CD_mod":{},"frase":"'Revelei a foto e no canto estava... algo. Que não estava lá quando tirei.'"},
+    {"id":"presidiario","nome":"Ex-Presidiário","descricao":"Anos atrás da grade ensinaram a sobreviver em qualquer ambiente. Tem contatos no submundo.","pericias_bonus":["Crime","Furtividade","Intimidação"],"CD_mod":{"submundo":-5,"policiais":5},"frase":"'Dentro do presídio tinha um setor que ninguém queria trabalhar. Eu sei por quê.'"}
+  ],
+  "personalidades": [
+    {"id":"cauteloso","nome":"Cauteloso e Metódico","descricao":"Analisa antes de agir. Raramente age impulsivamente. Planeja cada movimento.","frase_tipica":"'Espera. Precisamos entender o que está acontecendo antes de avançar.'"},
+    {"id":"impulsivo","nome":"Impulsivo e Corajoso","descricao":"Age primeiro, pensa depois. Coragem às vezes beira a imprudência. Primeiro a entrar, primeiro a sair.","frase_tipica":"'Não tem tempo para planejar. Vamos!!'"},
+    {"id":"cetico","nome":"Cético Relutante","descricao":"Não acredita facilmente no paranormal. Sempre busca uma explicação racional. Mas continua tentando.","frase_tipica":"'Deve ter uma explicação lógica para isso. Deve haver...'"},
+    {"id":"crente","nome":"Crente Convicto","descricao":"Já sabia que o paranormal existia. Age com reverência e cuidado diante do sobrenatural.","frase_tipica":"'Eu sabia. Sempre soube. Agora todos vão saber.'"},
+    {"id":"pragmatico","nome":"Pragmático e Frio","descricao":"Foca no objetivo, ignora o emocional. Decisões difíceis não o perturbam. Eficiência acima de tudo.","frase_tipica":"'Sentimentos depois. Missão agora.'"},
+    {"id":"protetor","nome":"Protetor e Leal","descricao":"A equipe vem primeiro. Sacrificaria-se pelos companheiros sem hesitar. Fidelidade absoluta.","frase_tipica":"'Ninguém fica para trás. Podem contar comigo.'"},
+    {"id":"solitario","nome":"Solitário e Reservado","descricao":"Prefere trabalhar sozinho. Pouco fala, observa muito. Difícil de ler, mas extremamente competente.","frase_tipica":"'...' (observa em silêncio, depois age)"},
+    {"id":"humoristico","nome":"Bem-humorado sob Pressão","descricao":"Usa humor para lidar com o terror. Piadas nos momentos mais inapropriados. Mas não é idiota.","frase_tipica":"'Certo, então temos um monstro eldritch do além. Alguém trouxe salgadinho?'"},
+    {"id":"traumatizado","nome":"Traumatizado mas Determinado","descricao":"Algo quebrou esse personagem no passado. Mas carrega cicatrizes com dignidade e propósito.","frase_tipica":"'Já perdi tudo uma vez. Não vou deixar acontecer de novo.'"},
+    {"id":"curioso","nome":"Curioso e Científico","descricao":"Quer entender, não apenas sobreviver. Documentaria tudo se pudesse. O paranormal o fascina.","frase_tipica":"'Isso é incrível. Assustador, sim. Mas incrivelmente fascinante.'"},
+    {"id":"desconfiado","nome":"Desconfiado e Paranóico","descricao":"Não confia facilmente. Sempre suspeita de motivações ocultas. Muitas vezes está certo.","frase_tipica":"'E se estiver nos usando? E se esse NPC souber mais do que diz?'"},
+    {"id":"religioso","nome":"Religioso e Esperançoso","descricao":"Fé como escudo. Reza antes de entrar em combate. Vê propósito divino até no horror.","frase_tipica":"'Com fé, conseguimos. Não estamos sozinhos nessa.'"}
+  ],
+  "aparencias": [
+    "Cicatriz horizontal no queixo. Olhar firme e direto. Corpo atlético com marcas de combate.",
+    "Cabelos grisalhos prematuros. Óculos de leitura esquecidos sempre na testa. Mãos de quem trabalha.",
+    "Alta e magra, movimento preciso como dançarina. Olhos escuros que observam tudo.",
+    "Rosto jovem contrastando com olhos cansados demais para a idade. Sempre com uma caneta no bolso.",
+    "Corpo robusto, mãos grandes e calejadas. Voz grave que acalma ou intimidada dependendo do tom.",
+    "Pele morena, cabelos longos presos. Sempre com um amuleto ou rosário visível.",
+    "Aparência comum que torna invisível em multidões. O que é, curiosamente, a maior habilidade.",
+    "Marca de nascença no pescoço, em forma de lua. Roupas escuras, sempre funcionais.",
+    "Tatuagens cobrindo o antebraço esquerdo — símbolos que poucos reconhecem. Muitos deveriam.",
+    "Olhos de cores diferentes (heterocromia). Sorriso raro, mas quando vem, genuíno.",
+    "Barba por fazer permanente. Roupas sempre um tamanho maior. Parece relaxado. Não está.",
+    "Mãos de cirurgião — precisas e delicadas. O resto do corpo conta outra história.",
+    "Voz suave que contrasta com a postura militar. Cada palavra é medida antes de sair.",
+    "Cabelos ruivos naturais. Sardas que some com bronzeado. Riso fácil que some diante do perigo."
+  ],
+  "traumas": [
+    {"id":"sobrevivente_acidente","descricao":"Sobreviveu a um acidente que matou pessoas próximas. Carrega culpa do sobrevivente.","efeito":"Às vezes hesita em fugir enquanto outros estão em perigo. +2 em testes de SAN perto de acidentes."},
+    {"id":"perda_familiar","descricao":"Perdeu família para o paranormal diretamente. Por isso está aqui.","efeito":"Motivação clara mas perigosa: pode tomar riscos desnecessários para vingança."},
+    {"id":"experimento","descricao":"Foi submetido a algum tipo de experimento ou ritual sem consentimento. Tem lacunas de memória.","efeito":"Às vezes reage instintivamente de formas que não entende. Pode ter resistências ocultas."},
+    {"id":"testemunha","descricao":"Testemunhou algo que não consegue explicar para ninguém. Ninguém acreditou. Perdeu credibilidade.","efeito":"Hipersensível a duvidar de relatos alheios. +2 em Intuição ao avaliar testemunhos."},
+    {"id":"possessao","descricao":"Foi possuído brevemente por uma entidade. Ainda sente ecos disso.","efeito":"Resistência aumentada a possessão. Mas às vezes pensa coisas que não são suas."},
+    {"id":"sem_trauma","descricao":"Ainda não passou pela experiência definitiva que quebra uma pessoa. O que torna tudo mais frágil.","efeito":"Ainda não tem as defesas que a exposição cria. Mais vulnerável à primeira vez."}
+  ]
+}

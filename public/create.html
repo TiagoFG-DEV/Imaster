@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>IMaster — Criar Agente</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=62">
+</head>
+<body class="create-page">
+<div class="create-bg"><div class="create-overlay"></div></div>
+
+<div class="create-container">
+  <a href="theme.html" class="back-link" id="back-link">⟵ Voltar</a>
+  <h1 class="create-title" id="create-title">⸸ Criar Agente</h1>
+  <p class="create-sub" id="create-sub">Defina seu agente ou deixe o Mestre decidir tudo</p>
+  <!-- Badge de contexto multiplayer -->
+  <div id="player-context-badge" style="display:none;align-items:center;gap:8px;background:rgba(61,191,112,.07);border:1px solid var(--green2);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--green3);font-family:var(--font-t);letter-spacing:1px;align-self:center;"></div>
+
+  <div id="theme-badge" style="display:none;align-items:center;gap:8px;background:rgba(201,168,76,.07);border:1px solid var(--gold-d);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--gold);font-family:var(--font-t);letter-spacing:1px;align-self:center;"></div>
+
+  <!-- DEIXAR IA DECIDIR -->
+  <label class="ai-toggle-wrap">
+    <input type="checkbox" id="chk-ai" onchange="toggleAI(this.checked)">
+    <span class="ai-toggle-track"><span class="ai-toggle-thumb"></span></span>
+    <span class="ai-toggle-label">Deixar o Mestre criar tudo</span>
+  </label>
+
+  <div id="form-manual">
+    <!-- NOME -->
+    <div class="form-section">
+      <label class="form-label">NOME DO AGENTE</label>
+      <input id="inp-name" class="neon-input" type="text" maxlength="30" placeholder="Digite um nome ou deixe em branco para aleatório">
+    </div>
+
+    <!-- CLASSE -->
+    <div class="form-section">
+      <label class="form-label">CLASSE</label>
+      <div class="class-grid">
+        <div class="class-card selected" data-class="Combatente" onclick="selectClass(this)">
+          <div class="class-icon">⚔</div>
+          <div class="class-name">Combatente</div>
+          <div class="class-desc">Linha de frente. PV alto, especialista em armas.</div>
+          <div class="class-stats">PV 20+VIG · PE 2+PRE · SAN 12+PRE</div>
+        </div>
+        <div class="class-card" data-class="Especialista" onclick="selectClass(this)">
+          <div class="class-icon">◈</div>
+          <div class="class-name">Especialista</div>
+          <div class="class-desc">Versátil e habilidoso. Ótimo em perícias.</div>
+          <div class="class-stats">PV 16+VIG · PE 3+PRE · SAN 16+PRE</div>
+        </div>
+        <div class="class-card" data-class="Ocultista" onclick="selectClass(this)">
+          <div class="class-icon">☽</div>
+          <div class="class-name">Ocultista</div>
+          <div class="class-desc">Domina o paranormal. Alta sanidade e PE.</div>
+          <div class="class-stats">PV 12+VIG · PE 4+PRE · SAN 20+PRE</div>
+        </div>
+        <div class="class-card" data-class="Comum" onclick="selectClass(this)">
+          <div class="class-icon">✦</div>
+          <div class="class-name">Comum</div>
+          <div class="class-desc">Pessoa comum jogada no paranormal. Cresce com a experiência.</div>
+          <div class="class-stats">PV 12+VIG · PE 1+PRE · SAN 16+PRE</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ATRIBUTOS -->
+    <div class="form-section">
+      <label class="form-label">
+        ATRIBUTOS
+        <span class="points-badge">Pontos restantes: <b id="pts-left">4</b></span>
+      </label>
+      <p class="form-hint">Início: todos em 0 · 4 pontos para distribuir · Máximo 3 por atributo · Reduza para -1 para ganhar 1 ponto extra</p>
+      <div class="attr-builder">
+        <div class="attr-row" data-attr="agilidade">
+          <div class="attr-info"><span class="attr-name-b">AGI</span><span class="attr-full">Agilidade</span><span class="attr-hint">Esquiva, furtividade, reflexos</span></div>
+          <div class="attr-controls">
+            <button class="attr-btn" onclick="changeAttr('agilidade',-1)">−</button>
+            <span class="attr-val-b" id="val-agilidade">0</span>
+            <button class="attr-btn" onclick="changeAttr('agilidade',1)">+</button>
+          </div>
+        </div>
+        <div class="attr-row" data-attr="forca">
+          <div class="attr-info"><span class="attr-name-b">FOR</span><span class="attr-full">Força</span><span class="attr-hint">Combate corpo a corpo, atletismo</span></div>
+          <div class="attr-controls">
+            <button class="attr-btn" onclick="changeAttr('forca',-1)">−</button>
+            <span class="attr-val-b" id="val-forca">0</span>
+            <button class="attr-btn" onclick="changeAttr('forca',1)">+</button>
+          </div>
+        </div>
+        <div class="attr-row" data-attr="intelecto">
+          <div class="attr-info"><span class="attr-name-b">INT</span><span class="attr-full">Intelecto</span><span class="attr-hint">Investigação, medicina, tecnologia</span></div>
+          <div class="attr-controls">
+            <button class="attr-btn" onclick="changeAttr('intelecto',-1)">−</button>
+            <span class="attr-val-b" id="val-intelecto">0</span>
+            <button class="attr-btn" onclick="changeAttr('intelecto',1)">+</button>
+          </div>
+        </div>
+        <div class="attr-row" data-attr="presenca">
+          <div class="attr-info"><span class="attr-name-b">PRE</span><span class="attr-full">Presença</span><span class="attr-hint">Diplomacia, enganação, rituais</span></div>
+          <div class="attr-controls">
+            <button class="attr-btn" onclick="changeAttr('presenca',-1)">−</button>
+            <span class="attr-val-b" id="val-presenca">0</span>
+            <button class="attr-btn" onclick="changeAttr('presenca',1)">+</button>
+          </div>
+        </div>
+        <div class="attr-row" data-attr="vigor">
+          <div class="attr-info"><span class="attr-name-b">VIG</span><span class="attr-full">Vigor</span><span class="attr-hint">PV, resistência física</span></div>
+          <div class="attr-controls">
+            <button class="attr-btn" onclick="changeAttr('vigor',-1)">−</button>
+            <span class="attr-val-b" id="val-vigor">0</span>
+            <button class="attr-btn" onclick="changeAttr('vigor',1)">+</button>
+          </div>
+        </div>
+      </div>
+      <!-- preview de stats -->
+      <div class="stats-preview">
+        <span>PV: <b id="prev-pv">12</b></span>
+        <span>PE: <b id="prev-pe">1</b></span>
+        <span>SAN: <b id="prev-san">16</b></span>
+      </div>
+    </div>
+
+    <!-- IDENTIDADE & PERFIL DO AGENTE -->
+    <div class="form-section">
+      <label class="form-label">DOSSIÊ PESSOAL & IDENTIDADE</label>
+      <div class="identity-grid">
+        <div class="identity-field">
+          <label class="field-sublabel">IDADE</label>
+          <input id="inp-age" class="neon-input" type="number" min="16" max="90" placeholder="Ex: 28">
+        </div>
+        <div class="identity-field">
+          <label class="field-sublabel">GÊNERO / PRONOMES</label>
+          <select id="sel-gender" class="neon-select">
+            <option value="Masculino">Masculino (Ele/Dele)</option>
+            <option value="Feminino">Feminino (Ela/Dela)</option>
+            <option value="Não-binário">Não-binário (Elu/Delu)</option>
+            <option value="Outro">Outro / Não especificado</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- ORIGEM / PROFISSÃO -->
+      <div class="origin-block">
+        <label class="field-sublabel">ORIGEM / ANTECEDENTES</label>
+        <div class="origin-chips" id="origin-chips">
+          <button type="button" class="origin-chip selected" data-origin="Policial" onclick="selectOrigin(this)">Policial</button>
+          <button type="button" class="origin-chip" data-origin="Médico" onclick="selectOrigin(this)">Médico</button>
+          <button type="button" class="origin-chip" data-origin="Acadêmico" onclick="selectOrigin(this)">Acadêmico</button>
+          <button type="button" class="origin-chip" data-origin="Investigador" onclick="selectOrigin(this)">Investigador</button>
+          <button type="button" class="origin-chip" data-origin="T.I. / Hacker" onclick="selectOrigin(this)">T.I. / Hacker</button>
+          <button type="button" class="origin-chip" data-origin="Atleta" onclick="selectOrigin(this)">Atleta</button>
+          <button type="button" class="origin-chip" data-origin="Artista" onclick="selectOrigin(this)">Artista</button>
+          <button type="button" class="origin-chip" data-origin="Ex-Militar" onclick="selectOrigin(this)">Ex-Militar</button>
+          <button type="button" class="origin-chip" data-origin="Ocultista Amador" onclick="selectOrigin(this)">Ocultista Amador</button>
+          <button type="button" class="origin-chip" data-origin="Sobrevivente" onclick="selectOrigin(this)">Sobrevivente</button>
+        </div>
+        <input id="inp-origin-custom" class="neon-input" type="text" placeholder="Ou digite outra profissão / antecedente...">
+      </div>
+
+      <!-- APARÊNCIA FÍSICA -->
+      <div class="desc-field">
+        <label class="field-sublabel">APARÊNCIA FÍSICA & ESTILO</label>
+        <textarea id="inp-appearance" class="neon-textarea" rows="2" placeholder="Descreva traços marcantes, vestimentas, cicatrizes, postura corporal, corte de cabelo..."></textarea>
+      </div>
+
+      <!-- HISTÓRICO & MOTIVAÇÃO -->
+      <div class="desc-field">
+        <label class="field-sublabel">HISTÓRICO / MOTIVAÇÃO COM O PARANORMAL</label>
+        <textarea id="inp-history" class="neon-textarea" rows="2" placeholder="Qual foi seu primeiro vislumbre do Outro Lado? Por que você luta ao lado da Ordem?"></textarea>
+      </div>
+    </div>
+
+    <!-- EQUIPAMENTO & INVENTÁRIO INICIAL -->
+    <div class="form-section">
+      <div class="inventory-section-header">
+        <label class="form-label">EQUIPAMENTO & ITENS INICIAIS</label>
+        <button type="button" class="btn-add-item" onclick="toggleCustomItemForm()">+ Adicionar Item</button>
+      </div>
+      <p class="form-hint">Kits temáticos carregados pela classe. Adicione, remova ou personalize itens livremente.</p>
+      
+      <!-- Formulário de Adicionar Item Personalizado -->
+      <div id="custom-item-form" class="custom-item-form" style="display:none">
+        <div class="cif-header">NOVO ITEM PERSONALIZADO</div>
+        <div class="cif-grid">
+          <div class="cif-field">
+            <label class="cif-label">NOME DO ITEM *</label>
+            <input id="cif-name" class="neon-input" type="text" placeholder="Ex: Frasco de Veneno Arcano, Arma 9mm...">
+          </div>
+          <div class="cif-field">
+            <label class="cif-label">MACRO AÇÃO *</label>
+            <select id="cif-action" class="neon-select">
+              <option value="Ataque">⚔ Ataque (Ofensivo / Combate)</option>
+              <option value="Defesa">🛡 Defesa (Proteção / Bloqueio)</option>
+              <option value="Cura">✚ Cura (Tratamento / Vitalidade)</option>
+              <option value="Investigação">◈ Investigação (Pistas / Percepção)</option>
+              <option value="Ocultismo">⸸ Ocultismo (Paranormal / Rituais)</option>
+              <option value="Veneno">☠ Veneno (Toxina / Dano Contínuo)</option>
+              <option value="Utilidade">⚙ Utilidade (Ferramenta / Prático)</option>
+              <option value="Fuga">► Fuga (Evasão / Mobilidade)</option>
+              <option value="Suporte">✦ Suporte (Auxílio / Buff)</option>
+            </select>
+          </div>
+        </div>
+        <div class="cif-field">
+          <label class="cif-label">DESCRIÇÃO DO ITEM & EFEITO *</label>
+          <textarea id="cif-desc" class="neon-textarea" rows="2" placeholder="Descreva o que o item faz e seu papel no jogo..."></textarea>
+        </div>
+        <div class="cif-field">
+          <label class="cif-label">URL DA FOTO / ÍCONE (OPCIONAL)</label>
+          <input id="cif-photo" class="neon-input" type="url" placeholder="https://... (deixe em branco para ícone padrão)">
+        </div>
+        <div class="cif-actions">
+          <button type="button" class="btn-cancel-item" onclick="toggleCustomItemForm(false)">Cancelar</button>
+          <button type="button" class="btn-save-item" onclick="addCustomItem()">Salvar Item no Dossiê</button>
+        </div>
+      </div>
+
+      <!-- Lista de Itens Carregados -->
+      <div id="inventory-list" class="inventory-creator-list"></div>
+    </div>
+  </div>
+
+  <button id="btn-start" class="btn btn-primary btn-full" onclick="startGame()">
+    <span>▶</span> Iniciar História
+  </button>
+</div>
+
+<script src="js/create.js?v=62"></script>
+</body></html>

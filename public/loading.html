@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>IMaster — O Mestre Prepara...</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+.loading-page { display:flex; align-items:center; justify-content:center; height:100vh; background:var(--bg); }
+.loading-container {
+  position:relative; z-index:1;
+  display:flex; flex-direction:column; align-items:center; gap:36px;
+  max-width:600px; width:100%; padding:40px 24px; text-align:center;
+}
+.loading-rune {
+  font-size:64px; color:var(--gold); line-height:1;
+  animation:runeFloat 3s ease-in-out infinite;
+  filter:drop-shadow(0 0 32px rgba(201,168,76,.6));
+}
+.loading-title { font-family:var(--font-d); font-size:clamp(18px,4vw,28px); color:var(--gold); letter-spacing:3px; }
+.loading-subtitle { font-size:14px; color:var(--text-d); letter-spacing:1px; line-height:1.7; }
+
+/* checklist */
+.checklist { display:flex; flex-direction:column; gap:10px; width:100%; max-width:480px; transform: scale(0.7);}
+.check-item {
+  display:flex; align-items:center; gap:14px;
+  background:var(--surf); border:1px solid var(--border); border-radius:var(--r);
+  padding:12px 16px; transition:all .4s ease;
+}
+.check-item.active { border-color:var(--gold-d); background:rgba(201,168,76,.05); }
+.check-item.done { border-color:var(--green2); background:rgba(31,106,60,.1); }
+.check-item.error { border-color:var(--red2); background:rgba(156,40,40,.1); }
+.check-icon {
+  font-size:20px; width:28px; text-align:center; flex-shrink:0;
+  transition:all .3s;
+}
+.check-item.active .check-icon { animation:spin .8s linear infinite; }
+.check-text { display:flex; flex-direction:column; gap:2px; text-align:left; }
+.check-label { font-family:var(--font-t); font-size:11px; letter-spacing:2px; color:var(--text); text-transform:uppercase; }
+.check-detail { font-size:12px; color:var(--text-d); }
+
+/* progress bar */
+.progress-wrap { width:100%; max-width:480px; }
+.progress-label { display:flex; justify-content:space-between; font-size:11px; letter-spacing:1px; color:var(--text-d); margin-bottom:8px; }
+.progress-bar { height:4px; background:var(--surf2); border-radius:2px; overflow:hidden; }
+.progress-fill { height:100%; background:linear-gradient(90deg, var(--gold-d), var(--gold)); border-radius:2px; transition:width .8s ease; width:0%; }
+
+/* validation badge */
+.validation-wrap { width:100%; max-width:480px; }
+.validation-title { font-size:9px; letter-spacing:4px; color:var(--text-d); text-transform:uppercase; margin-bottom:8px; }
+.validation-passes {
+  display:flex; gap:6px; flex-wrap:wrap;
+}
+.v-pass {
+  font-size:10px; letter-spacing:1px; padding:4px 10px; border-radius:20px;
+  border:1px solid var(--border); color:var(--text-d);
+  transition:all .4s; font-family:var(--font-t); text-transform:uppercase;
+}
+.v-pass.ok { border-color:var(--green2); color:var(--green3); background:rgba(31,106,60,.15); }
+.v-pass.fail { border-color:var(--red2); color:var(--red3); background:rgba(156,40,40,.15); }
+
+.loading-error {
+  background:rgba(156,40,40,.15); border:1px solid var(--red2); border-radius:var(--r);
+  padding:16px 20px; font-size:14px; color:var(--red3); line-height:1.6;
+  display:none; width:100%; max-width:480px;
+}
+.loading-error.visible { display:block; }
+
+.retry-btn {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: var(--surf2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r2);
+  color: var(--text2);
+  font-family: var(--font-t);
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .25s ease;
+  margin-top: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.5);
+}
+.retry-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--gold-g);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201,168,76,.3);
+}
+
+@keyframes spin { to { transform:rotate(360deg); } }
+@keyframes runeFloat {
+  0%,100% { transform:translateY(0); filter:drop-shadow(0 0 32px rgba(201,168,76,.5)); }
+  50% { transform:translateY(-12px); filter:drop-shadow(0 0 60px rgba(201,168,76,.9)); }
+}
+</style>
+</head>
+<body class="loading-page">
+<div class="menu-bg"><div class="menu-overlay"></div></div>
+
+<div class="loading-container">
+  <div class="loading-rune">⸸</div>
+  <div>
+    <div class="loading-title">O Mestre Prepara a Sessão</div>
+    <div class="loading-subtitle">Aguarde enquanto o Mestre gera e valida todos os elementos da história antes de iniciar.</div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Preparação</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+
+  <div class="validation-wrap" id="validation-wrap" style="display:none">
+    <div class="validation-title">Verificações do Mestre</div>
+    <div class="validation-passes" id="validation-passes"></div>
+  </div>
+
+  <div class="loading-error" id="loading-error"></div>
+  <button id="retry-btn" class="retry-btn" style="display:none" onclick="window.location='mode.html'">⟵ Tentar novamente</button>
+</div>
+<div class="checklist" id="checklist"></div>
+
+<script src="js/loading.js"></script>
+</body>
+</html>

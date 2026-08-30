@@ -1,0 +1,256 @@
+{
+  "session_metadata": {
+    "session_id": "",
+    "creation_timestamp": "",
+    "engine_version": "RPG_MASTER_V1",
+    "status": "preparation"
+  },
+ 
+  "themes": {
+    "primary_theme": "",
+    "secondary_theme": "",
+    "combined_thematic_description": ""
+  },
+ 
+  "story": {
+    "introduction": "",
+    "story_summary": "",
+    "climax_description": "",
+    "final_battle": {
+      "description": "",
+      "location": ""
+    },
+ 
+    "victory_consequences": [],
+    "defeat_consequences": []
+  },
+ 
+  "fixed_events": [
+    {
+      "event_id": "",
+      "name": "",
+      "type": "",
+      "description": "",
+      "location": "",
+      "trigger_conditions": [],
+      "possible_outcomes": {
+        "success": "",
+        "partial_success": "",
+        "failure": "",
+        "critical_failure": ""
+      },
+      "resolved": false
+    }
+  ],
+ 
+  "story_validation_report": {
+    "narrative_coherence": "",
+    "theme_alignment": "",
+    "npc_motivation_check": "",
+    "timeline_consistency": "",
+    "issues_fixed": []
+  },
+ 
+  "world_map": {
+    "map_name": "",
+    "map_description": "",
+ 
+    "locations": [
+      {
+        "location_id": "",
+        "name": "",
+        "description": "",
+        "connected_locations": [],
+        "npcs_present": [],
+        "points_of_interest": []
+      }
+    ]
+  },
+ 
+  "points_of_interest_database": [
+    {
+      "poi_id": "",
+      "location_id": "",
+      "name": "",
+      "type": "",
+      "description": "",
+      "investigation_required": true,
+      "discovery_difficulty": "",
+      "hidden_contents": {
+        "documents": [],
+        "items": [],
+        "weapons": [],
+        "clues": [],
+        "traps": [],
+        "secrets": []
+      },
+      "logical_placement_explanation": ""
+    }
+  ],
+ 
+  "npcs": [
+    {
+      "npc_id": "",
+      "name": "",
+      "description": "",
+      "personality": "",
+      "motivation": "",
+      "secrets": [],
+      "current_location": "",
+      "relationship_with_player": "",
+      "alive": true
+    }
+  ],
+ 
+  "paranormal_creatures": [
+    {
+      "creature_id": "",
+      "name": "",
+      "origin": "",
+      "description": "",
+      "abilities": [],
+      "weaknesses": [],
+      "threat_level": "",
+      "current_location": "",
+      "active": false
+    }
+  ],
+ 
+  "random_events_table": [
+    {
+      "event_id": "",
+      "dice_range": "",
+      "event_description": "",
+      "effect": "",
+      "possible_locations": []
+    }
+  ],
+ 
+  "narrative_clock": {
+    "current_tick": 0,
+    "scheduled_events": [
+      {
+        "tick": 0,
+        "event_description": "",
+        "location": "",
+        "impact": ""
+      }
+    ]
+  },
+ 
+  "player_character": {
+ 
+    "identity": {
+      "name": "",
+      "surname": "",
+      "gender": "",
+      "height": "",
+      "appearance": "",
+      "personality": "",
+      "likes": []
+    },
+ 
+    "attributes": {
+      "forca": 0,
+      "agilidade": 0,
+      "intelecto": 0,
+      "presenca": 0,
+      "vigor": 0
+    },
+ 
+    "derived_stats": {
+      "pv_max": 0,
+      "pv_current": 0,
+      "pe_max": 0,
+      "pe_current": 0,
+      "sanidade_max": 0,
+      "sanidade_current": 0
+    },
+ 
+    "status_effects": [],
+    "inventory": [],
+    "current_location": ""
+  },
+ 
+  "sanity_effects_catalog": [
+    {
+      "sanity_threshold": "",
+      "effect": "",
+      "description": ""
+    }
+  ],
+ 
+  "combat_state": {
+    "in_combat": false,
+    "current_turn": "",
+    "combatants": []
+  },
+ 
+  "map_state_changes": [
+    {
+      "change_id": "",
+      "description": "",
+      "location": "",
+      "trigger_event": "",
+      "applied": false
+    }
+  ],
+ 
+  "inventory_database": [
+    {
+      "item_id": "",
+      "name": "",
+      "type": "",
+      "description": "",
+      "effects": []
+    }
+  ],
+ 
+  "session_variables": {
+    "current_location": "",
+    "last_event_triggered": "",
+    "current_story_phase": "",
+    "game_over": false
+  },
+ 
+  "dice_log": [
+    {
+      "roll_id": "",
+      "player_action": "",
+      "dice_type": "d20",
+      "player_result": "",
+      "attribute_used": "",
+      "timestamp": ""
+    }
+  ],
+ 
+  "status_change_log": [
+    {
+      "change_id": "",
+      "variable": "",
+      "old_value": "",
+      "new_value": "",
+      "reason": "",
+      "timestamp": ""
+    }
+  ],
+ 
+  "story_progress_log": [
+    {
+      "entry_id": "",
+      "description": "",
+      "location": "",
+      "event_related": "",
+      "timestamp": ""
+    }
+  ],
+ 
+  "master_internal_flags": {
+    "story_generated": false,
+    "story_validated": false,
+    "map_generated": false,
+    "map_validated": false,
+    "character_generated": false,
+    "session_started": false
+  }
+}

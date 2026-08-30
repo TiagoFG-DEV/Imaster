@@ -1,0 +1,11 @@
+node_modules/
+.env
+.env.local
+scratch/
+sessions/session_*
+sessions/activeSessions.json
+*.log
+.DS_Store
+.vscode/
+.idea/
+

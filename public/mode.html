@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>IMaster — Criar Nova História</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=65">
+<style>
+/* ─── PÁGINA UNIFICADA DE CRIAÇÃO ─── */
+.hub-page {
+  overflow-y: auto;
+  min-height: 100vh;
+  background: var(--bg);
+  padding-bottom: 140px;
+}
+
+.hub-bg {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(160,40,30,.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(40,20,90,.14) 0%, transparent 60%),
+    radial-gradient(circle at 50% 50%, rgba(10,10,16,.92) 0%, #06060a 100%);
+}
+
+.hub-container {
+  position: relative; z-index: 1;
+  max-width: 960px; margin: 0 auto;
+  padding: 36px 20px;
+  display: flex; flex-direction: column; gap: 28px;
+}
+
+/* ── HEADER ── */
+.hub-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.hub-back-btn {
+  color: var(--text-d); font-size: 12px; letter-spacing: 2px;
+  text-transform: uppercase; background: none; border: none; cursor: pointer;
+  font-family: var(--font-t); display: inline-flex; align-items: center; gap: 8px;
+  transition: color var(--trans);
+}
+.hub-back-btn:hover { color: var(--gold); }
+
+.hub-header {
+  text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.hub-sigil {
+  font-size: 48px; color: var(--gold); line-height: 1;
+  filter: drop-shadow(0 0 24px rgba(201,168,76,.5));
+  animation: runeFloat 5s ease-in-out infinite;
+}
+@keyframes runeFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+
+.hub-title {
+  font-family: var(--font-d); font-size: clamp(24px, 4.5vw, 40px);
+  color: var(--gold); letter-spacing: 4px; text-transform: uppercase;
+}
+.hub-sub {
+  font-size: 14.5px; color: var(--text-d); letter-spacing: .5px; max-width: 600px; line-height: 1.5;
+}
+
+/* ── CARDS DE SEÇÃO ── */
+.hub-section {
+  background: linear-gradient(160deg, rgba(20,20,30,.92), rgba(10,10,16,.98));
+  border: 1px solid var(--border); border-radius: var(--r2);
+  padding: clamp(20px, 3vh, 32px) clamp(16px, 3vw, 32px);
+  box-shadow: 0 16px 40px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.04);
+  display: flex; flex-direction: column; gap: 20px;
+  transition: border-color var(--trans);
+}
+.hub-section:hover { border-color: rgba(201,168,76,.3); }
+
+.hub-section-header {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;
+  border-bottom: 1px solid var(--border2); padding-bottom: 14px;
+}
+.hub-section-title {
+  font-family: var(--font-t); font-size: 14px; color: var(--gold);
+  letter-spacing: 3px; text-transform: uppercase; display: flex; align-items: center; gap: 10px;
+}
+.hub-section-title span.icon { font-size: 20px; }
+
+/* ── SELETOR DE JOGADORES ── */
+.players-counter-box {
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+}
+.stepper-wrap {
+  display: flex; align-items: center;
+}
+.stepper-btn {
+  width: 44px; height: 44px; background: var(--surf2); border: 1px solid var(--border);
+  color: var(--gold); font-size: 22px; font-family: var(--font-t);
+  cursor: pointer; transition: all var(--trans); display: flex; align-items: center; justify-content: center;
+}
+.stepper-btn:first-child { border-radius: var(--r) 0 0 var(--r); }
+.stepper-btn:last-child { border-radius: 0 var(--r) var(--r) 0; }
+.stepper-btn:hover { background: var(--gold-g); border-color: var(--gold); color: #fff; }
+
+.stepper-val {
+  width: 68px; height: 44px; background: var(--surf);
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-d); font-size: 24px; color: var(--gold);
+}
+
+.quick-pills {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.quick-pill {
+  padding: 8px 14px; background: var(--surf2); border: 1px solid var(--border);
+  border-radius: 20px; color: var(--text2); font-family: var(--font-t); font-size: 11px;
+  letter-spacing: 1.5px; cursor: pointer; transition: all var(--trans); text-transform: uppercase;
+}
+.quick-pill:hover, .quick-pill.active {
+  border-color: var(--gold); background: var(--gold-g); color: var(--gold);
+  box-shadow: 0 0 12px rgba(201,168,76,.2);
+}
+
+.global-random-btn {
+  background: linear-gradient(135deg, rgba(201,168,76,.18), rgba(201,168,76,.06));
+  border: 1.5px solid var(--gold-d); border-radius: var(--r);
+  color: var(--gold); font-family: var(--font-t); font-size: 11px;
+  letter-spacing: 2px; text-transform: uppercase; padding: 10px 18px;
+  cursor: pointer; transition: all var(--trans); display: inline-flex; align-items: center; gap: 8px;
+}
+.global-random-btn:hover {
+  background: var(--gold); color: #08080a; font-weight: 700;
+  box-shadow: 0 0 20px rgba(201,168,76,.4);
+}
+
+/* ── LISTA DE FICHAS STACKED ── */
+.characters-list {
+  display: flex; flex-direction: column; gap: 18px; width: 100%;
+}
+
+.char-setup-card {
+  background: var(--surf2); border: 1.5px solid var(--border2);
+  border-radius: var(--r); overflow: hidden;
+  transition: all .28s cubic-bezier(.34,1.56,.64,1);
+}
+.char-setup-card:hover { border-color: rgba(201,168,76,.35); }
+.char-setup-card.class-combatente { border-left: 4px solid #e04040; }
+.char-setup-card.class-especialista { border-left: 4px solid #3b82f6; }
+.char-setup-card.class-ocultista { border-left: 4px solid #a855f7; }
+.char-setup-card.class-comum { border-left: 4px solid #eab308; }
+
+.char-card-header {
+  padding: 14px 18px; display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap; background: rgba(0,0,0,.25);
+}
+.char-header-left {
+  display: flex; align-items: center; gap: 14px;
+}
+.char-header-avatar-wrap {
+  position: relative; width: 48px; height: 48px; border-radius: 50%;
+  border: 2px solid var(--gold); overflow: hidden; background: #000; flex-shrink: 0;
+  box-shadow: 0 0 12px rgba(201,168,76,.25);
+}
+.char-header-avatar {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.char-header-info { display: flex; flex-direction: column; gap: 2px; }
+.char-header-num { font-size: 10px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; font-family: var(--font-t); }
+.char-header-name { font-family: var(--font-t); font-size: 15px; color: var(--text); font-weight: 700; }
+
+.char-header-right {
+  display: flex; align-items: center; gap: 12px;
+}
+
+/* Switch Randomizer */
+.toggle-wrap {
+  display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;
+}
+.toggle-switch {
+  position: relative; width: 42px; height: 22px; background: var(--surf3);
+  border-radius: 12px; border: 1px solid var(--border); transition: all .25s ease;
+}
+.toggle-switch::after {
+  content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px;
+  background: var(--text-d); border-radius: 50%; transition: all .25s ease;
+}
+.toggle-input { display: none; }
+.toggle-input:checked + .toggle-switch {
+  background: var(--gold); border-color: var(--gold2);
+}
+.toggle-input:checked + .toggle-switch::after {
+  transform: translateX(20px); background: #08080a;
+}
+.toggle-label {
+  font-family: var(--font-t); font-size: 11px; letter-spacing: 1.5px; color: var(--text2);
+  text-transform: uppercase;
+}
+
+/* Minimized card preview (quando randomizer está ativo) */
+.char-minimized-box {
+  padding: 14px 18px; display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; font-size: 13px; color: var(--text-d); background: rgba(201,168,76,.03);
+  flex-wrap: wrap;
+}
+.char-minimized-badge {
+  display: inline-flex; align-items: center; gap: 8px; color: var(--gold);
+  font-family: var(--font-t); font-size: 11.5px; letter-spacing: 1.5px;
+}
+.char-class-select-mini {
+  background: var(--surf3); border: 1px solid var(--border); border-radius: var(--r);
+  color: var(--text); font-family: var(--font-t); font-size: 11px; padding: 6px 10px; cursor: pointer;
+}
+
+/* Expanded Manual Edit Form */
+.char-manual-form {
+  padding: 20px 18px; display: none; flex-direction: column; gap: 18px;
+  border-top: 1px solid var(--border2);
+  animation: formExpand .25s ease;
+}
+.char-manual-form.active { display: flex; }
+@keyframes formExpand { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+
+.form-grid-2 {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+}
+@media(max-width: 600px){ .form-grid-2 { grid-template-columns: 1fr; } }
+
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label {
+  font-family: var(--font-t); font-size: 10px; letter-spacing: 2px; color: var(--text-d);
+  text-transform: uppercase; display: flex; justify-content: space-between; align-items: center;
+}
+.form-input {
+  background: var(--surf3); border: 1px solid var(--border); border-radius: var(--r);
+  color: var(--text); font-family: var(--font-b); font-size: 14px; padding: 9px 12px;
+  outline: none; transition: border-color var(--trans);
+}
+.form-input:focus { border-color: var(--gold); }
+
+/* Seletor de Classe Manual */
+.class-radio-group {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+}
+@media(max-width: 500px){ .class-radio-group { grid-template-columns: repeat(2, 1fr); } }
+
+.class-radio-btn {
+  background: var(--surf3); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 10px 8px; text-align: center; cursor: pointer; transition: all var(--trans);
+  font-family: var(--font-t); font-size: 11px; letter-spacing: 1px; color: var(--text2);
+  user-select: none;
+}
+.class-radio-btn:hover { border-color: var(--gold-d); color: var(--text); }
+.class-radio-btn.selected {
+  border-color: var(--gold); background: var(--gold-g); color: var(--gold); font-weight: 700;
+}
+
+/* Avatar Upload & LGPD Box */
+.avatar-setup-box {
+  background: rgba(0,0,0,.25); border: 1px dashed var(--border); border-radius: var(--r);
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 10px;
+}
+.avatar-setup-header {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+}
+.file-upload-btn {
+  background: var(--surf3); border: 1px solid var(--border); border-radius: var(--r);
+  color: var(--text); font-family: var(--font-t); font-size: 11px; letter-spacing: 1.5px;
+  padding: 8px 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+  text-transform: uppercase; transition: all var(--trans);
+}
+.file-upload-btn:hover { border-color: var(--gold); color: var(--gold); background: var(--surf); }
+.file-input-hidden { display: none; }
+
+.lgpd-badge {
+  font-size: 10.5px; color: var(--text-d); font-style: italic; line-height: 1.4;
+  display: flex; align-items: center; gap: 6px;
+}
+.lgpd-badge span.icon { color: var(--green2); font-style: normal; }
+
+/* Especialidades / Trilhas Box */
+.specialization-box {
+  background: rgba(201,168,76,.03); border: 1px solid var(--border2); border-radius: var(--r);
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;
+}
+.trilhas-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+}
+@media(max-width: 600px){ .trilhas-grid { grid-template-columns: 1fr; } }
+
+.trilha-card {
+  background: var(--surf3); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 8px 10px; cursor: pointer; transition: all var(--trans);
+  display: flex; flex-direction: column; gap: 3px;
+}
+.trilha-card:hover { border-color: var(--gold-d); }
+.trilha-card.selected {
+  border-color: var(--gold); background: var(--gold-g); color: var(--gold);
+}
+.trilha-title { font-family: var(--font-t); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
+.trilha-desc { font-size: 11px; color: var(--text-d); line-height: 1.3; }
+
+/* Rituais Grid */
+.rituals-box {
+  background: rgba(168,85,247,.05); border: 1px solid rgba(168,85,247,.3); border-radius: var(--r);
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 10px;
+}
+.rituals-chips-wrap {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.ritual-chip {
+  background: var(--surf3); border: 1px solid var(--border); border-radius: 16px;
+  padding: 5px 12px; font-family: var(--font-t); font-size: 11px; letter-spacing: 1px;
+  color: var(--text2); cursor: pointer; transition: all var(--trans); user-select: none;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.ritual-chip:hover { border-color: #c084fc; color: #fff; }
+.ritual-chip.selected {
+  border-color: #a855f7; background: rgba(168,85,247,.2); color: #d8b4fe; font-weight: 700;
+  box-shadow: 0 0 10px rgba(168,85,247,.3);
+}
+
+/* Atributos mini stepper */
+.attrs-row {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+}
+@media(max-width: 500px){ .attrs-row { grid-template-columns: repeat(3, 1fr); } }
+
+.attr-box {
+  background: var(--surf3); border: 1px solid var(--border2); border-radius: var(--r);
+  padding: 8px 4px; display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.attr-box-name { font-size: 9px; letter-spacing: 1.5px; color: var(--text-d); text-transform: uppercase; }
+.attr-box-controls { display: flex; align-items: center; gap: 4px; }
+.attr-btn {
+  width: 22px; height: 22px; background: var(--surf); border: 1px solid var(--border);
+  color: var(--text2); font-size: 14px; border-radius: 3px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.attr-btn:hover { border-color: var(--gold); color: var(--gold); }
+.attr-val { font-family: var(--font-t); font-size: 15px; color: var(--gold); width: 18px; text-align: center; }
+
+/* ── SEÇÃO DE TEMA ── */
+.theme-options-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+}
+@media(max-width: 700px){ .theme-options-grid { grid-template-columns: 1fr; } }
+
+.theme-card-option {
+  background: var(--surf2); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 16px 14px; cursor: pointer; transition: all var(--trans);
+  display: flex; flex-direction: column; gap: 6px;
+}
+.theme-card-option:hover { border-color: var(--gold-d); transform: translateY(-2px); }
+.theme-card-option.selected {
+  border-color: var(--gold); background: rgba(201,168,76,.08);
+  box-shadow: 0 0 16px rgba(201,168,76,.2);
+}
+.theme-card-icon { font-size: 24px; }
+.theme-card-title { font-family: var(--font-t); font-size: 12px; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; }
+.theme-card-desc { font-size: 12px; color: var(--text-d); line-height: 1.4; }
+
+/* ── BARRA FIXA DE INÍCIO ── */
+.launch-sticky-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(10,10,15,.96); backdrop-filter: blur(16px);
+  border-top: 1.5px solid var(--border);
+  padding: 16px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; box-shadow: 0 -12px 40px rgba(0,0,0,.7);
+}
+.launch-summary {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.launch-tag {
+  font-family: var(--font-t); font-size: 11px; letter-spacing: 1.5px;
+  color: var(--text-d); text-transform: uppercase;
+}
+.launch-tag strong { color: var(--gold); }
+
+.launch-btn {
+  background: linear-gradient(155deg, var(--gold2), var(--gold), #8a5f1e);
+  color: #08080a; border: none; border-radius: var(--r);
+  padding: 14px 36px; font-family: var(--font-t); font-size: 13px;
+  letter-spacing: 3px; text-transform: uppercase; font-weight: 700;
+  cursor: pointer; transition: all .25s ease;
+  box-shadow: 0 4px 20px rgba(201,168,76,.35);
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.launch-btn:hover {
+  box-shadow: 0 6px 36px rgba(201,168,76,.65);
+  transform: translateY(-2px);
+}
+</style>
+</head>
+<body class="hub-page">
+<div class="hub-bg"></div>
+
+<div class="hub-container">
+  <div class="hub-topbar">
+    <button class="hub-back-btn" onclick="window.location='index.html'">⟵ Voltar ao Início</button>
+    <button class="global-random-btn" onclick="randomizeAll()">✦ Randomizar Tudo</button>
+  </div>
+
+  <div class="hub-header">
+    <div class="hub-sigil">⸸</div>
+    <h1 class="hub-title">Criar Nova História</h1>
+    <p class="hub-sub">Configure sua equipe de agentes e o mistério paranormal em uma única tela prática e rápida.</p>
+  </div>
+
+  <!-- ── SEÇÃO 1: QUANTIDADE DE JOGADORES ── -->
+  <div class="hub-section">
+    <div class="hub-section-header">
+      <div class="hub-section-title">
+        <span class="icon">◈</span>
+        <span>Quantidade de Agentes</span>
+      </div>
+      <div class="quick-pills">
+        <button class="quick-pill" id="pill-1" onclick="setCount(1)">1 Solo</button>
+        <button class="quick-pill active" id="pill-2" onclick="setCount(2)">2 Dupla</button>
+        <button class="quick-pill" id="pill-3" onclick="setCount(3)">3 Trio</button>
+        <button class="quick-pill" id="pill-4" onclick="setCount(4)">4 Esquadrão</button>
+        <button class="quick-pill" id="pill-5" onclick="setCount(5)">5+</button>
+      </div>
+    </div>
+
+    <div class="players-counter-box">
+      <div class="stepper-wrap">
+        <button class="stepper-btn" onclick="changePlayerCount(-1)">−</button>
+        <div class="stepper-val" id="player-count-display">2</div>
+        <button class="stepper-btn" onclick="changePlayerCount(+1)">+</button>
+      </div>
+      <span style="font-size:14px; color:var(--text-d);" id="player-count-text">2 agentes na equipe</span>
+    </div>
+  </div>
+
+  <!-- ── SEÇÃO 2: FICHAS DOS AGENTES (STACKED) ── -->
+  <div class="hub-section">
+    <div class="hub-section-header">
+      <div class="hub-section-title">
+        <span class="icon">◈</span>
+        <span>Fichas dos Agentes & Especialidades</span>
+      </div>
+      <button class="global-random-btn" onclick="randomizeAllCharacters()">✦ Randomizar Todas as Fichas</button>
+    </div>
+
+    <div class="characters-list" id="characters-list">
+      <!-- Injetado dinamicamente via JS -->
+    </div>
+  </div>
+
+  <!-- ── SEÇÃO 3: TEMA DO MISTÉRIO ── -->
+  <div class="hub-section">
+    <div class="hub-section-header">
+      <div class="hub-section-title">
+        <span class="icon">◈</span>
+        <span>Tema & Mistério da História</span>
+      </div>
+      <label class="toggle-wrap">
+        <input type="checkbox" class="toggle-input" id="theme-random-toggle" checked onchange="toggleThemeRandom(this.checked)">
+        <div class="toggle-switch"></div>
+        <span class="toggle-label">Randomizer do Mestre</span>
+      </label>
+    </div>
+
+    <div id="theme-random-box" class="char-minimized-box">
+      <div class="char-minimized-badge">
+        <span>✦</span>
+        <span>O Mestre criará uma missão paranormal original, com perigos, rituais e entidades ocultas imprevisíveis.</span>
+      </div>
+    </div>
+
+    <div id="theme-manual-box" style="display:none; flex-direction:column; gap:18px;">
+      <!-- Grade de temas pré-definidos -->
+      <div class="theme-options-grid" id="theme-grid">
+        <div class="theme-card-option selected" onclick="selectTheme(this, 'Mansão Assombrada')">
+          <div class="theme-card-icon">🏛</div>
+          <div class="theme-card-title">Mansão Assombrada</div>
+          <div class="theme-card-desc">Linhagem amaldiçoada, cômodos lacrados e rituais de sangue.</div>
+        </div>
+        <div class="theme-card-option" onclick="selectTheme(this, 'Sanatório Abandonado')">
+          <div class="theme-card-icon">⚕</div>
+          <div class="theme-card-title">Sanatório Abandonado</div>
+          <div class="theme-card-desc">Experimentos desumanos, alucinações e perda de sanidade.</div>
+        </div>
+        <div class="theme-card-option" onclick="selectTheme(this, 'Floresta Macabra')">
+          <div class="theme-card-icon">🌲</div>
+          <div class="theme-card-title">Floresta Macabra</div>
+          <div class="theme-card-desc">Culto ancestral na mata, desaparecimentos e entidades da floresta.</div>
+        </div>
+        <div class="theme-card-option" onclick="selectTheme(this, 'Investigação Urbana')">
+          <div class="theme-card-icon">🏙</div>
+          <div class="theme-card-title">Investigação Urbana</div>
+          <div class="theme-card-desc">Crimes ocultistas pela cidade, símbolos enigmáticos e conspiração.</div>
+        </div>
+        <div class="theme-card-option" onclick="selectTheme(this, 'Vila na Névoa')">
+          <div class="theme-card-icon">⚓</div>
+          <div class="theme-card-title">Vila na Névoa</div>
+          <div class="theme-card-desc">Pescadores fanáticos, névoa espessa e horror das profundezas.</div>
+        </div>
+        <div class="theme-card-option" onclick="selectTheme(this, 'Bio-Terror Oculto')">
+          <div class="theme-card-icon">☣</div>
+          <div class="theme-card-title">Bio-Terror Oculto</div>
+          <div class="theme-card-desc">Instalação subterrânea isolada e aberrações biológicas.</div>
+        </div>
+        <div class="theme-card-option" onclick="selectTheme(this, 'Ruínas Antigas')">
+          <div class="theme-card-icon">☥</div>
+          <div class="theme-card-title">Ruínas Antigas</div>
+          <div class="theme-card-desc">Civilização esquecida, inscrições impossíveis e deuses deitados.</div>
+        </div>
+        <div class="theme-card-option" onclick="selectTheme(this, 'Navio Amaldiçoado')">
+          <div class="theme-card-icon">⚓</div>
+          <div class="theme-card-title">Navio Amaldiçoado</div>
+          <div class="theme-card-desc">Mar aberto, isolamento total e tripulação que não morre de vez.</div>
+        </div>
+        <div class="theme-card-option" onclick="selectTheme(this, 'Conspiração Corporativa')">
+          <div class="theme-card-icon">🏢</div>
+          <div class="theme-card-title">Corporação Sombria</div>
+          <div class="theme-card-desc">Megacorporação com agenda oculta e experimentos em humanos.</div>
+        </div>
+        <div class="theme-card-option" onclick="selectTheme(this, 'Viagem ao Outro Lado')">
+          <div class="theme-card-icon">⸸</div>
+          <div class="theme-card-title">Outro Lado</div>
+          <div class="theme-card-desc">Plano espiritual tangível, rituais de travessia e entidades sem forma.</div>
+        </div>
+        <div class="theme-card-option" onclick="selectTheme(this, 'Distopia Tecnológica')">
+          <div class="theme-card-icon">⚙</div>
+          <div class="theme-card-title">Distopia Tech</div>
+          <div class="theme-card-desc">IA singularidade, nanomáquinas e o sobrenatural encontrando o digital.</div>
+        </div>
+        <div class="theme-card-option theme-card-custom" onclick="activateCustomTheme(this)">
+          <div class="theme-card-icon">✦</div>
+          <div class="theme-card-title">Descrever Tema</div>
+          <div class="theme-card-desc">Você decide como vai ser a história. Escreva, importe um documento.</div>
+        </div>
+      </div>
+
+      <!-- Área de tema personalizado (visível só quando "Descrever Tema" selecionado) -->
+      <div id="custom-theme-area" class="custom-theme-area" style="display:none;">
+        <label class="form-label" style="color:var(--gold);font-size:12px;letter-spacing:2px;text-transform:uppercase;">
+          ✦ Descreva sua História
+        </label>
+        <textarea
+          class="custom-theme-textarea"
+          id="custom-theme-input"
+          rows="5"
+          placeholder="Ex: Uma investigação em um circo itinerante onde os palhaços estão sendo assassinados por algo que só aparece sob a luz dos holofotes. A equipe chega na madrugada e descobre que o ringmaster já está morto há dias, mas ainda fala..."
+        ></textarea>
+
+        <!-- Upload de Documento (PDF, DOCX, TXT) -->
+        <div class="doc-upload-zone" id="doc-upload-zone" onclick="document.getElementById('doc-file-input').click()">
+          <input type="file" id="doc-file-input" accept=".pdf,.docx,.doc,.txt,.md" style="display:none" onchange="handleDocUpload(event)">
+          <div class="doc-upload-icon">⎘</div>
+          <div class="doc-upload-label">Importar Documento de Referência</div>
+          <div class="doc-upload-sub">PDF, DOCX, TXT, MD — O Mestre lerá e jogará dentro do universo descrito</div>
+          <div class="doc-upload-name" id="doc-file-name" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── BARRA FIXA DE LANÇAMENTO ── -->
+<div class="launch-sticky-bar">
+  <div class="launch-summary">
+    <span class="launch-tag">Equipe: <strong id="summary-players">2 Agentes</strong></span>
+    <span class="launch-tag">Mistério: <strong id="summary-theme">Aleatório pelo Mestre</strong></span>
+  </div>
+  <button class="launch-btn" onclick="launchMission()">
+    <span>✦</span>
+    <span>Iniciar Investigação</span>
+  </button>
+</div>
+
+<script src="js/mode.js?v=65"></script>
+</body>
+</html>

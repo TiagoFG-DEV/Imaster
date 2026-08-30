@@ -1,0 +1,168 @@
+{
+  "_aviso": "Este arquivo é DESCONEXO do projeto — não é importado por nenhum código. Existe como documento de essência, memória e guia para trabalhos futuros.",
+  "_versao": "IMaster RPG v3 — Abril 2026",
+
+  "ESSENCIA_DO_PROJETO": {
+    "o_que_e": "IMaster é um sistema de RPG de mesa digital baseado em Ordem Paranormal (criação de Cellbit), onde uma IA generativa assume o papel de Mestre. O jogador interage via chat, rola dados virtuais e vive uma história de terror paranormal brasileira gerada e narrada pela IA em tempo real.",
+    "tom_e_estilo": "Terror, suspense e drama humano. Baseado no estilo narrativo do Cellbit: imersivo, dramático, com consequências reais, NPCs com motivações próprias e um mundo que respira independente do jogador. O medo do desconhecido é a ferramenta principal.",
+    "diferencial": "Não é apenas um chatbot de RPG. É uma experiência que combina sistema de dados oficial, fichas mecânicas corretas, cinemáticas de dano e narrativa coerente com início, meio e FIM real.",
+    "ambientacao": "Brasil contemporâneo. Cidades reais. O paranormal infiltrado no cotidiano. A Ordem Paranormal é uma organização secreta que investiga e contém ameaças do Outro Lado."
+  },
+
+  "REGRAS_FUNDAMENTAIS_QUE_NUNCA_PODEM_MUDAR": {
+    "atributos": {
+      "regra": "Todos os atributos COMEÇAM EM 0. O jogador recebe 4 pontos para distribuir. Máximo 3 por atributo. Mínimo -1 (dá +1 ponto extra).",
+      "formula_dados": "Quantidade de d20 = 1 + valor_do_atributo. Atributo 0 = 1d20. Atributo 2 = 3d20, pega o maior.",
+      "atributo_negativo": "Atributo -1: rola 2d20 e pega o PIOR resultado (desvantagem).",
+      "ERRO_HISTORICO": "Em versões anteriores do projeto, atributos começavam em 1 e a fórmula era diferente. Isso gerava stats errados. A regra correta do livro oficial é: base 0, +4 pontos."
+    },
+    "iniciativa": {
+      "regra": "Rola (1 + Agilidade) d20, pega o MAIOR resultado. Se treinado em Iniciativa: +5 ao resultado final.",
+      "ERRO_HISTORICO": "Não some o VALOR de Agilidade ao resultado. Agilidade só define QUANTOS dados rolar.",
+      "ordem": "Do maior para o menor. Mantida por todo o combate. Em empate: maior Agilidade age primeiro."
+    },
+    "stats_por_classe_nex5": {
+      "Combatente":   { "pv": "20 + Vigor", "pe": "2 + Presença", "san": 12 },
+      "Especialista": { "pv": "16 + Vigor", "pe": "3 + Presença", "san": 16 },
+      "Ocultista":    { "pv": "12 + Vigor", "pe": "4 + Presença", "san": 20 },
+      "Comum":        { "pv": "12 + Vigor", "pe": "2 + Presença", "san": 16 }
+    },
+    "pv_logica": "NUNCA narrar perda de PV sem calcular o novo valor absoluto. pv_novo = pv_atual - dano. O state_updates.pv_current DEVE ter o valor absoluto correto.",
+    "san_fixo": "SAN é FIXO por classe em NEX 5%. Não aumenta com Presença. Combatente=12, Especialista=16, Ocultista=20, Comum=16.",
+    "treinado_bonus": "+5 ao resultado final quando Treinado na perícia relevante."
+  },
+
+  "SISTEMAS_QUE_DEVEM_EXISTIR_E_FUNCIONAR": {
+    "1_geracao_de_personagem": {
+      "o_que_e": "Antes de qualquer narrativa, a IA gera uma ficha COMPLETA: identidade (nome, sexo, idade, aparência, origem, personalidade), atributos, stats, perícias, habilidades com descrição completa.",
+      "problema_historico": "A IA gerava fichas incompletas ou com stats errados. Solução: hardCorrectStats() é chamado SEMPRE após qualquer geração de IA para corrigir matematicamente.",
+      "garanta": "Ficha nunca pode ser parcial. Se a IA falhar, use fallback local com nomes e habilidades padrão."
+    },
+    "2_geracao_do_mundo": {
+      "o_que_e": "Antes de abrir a narração, a IA gera: título da missão, contexto, evento incitante, prólogo, 5 eventos fixos, mapa com 4-6 locais, NPCs com motivações e segredos, criaturas com stats, eventos aleatórios.",
+      "problema_historico": "O mestre começava a história sem mundo gerado, causando incoerência narrativa.",
+      "garante": "O session_started só é true APÓS todas as 4 fases de preparação. Com fallback robusto para cada fase."
+    },
+    "3_coerencia_narrativa": {
+      "regra_fundamental": "Todo evento iniciado DEVE ter resolução. Se um NPC 'está chegando', ele DEVE chegar em no máximo 2 turnos. NUNCA deixar situações em suspensão.",
+      "origem_impacta_gameplay": "A origem e personalidade do personagem DEVEM mudar como NPCs reagem. Ex-policial: policiais o respeitam, criminosos desconfiam. Médico: civis feridos o buscam.",
+      "historia_tem_fim": "O mestre conhece o clímax e o final possível ANTES de começar a narrar. A história sempre progride em direção a esse destino."
+    },
+    "4_sistema_de_dados": {
+      "o_que_e": "O mestre pede o teste (dice_request) com: atributo, perícia, CD, quantidade de dados, se é treinado. O jogador rola no sistema visual. O resultado volta para o mestre narrar.",
+      "criticais": "20 natural = crítico (dano duplo, sucesso excepcional). Todos os dados mostrando 1 = desastre (falha catastrófica).",
+      "garante": "O mestre NUNCA narra o resultado do teste antes do jogador rolar."
+    },
+    "5_cinematicas": {
+      "o_que_e": "Animações visuais que aparecem quando há mudanças significativas de PV, PE ou SAN. Tipos: dano_pv, dano_san, gasto_pe, morte, matar.",
+      "quando_disparar": "Automaticamente quando o diff de PV < -2, SAN < -1, PE < -1. Ou quando a IA retornar o campo 'cinematica' na resposta.",
+      "garante": "Cinemáticas de morte são sempre exibidas quando pv_current = 0."
+    },
+    "6_multiplayer": {
+      "o_que_e": "Modo com 2-4 jogadores no mesmo PC (ou futuro online). Cada jogador tem sua ficha completa. O sidebar mostra abas/botões para alternar entre fichas.",
+      "iniciativa_multiplayer": "Botão 'Rolar Iniciativa' aparece no sidebar em modo multiplayer. Rola para todos os personagens simultaneamente e apresenta a ordem no chat.",
+      "turno": "O mestre aguarda cada jogador agir em sua vez. A ordem é mantida por todo o combate.",
+      "npcs_fixos": "No modo custom, o usuário pode definir NPCs que terão papel central na trama gerada."
+    },
+    "7_modos_de_jogo": {
+      "individual": "1 jogador, 1 personagem. Fluxo padrão.",
+      "multiplayer_local": "2-4 jogadores, cada um com uma ficha completa. Mesma sessão, alternando turnos.",
+      "custom": "Modo avançado onde o mestre define personagens e NPCs específicos."
+    },
+    "8_ia_provedores": {
+      "prioridade": "1. Ollama (local, gratuito, ilimitado) → 2. Groq (nuvem, grátis) → 3. OpenRouter (fallback)",
+      "fallback_narrativo": "Se TODAS as IAs falharem, o sistema retorna JSON com narrativa de espera e NÃO quebra a sessão.",
+      "session_started_sempre_true": "Após prepareSession() completo, session_started é SEMPRE true. As validações nunca bloqueiam o mestre."
+    }
+  },
+
+  "BUGS_CORRIGIDOS_NA_V3": [
+    "Atributos corrigidos para começar em 0 (não 1) em todo o sistema",
+    "Formula de dados corrigida: 1 + valor_atributo (não valor_atributo direto)",
+    "Iniciativa: AGI determina QUANTOS dados, não bônus numérico",
+    "hardCorrectStats() garante stats matematicamente corretos após qualquer geração de IA",
+    "session_started = true SEMPRE após prepareSession (não mais bloqueado por validações)",
+    "Validações são avisos (warn), não erros críticos — nunca travam o mestre",
+    "PV/PE/SAN: state_updates recebe o valor ABSOLUTO correto (não delta)",
+    "all_characters exposto via /api/session-state e salvo no sessionIntro",
+    "Sidebar multiplayer: abas para cada personagem + botão de Iniciativa",
+    "chat.js carrega all_characters do sessionIntro e sincroniza fichas após cada resposta",
+    "loading.js salva all_characters e game_mode no sessionIntro",
+    "Origem e personalidade obrigatórias nos prompts — afetam NPCs e sugestões",
+    "Narrativa: todo evento tem resolução (prompt exige fechamento de loops)",
+    "engine/prepareSession.js removido (código morto — nunca foi chamado)",
+    "sessionManager.js: CLASS_BASES inclui 'comum', DEFAULT_ATTRS começa em 0",
+    "ai.js reescrito: suporte real ao Ollama com health check e detecção de modelos",
+    "library_of_rules/ criada com todos os JSONs de regras centralizados"
+  ],
+
+  "ESTRUTURA_DE_ARQUIVOS": {
+    "raiz": {
+      "app.js": "Servidor Express principal",
+      "routes.js": "Todas as rotas da API — NUNCA exponha chaves aqui",
+      "ai.js": "Provedor de IA: Ollama → Groq → OpenRouter com fallback",
+      ".env": "Chaves e configurações. NUNCA commitar no git.",
+      "GUIA_IA_LOCAL.md": "Guia de instalação do Ollama para o usuário",
+      "package.json": "Dependências Node.js"
+    },
+    "engine": {
+      "gameEngine.js": "Orquestra as 4 fases de preparação e o loop de jogo",
+      "promptBuilder.js": "Constrói todos os prompts para a IA (regras embutidas)",
+      "sessionManager.js": "Gerencia estado de sessão em disco (sessions/)"
+    },
+    "library_of_rules": {
+      "DICE_RULES.json": "Regras oficiais de dados, iniciativa, CDs, dano, sanidade",
+      "CHARACTER_CREATION.json": "Regras de criação de personagem, classes, atributos",
+      "ABILITIES.json": "Habilidades por classe com descrições completas",
+      "GAME_MODE.json": "Configuração de modos de jogo (individual/multi/custom)",
+      "ACTION_SUGGESTIONS.json": "Tipologia de sugestões de ação",
+      "BASE_RPG_MASTER_PROMPT.json": "Prompt base de referência (usado internamente)",
+      "RPG_SESSION_SCHEMA.json": "Schema de validação de sessão",
+      "SESSION_STATE_TEMPLATE.json": "Template de estado de sessão"
+    },
+    "public": {
+      "js/chat.js": "Frontend do chat: sidebar, multiplayer, dados, cinemáticas",
+      "js/loading.js": "Tela de carregamento com SSE e barra de progresso",
+      "js/create.js": "Tela de criação de personagem",
+      "js/mode.js": "Seleção de modo de jogo"
+    },
+    "sessions": "Gerado automaticamente. Cada sessão tem uma pasta com state.json"
+  },
+
+  "FLUXO_COMPLETO_DA_SESSAO": {
+    "1_selecao_de_modo":   "Jogador escolhe Individual, Multiplayer ou Custom em mode.html",
+    "2_criacao_personagem": "Jogador preenche (ou deixa o Mestre decidir) em create.html",
+    "3_loading_4_fases": {
+      "fase_1": "IA gera ficha(s) completa(s). hardCorrectStats() corrige matemática.",
+      "fase_2": "IA valida e corrige a ficha. hardCorrectStats() novamente.",
+      "fase_3": "IA gera mundo: mapa, NPCs, criaturas, eventos fixos, clímax.",
+      "fase_4": "IA escreve narração de abertura com detalhes sensoriais e todos os personagens posicionados."
+    },
+    "4_sessao_ativa": "Loop: jogador age → IA narra → (se necessário) jogador rola dados → IA narra resultado",
+    "5_fim": "pv_current = 0 encerra a sessão. O mestre narra a morte com dignidade."
+  },
+
+  "O_QUE_NAO_PODE_ACONTECER_NUNCA": [
+    "Mestre iniciar a história com ficha incompleta",
+    "Mestre iniciar a história sem mundo gerado",
+    "PV diminuindo sem state_updates.pv_current ter o valor absoluto correto",
+    "Validações bloqueando session_started = true após prepareSession",
+    "Evento narrativo sem resolução (personagem 'chegando' que nunca chega)",
+    "Origem do personagem não afetando NPCs e sugestões",
+    "Atributo 0 gerando 0 dados (deve gerar 1d20)",
+    "Iniciativa somando o valor de Agilidade ao resultado (Agilidade = quantidade de dados)",
+    "Modal 'Ficha Completa' em multiplayer mostrando sempre o primeiro personagem",
+    "all_characters não sendo salvo no sessionIntro do localStorage"
+  ],
+
+  "PARA_TRABALHOS_FUTUROS": {
+    "multiplayer_online": "Implementar Socket.io para múltiplos jogadores em dispositivos diferentes na mesma sessão",
+    "progresso_nex": "Sistema de avanço: quando o jogador termina uma missão, ganha NEX. Atributos sobem, novas habilidades.",
+    "inventario_visual": "Interface gráfica para gerenciar itens com ícones e efeitos",
+    "mapa_visual": "Mapa interativo baseado no world_data.mapa gerado pela IA",
+    "audio": "Música ambiente procedural baseada na temática e no estado de tensão",
+    "exportar_sessao": "Gerar PDF/markdown da sessão completa com histórico e ficha",
+    "modo_espectador": "Alguém pode assistir a sessão multiplayer sem jogar",
+    "memoria_entre_sessoes": "Personagens persistem entre missões com NEX acumulado"
+  }
+}

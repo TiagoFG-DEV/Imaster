@@ -1,0 +1,234 @@
+{
+  "_instrucao_ao_mestre": [
+    "Este JSON contém todas as habilidades de NEX 5% e poderes de classe de Ordem Paranormal RPG.",
+    "SEMPRE atribua as habilidades obrigatórias da classe ao personagem na criação.",
+    "SEMPRE descreva brevemente o que a habilidade faz e como o jogador a ativa.",
+    "Inclua custo em PE, tipo de ação, e quando pode ser usada.",
+    "Habilidades custam PE mesmo quando falham — informe o jogador ANTES de ativar."
+  ],
+
+  "limite_pe_por_turno": {
+    "REGRA_CRITICA": "O Mestre DEVE aplicar o limite de PE por turno. Limite = NEX atual ÷ 5 (arredondado acima, mínimo 1).",
+    "exemplos": [
+      "NEX 5%  → limite = 1 PE/turno (mas sempre pode usar pelo menos 1 habilidade no custo mínimo)",
+      "NEX 10% → limite = 2 PE/turno",
+      "NEX 15% → limite = 3 PE/turno",
+      "NEX 30% → limite = 6 PE/turno"
+    ],
+    "excecao": "Independente do limite, o personagem SEMPRE pode usar pelo menos 1 habilidade em seu custo mínimo por turno. Ex: Combatente NEX 5% (limite 1 PE) PODE usar Ataque Especial que custa 2 PE — essa é a exceção."
+  },
+
+  "Combatente": {
+    "habilidades_nex5_obrigatorias": ["Ataque Especial", "Tropa de Choque"],
+    "descricao_habilidades_obrigatorias": {
+      "Ataque_Especial": {
+        "nome": "Ataque Especial",
+        "custo": "2 PE",
+        "acao": "Modificador de ataque (declare ANTES de rolar)",
+        "quando_usar": "No seu turno, ao declarar um ataque",
+        "como_funciona": "Você gasta 2 PE ANTES de rolar o dado de ataque. Escolha: +5 no teste de ataque OU +5 no dano. Não pode mudar após escolher. Os PE são gastos mesmo se falhar.",
+        "progressao_por_nex": [
+          "NEX 5%:  2 PE → +5 no ataque OU +5 no dano",
+          "NEX 25%: 3 PE → +10 no ataque OU +10 no dano",
+          "NEX 55%: 4 PE → +15 no ataque OU +15 no dano",
+          "NEX 85%: 5 PE → +20 no ataque OU +20 no dano"
+        ],
+        "instrucao_ao_mestre": "Pergunte ao jogador ANTES de rolar: 'Você quer o bônus no teste de ataque ou no dano?' Só então peça a rolagem."
+      },
+      "Tropa_de_Choque": {
+        "nome": "Tropa de Choque",
+        "custo": "0 PE",
+        "acao": "Ação de movimento",
+        "quando_usar": "No seu turno, como ação de movimento",
+        "como_funciona": "Você se posiciona taticamente em relação a aliados. Aliados em alcance curto (adjacentes ou no mesmo quadrante) recebem +2 de Defesa até o início do SEU próximo turno.",
+        "instrucao_ao_mestre": "Lembre o jogador que esta habilidade SUBSTITUI a ação de movimento normal. O bônus de +2 à Defesa dos aliados dura até o início do próximo turno do Combatente."
+      }
+    },
+    "poderes_de_classe": [
+      {
+        "nome": "Artista Marcial",
+        "custo": "0 PE",
+        "acao": "Passiva",
+        "descricao": "Seus ataques desarmados causam 1d6 de dano (em vez de 1d4), podem causar dano letal e contam como armas ágeis (usam Agilidade ou Força, o que for melhor).",
+        "progressao": "NEX 35%: aumenta para 1d8. NEX 70%: aumenta para 1d10.",
+        "instrucao_ao_mestre": "Quando o Combatente atacar desarmado, use 1d6 de dano. Ele pode escolher entre Força e Agilidade para o teste de ataque."
+      },
+      {
+        "nome": "Ataque de Oportunidade",
+        "custo": "1 PE",
+        "acao": "Reação",
+        "descricao": "Quando um inimigo sair voluntariamente de um espaço adjacente ao seu sem se afastar, você pode gastar 1 PE como reação para fazer um ataque corpo a corpo contra ele.",
+        "instrucao_ao_mestre": "Aplique quando um inimigo tentar fugir de adjacência sem recuar. O jogador declara a reação, gasta 1 PE e rola o ataque normalmente."
+      },
+      {
+        "nome": "Saque Rápido",
+        "custo": "0 PE",
+        "acao": "Passiva / Ação livre",
+        "descricao": "Você pode sacar ou guardar armas e itens como ação livre (em vez de ação mínima). Pode sacar duas armas simultaneamente. Permite também recarregar uma arma de fogo como ação livre uma vez por rodada.",
+        "instrucao_ao_mestre": "O personagem não gasta ação de movimento para trocar de arma. Pode iniciar o turno com arma diferente sem custo."
+      },
+      {
+        "nome": "Bloqueio Aprimorado",
+        "custo": "1 PE",
+        "acao": "Reação",
+        "descricao": "Quando sofrer um ataque, você pode gastar 1 PE como reação para adicionar seu bônus de Fortitude (+5 se Treinado) à Defesa contra AQUELE ataque específico. Declare antes de saber o resultado do ataque.",
+        "instrucao_ao_mestre": "Declare ANTES do atacante revelar o resultado. O personagem gasta 1 PE e some +5 à Defesa naquela rolagem específica."
+      },
+      {
+        "nome": "Armamento Pesado",
+        "custo": "0 PE",
+        "acao": "Passiva",
+        "descricao": "Você tem proficiência com armas pesadas e explosivos. Armas de duas mãos causam +2 de dano adicional em suas mãos.",
+        "instrucao_ao_mestre": "Adicione +2 ao dano de rifles de assalto, espingardas longas e armas de duas mãos. O personagem pode usar granadas e explosivos táticos sem penalidade."
+      },
+      {
+        "nome": "Ímpeto",
+        "custo": "2 PE",
+        "acao": "Ação padrão",
+        "descricao": "Você corre até o dobro do seu deslocamento em linha reta e faz um ataque corpo a corpo no final do movimento com +1d6 de dano adicional.",
+        "instrucao_ao_mestre": "O personagem move até 18m em linha reta e ataca. O dado extra de dano só é somado se o ataque final acertar."
+      },
+      {
+        "nome": "Recuperação Avançada",
+        "custo": "0 PE",
+        "acao": "Passiva (durante descanso)",
+        "descricao": "Ao descansar por ao menos 8 horas, você recupera PV igual a 1d6 + valor de Vigor, em vez do normal.",
+        "instrucao_ao_mestre": "Ao narrar um descanso longo, role 1d6 + Vigor e restaure esse valor em PV para o personagem."
+      },
+      {
+        "nome": "Reflexos Defensivos",
+        "custo": "0 PE",
+        "acao": "Passiva",
+        "descricao": "Você recebe +2 permanente em Defesa e +2 em testes de resistência contra efeitos de área.",
+        "pre_requisito": "Agilidade 2",
+        "instrucao_ao_mestre": "Some +2 à Defesa base do personagem permanentemente. Este bônus já vem incluso no cálculo de Defesa."
+      }
+    ]
+  },
+
+  "Especialista": {
+    "habilidades_nex5_obrigatorias": ["Eclético", "Perito"],
+    "descricao_habilidades_obrigatorias": {
+      "Ecletico": {
+        "nome": "Eclético",
+        "custo": "2 PE",
+        "acao": "Ação livre (declare ANTES de rolar)",
+        "quando_usar": "Ao fazer teste de perícia na qual NÃO é Treinado",
+        "como_funciona": "Gaste 2 PE ANTES de rolar para agir como se fosse Treinado naquela perícia (+5 no resultado). Não funciona com Luta ou Pontaria. Os PE são gastos mesmo se falhar.",
+        "instrucao_ao_mestre": "Se o jogador não é Treinado em uma perícia e quer tentar mesmo assim: pergunte se quer usar Eclético. Ele gasta 2 PE, ganha +5 e rola normalmente."
+      },
+      "Perito": {
+        "nome": "Perito",
+        "custo": "2 PE",
+        "acao": "Ação livre (declare ANTES de rolar)",
+        "quando_usar": "Ao fazer teste de uma das 2 perícias escolhidas na criação (exceto Luta e Pontaria)",
+        "como_funciona": "Escolha 2 perícias Treinadas na criação. Ao usar uma delas, gaste 2 PE ANTES de rolar para somar +1d6 ao resultado final do teste.",
+        "progressao_por_nex": [
+          "NEX 5%:  2 PE → +1d6 ao resultado",
+          "NEX 25%: 3 PE → +1d8 ao resultado",
+          "NEX 55%: 4 PE → +1d10 ao resultado",
+          "NEX 85%: 5 PE → +1d12 ao resultado"
+        ],
+        "instrucao_ao_mestre": "Confirme quais são as 2 perícias de Perito na ficha do personagem. Quando usá-las, role o d6 extra e some ao resultado do teste de perícia."
+      }
+    },
+    "poderes_de_classe": [
+      {
+        "nome": "Conhecimento Aplicado",
+        "custo": "1 PE",
+        "acao": "Ação livre",
+        "descricao": "Ao fazer teste de perícia para facilitar investigação, gaste 1 PE para usar Força ou Agilidade no lugar do atributo-base da perícia. Se passar, o próximo aliado que usar esse bônus também recebe +2.",
+        "instrucao_ao_mestre": "O Especialista pode usar força bruta ou agilidade para investigar de formas não convencionais. Role com o atributo escolhido."
+      },
+      {
+        "nome": "Ataque Furtivo",
+        "custo": "0 PE",
+        "acao": "Passiva",
+        "descricao": "Ao atacar um inimigo que não sabe que você está ali, ou que está flanqueado por aliado, some +2d6 ao dano do ataque.",
+        "instrucao_ao_mestre": "Aplique quando o personagem atacar de surpresa ou quando houver aliado adjacente ao mesmo inimigo. Role 2d6 extras de dano."
+      },
+      {
+        "nome": "Paramédico",
+        "custo": "1 PE",
+        "acao": "Ação padrão",
+        "descricao": "Você pode usar Medicina para estabilizar um aliado Morrendo sem kit médico, e o aliado estabilizado recupera 1 PV imediatamente.",
+        "instrucao_ao_mestre": "Reduza a CD de estabilização para 10 (em vez de 15) e conceda 1 PV ao estabilizado. Sem custo de item."
+      },
+      {
+        "nome": "Hacker",
+        "custo": "1 PE",
+        "acao": "Ação padrão",
+        "descricao": "Ao usar Tecnologia para invadir sistemas, você pode gastar 1 PE para reduzir a CD em 5 e, em caso de sucesso, obter informação adicional além do objetivo principal.",
+        "instrucao_ao_mestre": "Se o personagem declara hacking e gasta 1 PE: reduza a CD em 5 e, em caso de sucesso, revele uma informação bônus do sistema invadido."
+      },
+      {
+        "nome": "Tiro Preciso",
+        "custo": "2 PE",
+        "acao": "Ação padrão",
+        "descricao": "Gaste 1 turno mirando (ação de movimento) e 2 PE no próximo turno para fazer um disparo com vantagem (+1 dado extra ao teste de ataque, pega o maior) e +1d6 de dano.",
+        "instrucao_ao_mestre": "Exige 1 turno de preparação com ação de movimento. No turno seguinte, o jogador rola 1 dado extra de ataque e pega o maior, mais 1d6 de dano extra."
+      }
+    ]
+  },
+
+  "Ocultista": {
+    "habilidades_nex5_obrigatorias": ["Escolhido pelo Outro Lado", "Aprendiz do Oculto"],
+    "descricao_habilidades_obrigatorias": {
+      "Escolhido_pelo_Outro_Lado": {
+        "nome": "Escolhido pelo Outro Lado",
+        "custo": "Varia por ritual (mínimo 1 PE)",
+        "acao": "Ação completa (conjurar ritual)",
+        "quando_usar": "Ao conjurar um ritual que o personagem conhece",
+        "como_funciona": "O Ocultista aprende 3 rituais de 1° círculo à sua escolha na criação. Esses rituais não contam no limite de rituais do Intelecto. Para conjurar: declare o ritual, gaste os PE necessários, role Ocultismo contra a CD do ritual.",
+        "rituais_disponiveis_1_circulo": ["Luz", "Criar Ilusão", "Curar Ferimentos (1d6 PV, 2 PE)", "Telecinesia", "Disfarce Ilusório", "Detectar o Outro Lado", "Barreira Protetora", "Invocar Sombras", "Queimar (1d6 fogo, 1 PE)"],
+        "instrucao_ao_mestre": "Liste os 3 rituais escolhidos na ficha. Quando o jogador conjurar, peça: 1) os PE do custo, 2) teste de Ocultismo vs CD do ritual. Sucesso = efeito. Falha = PE gastos sem efeito. Desastre = efeito negativo."
+      },
+      "Aprendiz_do_Oculto": {
+        "nome": "Aprendiz do Oculto",
+        "custo": "0 PE",
+        "acao": "Passiva",
+        "quando_usar": "Automaticamente ao encontrar rituais ou entidades conhecidas",
+        "como_funciona": "O Ocultista identifica rituais que conhece automaticamente, sem teste. Para entidades e rituais desconhecidos, o teste de Ocultismo tem CD reduzida em 5.",
+        "instrucao_ao_mestre": "Quando o personagem encontrar algo paranormal: se for ritual/entidade que ele conhece, diga que ele reconhece automaticamente. Se for desconhecido, aplique CD normal -5 no teste de Ocultismo para identificar."
+      }
+    },
+    "poderes_de_classe": [
+      {
+        "nome": "Círculo de Proteção",
+        "custo": "3 PE",
+        "acao": "Ação completa (10 minutos)",
+        "descricao": "Você traça um círculo de sal e símbolos, criando uma barreira que impede entidades do Outro Lado de cruzar. Dura até ser quebrado fisicamente.",
+        "instrucao_ao_mestre": "Entidades paranormais não podem cruzar o círculo voluntariamente. Podem tentar destruí-lo com ataque físico (PV do círculo = 10 + Presença do conjurador)."
+      },
+      {
+        "nome": "Catalisador de Medo",
+        "custo": "2 PE",
+        "acao": "Ação padrão",
+        "descricao": "Você canaliza o terror do Outro Lado em um alvo. Faça teste de Ocultismo vs. Vontade do alvo. Se passar, o alvo fica com medo: -2 em todos os testes por 1d4 rodadas.",
+        "instrucao_ao_mestre": "Peça teste de Ocultismo do Ocultista vs. resultado de Vontade do alvo. Se o Ocultista vencer: aplique -2 em testes do alvo durante 1d4 rodadas."
+      },
+      {
+        "nome": "Visão do Além",
+        "custo": "2 PE",
+        "acao": "Ação padrão",
+        "descricao": "Você percebe camadas paranormais da realidade por 1 cena. Pode ver entidades invisíveis, rastros paranormais e auras de objetos amaldiçoados.",
+        "instrucao_ao_mestre": "Durante a cena, revele informações ocultas da camada paranormal ao jogador: onde entidades estão escondidas, quais objetos têm energia do Outro Lado, etc."
+      }
+    ]
+  },
+
+  "rituais_1_circulo": {
+    "descricao": "Rituais básicos acessíveis no NEX 5%. Cada um tem custo em PE e CD para o teste de Ocultismo.",
+    "lista": [
+      {"nome": "Luz",              "custo": "1 PE", "cd": 10, "descricao": "Cria uma fonte de luz sobrenatural que ilumina um ambiente. Dura 1 hora."},
+      {"nome": "Criar Ilusão",     "custo": "2 PE", "cd": 15, "descricao": "Cria uma ilusão visual estática de um objeto ou pessoa. Não tem som. Dura 1 cena."},
+      {"nome": "Curar Ferimentos", "custo": "2 PE", "cd": 12, "descricao": "Toca um aliado e recupera 1d6 PV. Não funciona em combate ativo."},
+      {"nome": "Telecinesia",      "custo": "2 PE", "cd": 15, "descricao": "Move um objeto de até 10kg com a mente. Alcance de 10m. Dura 1 rodada."},
+      {"nome": "Detectar o Outro Lado", "custo": "1 PE", "cd": 10, "descricao": "Por 1 cena, você sente presença paranormal em 20m ao redor. Não identifica a natureza da presença."},
+      {"nome": "Disfarce Ilusório","custo": "3 PE", "cd": 18, "descricao": "Altera sua aparência visual por até 1 hora. Não muda voz ou tato."},
+      {"nome": "Queimar",          "custo": "1 PE", "cd": 12, "descricao": "Projeta chamas paranormais em um alvo adjacente. 1d6 dano de fogo. Teste de Ocultismo vs. Defesa."},
+      {"nome": "Invocar Sombras",  "custo": "2 PE", "cd": 15, "descricao": "Escurece uma área de 5m por 1d4 rodadas. Criaturas nela sofrem -2 em testes de Percepção e ataques."},
+      {"nome": "Barreira Protetora","custo": "3 PE", "cd": 16, "descricao": "Cria escudo paranormal em torno de 1 aliado. Ele recebe +3 à Defesa até o início do seu próximo turno."}
+    ]
+  }
+}

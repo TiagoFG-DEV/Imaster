@@ -1,0 +1,164 @@
+{
+  "_instrucao_ao_mestre": [
+    "Este JSON contém TODAS as regras oficiais de criação de personagem de Ordem Paranormal RPG.",
+    "Quando session_started = false, crie a ficha COMPLETA antes de qualquer narrativa.",
+    "NUNCA inicie a história sem ficha 100% preenchida.",
+    "Siga as regras de atributos EXATAMENTE como descrito abaixo — há diferença da versão anterior."
+  ],
+
+  "regras_de_atributos": {
+    "REGRA_OFICIAL": "Todos os atributos COMEÇAM EM 1 (não em zero). O personagem recebe 4 pontos para distribuir.",
+    "base_inicial": 1,
+    "pontos_para_distribuir": 4,
+    "maximo_inicial": 3,
+    "reducao_para_bonus": "Reduzir um atributo para 0 concede +1 ponto extra. Mínimo: 0 na criação (não -1).",
+    "formula_dados_CORRETA": "Quantidade de d20 = valor do atributo (Força 3 = rola 3d20, NÃO 4d20)",
+    "atributo_1": "Rola 1d20 — média humana",
+    "atributo_2": "Rola 2d20, pega o maior",
+    "atributo_3": "Rola 3d20, pega o maior",
+    "atributo_0": "Rola 2d20 e pega o PIOR (desvantagem)",
+    "ERRO_A_EVITAR": "Não use a fórmula '1 + atributo'. Ela está ERRADA. Use apenas o valor do atributo.",
+    "exemplo_personagem": "Bianca: FOR 1, AGI 2, VIG 1, INT 3, PRE 2 → soma de distribuição = 1+2+1+3+2 = 9, sendo 5 da base (1×5) + 4 distribuídos = correto"
+  },
+
+  "cinco_atributos": {
+    "Agilidade": {
+      "descricao": "Equilíbrio, precisão, velocidade de reação e coordenação motora.",
+      "pericias_vinculadas": ["Acrobacia", "Crime", "Furtividade", "Iniciativa", "Pilotagem", "Pontaria", "Reflexos"],
+      "bonus_especiais": "Determina a Defesa base (10 + AGI). Treinado em Reflexos: pode Esquivar como reação."
+    },
+    "Forca": {
+      "descricao": "Potência muscular, habilidade atlética, capacidade física.",
+      "pericias_vinculadas": ["Atletismo", "Luta"],
+      "bonus_especiais": "Some Força ao dano de ataques corpo a corpo e arremesso."
+    },
+    "Intelecto": {
+      "descricao": "Rapidez de raciocínio, memória, conhecimento e capacidade de resolução de problemas.",
+      "pericias_vinculadas": ["Atualidades", "Ciências", "Investigação", "Medicina", "Ocultismo", "Profissão", "Sobrevivência", "Tática", "Tecnologia"],
+      "bonus_especiais": "Você recebe treinamento em perícias adicionais igual ao seu Intelecto. Se INT aumentar, aprende perícia extra."
+    },
+    "Presenca": {
+      "descricao": "Carisma, persuasão, liderança, resiliência mental e social.",
+      "pericias_vinculadas": ["Atuação", "Diplomacia", "Enganação", "Intimidação", "Intuição", "Percepção", "Religião", "Vontade"],
+      "bonus_especiais": "Concede PE adicionais a cada NEX. Usada em testes de Sanidade para resistir ao horror."
+    },
+    "Vigor": {
+      "descricao": "Resiliência física, tolerância à dor, resistência a doenças e venenos.",
+      "pericias_vinculadas": ["Fortitude"],
+      "bonus_especiais": "Concede PV adicionais a cada NEX. Se Vigor aumentar, PV aumentam retroativamente. Treinado em Fortitude: pode Bloquear como reação."
+    }
+  },
+
+  "classes": {
+    "Combatente": {
+      "descricao": "Treinado para lutar com qualquer arma. Prefere abordagens diretas. Linha de frente.",
+      "pv_inicial": "20 + Vigor",
+      "pe_inicial": "2 + Presença",
+      "san_inicial": 12,
+      "pv_por_nex":  "4 + Vigor",
+      "pe_por_nex":  "2 + Presença",
+      "san_por_nex": 3,
+      "NOTA_PE": "Um Combatente com Presença 1 começa com PE = 2+1 = 3. Com Presença 0: PE = 2+0 = 2. NUNCA menos de 2.",
+      "pericias_obrigatorias": ["Luta ou Pontaria (escolha 1)", "Fortitude ou Reflexos (escolha 1)"],
+      "pericias_livres_adicionais": "2 + Intelecto perícias à escolha",
+      "proficiencias": ["Armas simples", "Armas táticas", "Proteções leves"],
+      "habilidades_nex5_obrigatorias": ["Ataque Especial", "Tropa de Choque"]
+    },
+    "Especialista": {
+      "descricao": "Versátil, habilidoso e inteligente. Usa esperteza e conhecimento para resolver problemas.",
+      "pv_inicial": "16 + Vigor",
+      "pe_inicial": "3 + Presença",
+      "san_inicial": 16,
+      "pv_por_nex":  "3 + Vigor",
+      "pe_por_nex":  "3 + Presença",
+      "san_por_nex": 4,
+      "NOTA_PE": "Especialista com Presença 1: PE = 3+1 = 4. Com Presença 0: PE = 3.",
+      "pericias_obrigatorias": [],
+      "pericias_livres_adicionais": "8 + Intelecto perícias à escolha (máxima versatilidade)",
+      "proficiencias": ["Armas simples", "Proteções leves"],
+      "habilidades_nex5_obrigatorias": ["Eclético", "Perito"]
+    },
+    "Ocultista": {
+      "descricao": "Estudioso do Outro Lado. Domina rituais e poderes paranormais. Alta sanidade, mais PE.",
+      "pv_inicial": "12 + Vigor",
+      "pe_inicial": "4 + Presença",
+      "san_inicial": 20,
+      "pv_por_nex":  "2 + Vigor",
+      "pe_por_nex":  "4 + Presença",
+      "san_por_nex": 5,
+      "NOTA_PE": "Ocultista com Presença 1: PE = 4+1 = 5. Com Presença 0: PE = 4. NUNCA menos de 4.",
+      "pericias_obrigatorias": ["Ocultismo", "Religião"],
+      "pericias_livres_adicionais": "4 + Intelecto perícias à escolha",
+      "proficiencias": ["Armas simples", "Proteções leves"],
+      "habilidades_nex5_obrigatorias": ["Escolhido pelo Outro Lado", "Aprendiz do Oculto"]
+    }
+  },
+
+  "calculo_derivados": {
+    "defesa": "10 + Agilidade + bônus de armadura",
+    "esquiva": "Reação: se Treinado em Reflexos, some +5 (bônus de Treinamento) à Defesa contra um ataque. Declara ANTES do atacante rolar.",
+    "bloqueio": "Reação: se Treinado em Fortitude, reduza o dano recebido em 5 (bônus de Treinamento). Declara APÓS saber o dano.",
+    "iniciativa": "Role (valor de Agilidade) d20, pegue o maior, some o valor de Agilidade"
+  },
+
+  "pericias_completas": {
+    "nota": "28 perícias totais. Treinado em uma perícia = +5 ao resultado do teste e acesso a usos especiais.",
+    "lista": [
+      {"nome": "Acrobacia",    "atributo": "Agilidade",  "descricao": "Equilíbrio, saltos acrobáticos, manobras ginásticas"},
+      {"nome": "Atletismo",    "atributo": "Força",      "descricao": "Natação, escalada, corrida, empurrar/puxar objetos pesados"},
+      {"nome": "Atualidades",  "atributo": "Intelecto",  "descricao": "Conhecimento de eventos atuais, cultura pop, informações gerais"},
+      {"nome": "Atuação",      "atributo": "Presença",   "descricao": "Disfarce, performance, fingir emoções, entreter"},
+      {"nome": "Ciências",     "atributo": "Intelecto",  "descricao": "Biologia, química, física, forense. EXIGE ser Treinado.", "exige_treinamento": true},
+      {"nome": "Crime",        "atributo": "Agilidade",  "descricao": "Arrombar fechaduras, furtar, sabotar dispositivos"},
+      {"nome": "Diplomacia",   "atributo": "Presença",   "descricao": "Negociação, persuasão, melhorar atitude de NPCs"},
+      {"nome": "Enganação",    "atributo": "Presença",   "descricao": "Mentir, blefar, criar falsas impressões"},
+      {"nome": "Fortitude",    "atributo": "Vigor",      "descricao": "Resistência a venenos, doenças, dano ambiental, exaustão. Treinado: pode Bloquear."},
+      {"nome": "Furtividade",  "atributo": "Agilidade",  "descricao": "Mover-se silenciosamente, se esconder, passar despercebido"},
+      {"nome": "Iniciativa",   "atributo": "Agilidade",  "descricao": "Reação rápida ao início de combate. Treinado: +5 na iniciativa."},
+      {"nome": "Intimidação",  "atributo": "Presença",   "descricao": "Ameaças, pressão psicológica, coagir NPCs"},
+      {"nome": "Intuição",     "atributo": "Presença",   "descricao": "Detectar mentiras, perceber intenções ocultas, sentir perigo"},
+      {"nome": "Investigação",  "atributo": "Intelecto", "descricao": "Analisar cenas de crime, encontrar pistas, deduzir fatos"},
+      {"nome": "Luta",         "atributo": "Força",      "descricao": "Combate corpo a corpo. Treinado: pode usar Contra-ataque como reação."},
+      {"nome": "Medicina",     "atributo": "Intelecto",  "descricao": "Primeiros socorros, estabilizar Morrendo (CD 15), diagnósticos"},
+      {"nome": "Ocultismo",    "atributo": "Intelecto",  "descricao": "Conhecimento do Outro Lado, rituais, entidades. Exige Treinado para rituais avançados.", "exige_treinamento": true},
+      {"nome": "Percepção",    "atributo": "Presença",   "descricao": "Notar detalhes, sentir presença, detectar objetos escondidos"},
+      {"nome": "Pilotagem",    "atributo": "Agilidade",  "descricao": "Dirigir veículos terrestres, aéreos, aquáticos; manobras de risco"},
+      {"nome": "Pontaria",     "atributo": "Agilidade",  "descricao": "Ataques à distância com armas de fogo e arremesso"},
+      {"nome": "Profissão",    "atributo": "Intelecto",  "descricao": "Habilidade de profissão específica definida na criação do personagem"},
+      {"nome": "Reflexos",     "atributo": "Agilidade",  "descricao": "Resistir a efeitos súbitos e de área. Treinado: pode Esquivar como reação (+5 à Defesa)."},
+      {"nome": "Religião",     "atributo": "Presença",   "descricao": "Conhecimento de cultos, rituais religiosos, entidades divinas e demoníacas"},
+      {"nome": "Sobrevivência","atributo": "Intelecto",  "descricao": "Navegação, rastreamento, caça, sobreviver em ambientes hostis"},
+      {"nome": "Tática",       "atributo": "Intelecto",  "descricao": "Planejamento de batalha, análise de terreno, coordenação de grupo"},
+      {"nome": "Tecnologia",   "atributo": "Intelecto",  "descricao": "Hack, eletrônica, equipamentos tecnológicos, sistemas de segurança"},
+      {"nome": "Vontade",      "atributo": "Presença",   "descricao": "Resistência a efeitos mentais, medo, manipulação paranormal"},
+      {"nome": "Crime",        "atributo": "Agilidade",  "descricao": "Arrombar, furtar, sabotar, abrir fechaduras"}
+    ]
+  },
+
+  "origens_disponiveis": {
+    "descricao": "A Origem define o passado do personagem. Concede 2 perícias treinadas + 1 poder de origem.",
+    "exemplos": [
+      {"nome": "Acadêmico",      "pericias": ["Atualidades", "Investigação"],  "poder": "Área de Especialidade: +2 em testes de uma área de conhecimento específica"},
+      {"nome": "Agente de Saúde","pericias": ["Intuição", "Medicina"],         "poder": "Técnica Medicinal: ao estabilizar um aliado, ele recupera 1d6 PV"},
+      {"nome": "Artista",        "pericias": ["Atuação", "Percepção"],         "poder": "Performance Sedutora: usando Atuação, pode melhorar atitude de um alvo em 1 passo"},
+      {"nome": "Calejado",       "pericias": ["Fortitude", "Sobrevivência"],   "poder": "Calejado: recebe +1 PV para cada 5% de NEX"},
+      {"nome": "Criminoso",      "pericias": ["Crime", "Enganação"],           "poder": "Contatos Obscuros: pode obter itens ilegais com mais facilidade"},
+      {"nome": "Ex-militar",     "pericias": ["Luta", "Tática"],              "poder": "Disciplina Militar: +2 em testes de iniciativa e resistência a medo"},
+      {"nome": "Investigador",   "pericias": ["Investigação", "Intuição"],     "poder": "Instinto Investigativo: 1x por cena, pode fazer pergunta ao Mestre que ele deve responder honestamente sobre pista óbvia"},
+      {"nome": "Jornalista",     "pericias": ["Atualidades", "Diplomacia"],   "poder": "Fonte Confiável: NPCs tendem a ser mais abertos com informações"},
+      {"nome": "Médico",         "pericias": ["Ciências", "Medicina"],         "poder": "Diagnóstico Rápido: estabiliza aliados sem teste (apenas com kit médico)"},
+      {"nome": "Universitário",  "pericias": ["Atualidades", "Investigação"],  "poder": "Dedicação: +1 PE, e +1 PE adicional a cada NEX ímpar (15%, 25%...)"}
+    ]
+  },
+
+  "instrucoes_criacao_completa": {
+    "passo1_conceito":    "Defina uma frase-conceito: 'Quem é, o que faz, por que entrou na Ordem?'",
+    "passo2_atributos":   "Distribua: todos começam em 1. Some 4 pontos. Máximo 3. Pode reduzir a 0 para ganhar +1 ponto.",
+    "passo3_origem":      "Escolha uma origem. Ganha 2 perícias treinadas + 1 poder de origem.",
+    "passo4_classe":      "Escolha Combatente, Especialista ou Ocultista. Ganha perícias obrigatórias + livres.",
+    "passo5_calcular_stats": "PV = base + Vigor | PE = base + Presença | SAN = fixo da classe",
+    "passo6_habilidades": "Atribua TODAS as habilidades de NEX 5% da classe. Para Ocultista: escolha 3 rituais de 1° círculo.",
+    "passo7_identidade":  "Crie: nome completo, sexo, idade (18-45), altura/peso, aparência física, origem narrativa, personalidade.",
+    "passo8_validacao":   "NUNCA envie ficha com campos null, PE incoerente, ou sem habilidades de classe."
+  }
+}

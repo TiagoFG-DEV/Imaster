@@ -1,0 +1,263 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RPG Session State Schema",
+  "description": "Validation schema for Ordem Paranormal AI RPG session files",
+  "type": "object",
+ 
+  "required": [
+    "session_metadata",
+    "themes",
+    "story",
+    "world_map",
+    "player_character",
+    "session_variables"
+  ],
+ 
+  "properties": {
+ 
+    "session_metadata": {
+      "type": "object",
+      "required": ["session_id", "engine_version", "status"],
+      "properties": {
+        "session_id": { "type": "string" },
+        "creation_timestamp": { "type": "string" },
+        "engine_version": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["preparation", "running", "finished"]
+        }
+      }
+    },
+ 
+    "themes": {
+      "type": "object",
+      "required": ["primary_theme", "secondary_theme"],
+      "properties": {
+        "primary_theme": { "type": "string" },
+        "secondary_theme": { "type": "string" },
+        "combined_thematic_description": { "type": "string" }
+      }
+    },
+ 
+    "story": {
+      "type": "object",
+      "required": ["introduction", "story_summary", "final_battle"],
+      "properties": {
+ 
+        "introduction": { "type": "string" },
+        "story_summary": { "type": "string" },
+        "climax_description": { "type": "string" },
+ 
+        "final_battle": {
+          "type": "object",
+          "required": ["description", "location"],
+          "properties": {
+            "description": { "type": "string" },
+            "location": { "type": "string" }
+          }
+        },
+ 
+        "victory_consequences": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+ 
+        "defeat_consequences": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+ 
+    "fixed_events": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["event_id", "name", "description", "location"],
+        "properties": {
+          "event_id": { "type": "string" },
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "description": { "type": "string" },
+          "location": { "type": "string" },
+ 
+          "trigger_conditions": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+ 
+          "possible_outcomes": {
+            "type": "object",
+            "properties": {
+              "success": { "type": "string" },
+              "partial_success": { "type": "string" },
+              "failure": { "type": "string" },
+              "critical_failure": { "type": "string" }
+            }
+          },
+ 
+          "resolved": { "type": "boolean" }
+        }
+      }
+    },
+ 
+    "world_map": {
+      "type": "object",
+      "required": ["locations"],
+      "properties": {
+ 
+        "map_name": { "type": "string" },
+        "map_description": { "type": "string" },
+ 
+        "locations": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["location_id", "name", "description"],
+            "properties": {
+ 
+              "location_id": { "type": "string" },
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+ 
+              "connected_locations": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+ 
+              "npcs_present": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+ 
+              "points_of_interest": {
+                "type": "array",
+                "maxItems": 5,
+                "items": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+ 
+    "points_of_interest_database": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["poi_id", "location_id", "name", "description"],
+        "properties": {
+ 
+          "poi_id": { "type": "string" },
+          "location_id": { "type": "string" },
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "description": { "type": "string" },
+ 
+          "investigation_required": { "type": "boolean" },
+ 
+          "discovery_difficulty": {
+            "type": "string",
+            "enum": [
+              "automatic",
+              "easy",
+              "standard",
+              "hard",
+              "extreme"
+            ]
+          },
+ 
+          "hidden_contents": {
+            "type": "object",
+            "properties": {
+              "documents": { "type": "array", "items": { "type": "string" } },
+              "items": { "type": "array", "items": { "type": "string" } },
+              "weapons": { "type": "array", "items": { "type": "string" } },
+              "clues": { "type": "array", "items": { "type": "string" } },
+              "traps": { "type": "array", "items": { "type": "string" } },
+              "secrets": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+ 
+          "logical_placement_explanation": { "type": "string" }
+        }
+      }
+    },
+ 
+    "player_character": {
+      "type": "object",
+      "required": ["identity", "attributes", "derived_stats"],
+      "properties": {
+ 
+        "identity": {
+          "type": "object",
+          "required": ["name"],
+          "properties": {
+            "name": { "type": "string" },
+            "surname": { "type": "string" },
+            "gender": { "type": "string" },
+            "appearance": { "type": "string" },
+            "personality": { "type": "string" }
+          }
+        },
+ 
+        "attributes": {
+          "type": "object",
+          "required": [
+            "forca",
+            "agilidade",
+            "intelecto",
+            "presenca",
+            "vigor"
+          ],
+          "properties": {
+ 
+            "forca": { "type": "integer", "minimum": 0, "maximum": 5 },
+            "agilidade": { "type": "integer", "minimum": 0, "maximum": 5 },
+            "intelecto": { "type": "integer", "minimum": 0, "maximum": 5 },
+            "presenca": { "type": "integer", "minimum": 0, "maximum": 5 },
+            "vigor": { "type": "integer", "minimum": 0, "maximum": 5 }
+          }
+        },
+ 
+        "derived_stats": {
+          "type": "object",
+          "required": [
+            "pv_max",
+            "pv_current",
+            "pe_max",
+            "pe_current",
+            "sanidade_max",
+            "sanidade_current"
+          ],
+          "properties": {
+ 
+            "pv_max": { "type": "integer", "minimum": 1 },
+            "pv_current": { "type": "integer", "minimum": 0 },
+ 
+            "pe_max": { "type": "integer", "minimum": 0 },
+            "pe_current": { "type": "integer", "minimum": 0 },
+ 
+            "sanidade_max": { "type": "integer", "minimum": 0 },
+            "sanidade_current": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+ 
+    "session_variables": {
+      "type": "object",
+      "required": ["game_over"],
+      "properties": {
+ 
+        "current_location": { "type": "string" },
+        "last_event_triggered": { "type": "string" },
+        "current_story_phase": { "type": "string" },
+ 
+        "game_over": { "type": "boolean" }
+      }
+    }
+  }
+}

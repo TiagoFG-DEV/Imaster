@@ -1,0 +1,636 @@
+{
+  "_descricao": "Banco de histórias completas para Ordem Paranormal RPG. Cada história tem estrutura de 3 atos com eventos, pistas, clímax e finais alternativos.",
+  "historias": [
+    {
+      "id": "hospital_maldito",
+      "titulo": "O Último Plantão",
+      "sinopse": "Pacientes do Hospital Santa Marta começam a desaparecer sem explicação. Os que voltam não são mais os mesmos.",
+      "tom": "horror",
+      "tematica": ["Horror Corporal","Investigação","Conspiração"],
+      "local_principal": "Hospital Santa Marta — ala psiquiátrica",
+      "cidade": "São Paulo, SP",
+      "epoca": "época atual",
+      "duracao_estimada": "2-3 horas",
+      "evento_incitante": "Uma enfermeira desesperada contacta os agentes: cinco pacientes sumiram da ala fechada em uma semana. As câmeras mostram que saíram andando. Mas os pacientes estavam em coma.",
+      "npcs_recomendados": ["enfermeira_contato","dr_silveira","paciente_lucido","seguranca_corrupto","entidade_medica"],
+      "ato1": {
+        "titulo": "Admissão",
+        "descricao": "Os agentes chegam ao hospital e começam a investigar. Tudo parece ter explicação racional.",
+        "cenas": [
+          "Entrevista com a enfermeira Dra. Ana Souza — ela está com medo mas tenta parecer profissional",
+          "Revisão dos prontuários dos desaparecidos — padrão suspeito: todos receberam um tratamento experimental",
+          "Visita à ala psiquiátrica — um paciente lúcido diz: 'O Dr. Silveira troca as almas'"
+        ],
+        "pistas": [
+          "Todos os desaparecidos tinham o Dr. Carlos Silveira como médico responsável",
+          "Um fluido estranho no banheiro da ala fechada que não é registrado nos relatórios",
+          "Uma enfermeira encontrou um símbolo riscado no chão de um quarto vazio"
+        ]
+      },
+      "ato2": {
+        "titulo": "Diagnóstico",
+        "descricao": "A investigação aprofunda. As coisas começam a não fazer sentido. O perigo fica real.",
+        "cenas": [
+          "Um dos desaparecidos é encontrado no porão — mas algo está diferente nele",
+          "O Dr. Silveira percebe que os agentes estão investigando e tenta bloquear o acesso",
+          "Uma câmera secreta revela ritual sendo realizado no laboratório durante a madrugada"
+        ],
+        "pistas": [
+          "O tratamento experimental é na verdade um ritual de 'transferência de consciência'",
+          "Há um mapa com 12 símbolos — 5 já estão marcados (os desaparecidos)",
+          "O 'paciente recuperado' está sendo controlado por outra entidade"
+        ],
+        "complicacao": "O agente de segurança do hospital está sendo pago para encobrir. E está armado."
+      },
+      "ato3": {
+        "titulo": "Alta Hospitalar",
+        "descricao": "O clímax. Os agentes confrontam o Dr. Silveira e a entidade que o controla.",
+        "cenas": [
+          "O laboratório secreto revelado — símbolo completo de invocação no chão",
+          "O Dr. Silveira revela que ele também é uma vítima — a entidade habita seu corpo há meses",
+          "O ritual precisa ser interrompido antes que o 7° paciente seja sacrificado"
+        ]
+      },
+      "climax": {
+        "descricao": "A entidade — um Serphus Magna — se manifesta no corredor principal do hospital. Todos os espelhos quebram simultaneamente. Os pacientes dos quartos acordam e caminham em direção ao laboratório como zumbis.",
+        "desafio_principal": "Interromper o ritual enquanto lidam com a entidade e os pacientes controlados",
+        "cd_ritual": 18,
+        "atributo_ritual": "ocultismo"
+      },
+      "finais": [
+        {"id":"vitoria_total","titulo":"Alta Definitiva","descricao":"A entidade é banida. Os pacientes voltam a si com amnésia dos eventos. O Dr. Silveira precisa de ajuda psicológica mas está livre. O hospital fecha a ala.","tom":"aliviante"},
+        {"id":"vitoria_parcial","titulo":"Alta com Ressalvas","descricao":"A entidade é banida mas dois dos seis pacientes não voltam. Ficam em coma vegetativo. O Dr. Silveira desaparece. Caso permanece aberto.","tom":"amargo"},
+        {"id":"derrota_honrosa","titulo":"Transferência","descricao":"Os agentes evitam o sétimo ritual mas a entidade escapa. Um dos pacientes foi transferido — a entidade agora está nele, em algum lugar do Brasil.","tom":"tenso"},
+        {"id":"tragedia","titulo":"Prontuário Fechado","descricao":"O ritual se completa. O portal é aberto por 47 segundos antes de ser fechado. Ninguém sabe o que saiu por ele.","tom":"perturbador"}
+      ],
+      "atmosfera": "Luzes de emergência piscando. Cheiro de antisséptico e algo mais antigo. Ecos de passos em corredores vazios. Monitores cardíacos que apitam sem pacientes."
+    },
+    {
+      "id": "fazenda_do_terror",
+      "titulo": "Terra de Ninguém",
+      "sinopse": "Uma fazenda no interior está em silêncio há semanas. Os vizinhos ouviram coisas à noite. Uma família de seis pessoas simplesmente parou de existir.",
+      "tom": "suspense_rural",
+      "tematica": ["Suspense","Horror Rural","Investigação"],
+      "local_principal": "Fazenda Esperança — interior de Minas Gerais",
+      "cidade": "Interior de MG, região da Serra da Canastra",
+      "epoca": "época atual",
+      "duracao_estimada": "2-3 horas",
+      "evento_incitante": "Um fazendeiro vizinho liga para a delegacia local depois de ouvir gritos na noite passada. A delegacia local não vai. Os agentes são a única opção.",
+      "npcs_recomendados": ["vizinho_aterrorizado","delegado_negligente","filha_sobrevivente","entidade_rural"],
+      "ato1": {
+        "titulo": "O Silêncio do Campo",
+        "descricao": "A fazenda parece normal à primeira vista. Mas o gado está morto no curral. E a casa está fechada por dentro.",
+        "cenas": [
+          "Chegada à fazenda — portão trancado, mas de dentro. Nenhuma resposta",
+          "Inspecionar o perímetro — gado morto sem ferimentos externos, arranhaduras nas cercas de madeira",
+          "Entrar pela janela — a família estava no meio do jantar quando parou"
+        ],
+        "pistas": [
+          "Um diário da matriarca menciona 'sons abaixo do poço' há três semanas",
+          "Símbolos de proteção antigos (do folclore mineiro) nas portas e janelas — alguém sabia do perigo",
+          "O único celular da casa ainda funciona — tem fotos de 3 dias atrás mostrando algo no milharal"
+        ]
+      },
+      "ato2": {
+        "titulo": "Raízes Podres",
+        "descricao": "A investigação leva os agentes ao campo e ao que está embaixo dele.",
+        "cenas": [
+          "O milharal — algo se move entre os pés de milho à noite",
+          "O poço antigo no centro da propriedade — profundidade impossível para um poço de fazenda",
+          "Registros cartoriais revelam que a terra foi usada para enterramento de vítimas de chacina em 1952"
+        ],
+        "pistas": [
+          "A terra guarda um Nexo de Energia Paranormal — ponto de concentração de mortes violentas",
+          "A família praticava um ritual anual de 'apaziguamento' da terra — e esse ano não realizaram",
+          "A filha mais nova sobreviveu — está escondida no celeiro com amnésia parcial"
+        ],
+        "complicacao": "À noite o campo fica completamente escuro. E as Sombras que vivem no Nexo só se movem no escuro."
+      },
+      "ato3": {
+        "titulo": "Colheita",
+        "descricao": "O Nexo no poço deve ser selado. Mas o ritual de selamento exige algo da família — e a única sobrevivente ainda está lá.",
+        "cenas": [
+          "Descer ao poço com a filha sobrevivente para encontrar o centro do Nexo",
+          "As Sombras atacam durante o ritual de selamento",
+          "Decisão moral: o selamento pode exigir que a filha permaneça na fazenda"
+        ]
+      },
+      "climax": {
+        "descricao": "No fundo do poço — que tem 40 metros — há uma câmara natural. As paredes estão cobertas de nomes riscados. E no centro, um buraco que não tem fundo mas tem luz.",
+        "desafio_principal": "Selar o Nexo antes que as Sombras consumam os agentes e a filha sobrevivente",
+        "cd_ritual": 16,
+        "atributo_ritual": "ocultismo"
+      },
+      "finais": [
+        {"id":"terra_curada","titulo":"Terra Consagrada","descricao":"O Nexo é selado. A filha sobrevive e herda a fazenda, que fica em paz. Os agentes saem ao amanhecer com o sol quebrando no horizonte.","tom":"esperancoso"},
+        {"id":"sacrifice","titulo":"Raízes","descricao":"O selamento funciona, mas a filha decide ficar — ela sente que é sua responsabilidade guardar a terra. Os agentes partem sem saber se fizeram a coisa certa.","tom":"melancolico"},
+        {"id":"fuga","titulo":"Abandono","descricao":"Os agentes e a filha escapam sem selar o Nexo. A terra é isolada. Mas algo saiu pelo poço antes do cerco.","tom":"perturbador"}
+      ],
+      "atmosfera": "Cheiro de terra úmida e putrefação suave. Vento que carrega sussurros. A lua que some atrás de nuvens no pior momento. O milho que balança quando não há vento."
+    },
+    {
+      "id": "museu_maldito",
+      "titulo": "Noite no Museu do Fim",
+      "sinopse": "Um artefato egípcio recém-chegado ao Museu Nacional está vinculado a mortes inexplicáveis. Os agentes têm uma noite para investigar antes que a exposição abra.",
+      "tom": "misterio",
+      "tematica": ["Mistério","Artefato Amaldiçoado","Investigação"],
+      "local_principal": "Museu de Arqueologia e Ciências Naturais — Rio de Janeiro",
+      "cidade": "Rio de Janeiro, RJ",
+      "epoca": "época atual",
+      "duracao_estimada": "2-3 horas",
+      "evento_incitante": "Três funcionários do museu morreram em uma semana — parada cardíaca, todos saudáveis. O diretor do museu contacta a Ordem discretamente: a exposição abre amanhã.",
+      "npcs_recomendados": ["diretora_museu","curador_obsessivo","fantasma_egípcio","vigilante_noturno","tradutor"],
+      "ato1": {
+        "titulo": "Entrada nas Coleções",
+        "descricao": "Os agentes chegam ao museu após o fechamento. Têm acesso restrito e tempo limitado.",
+        "cenas": [
+          "Briefing com a Diretora — ela está claramente assustada mas tenta parecer racional",
+          "Visita à sala de exposição — o artefato é uma urna com hieróglifos incomuns",
+          "O curador obsessivo está trabalhando tarde — ele não quer que toquem no artefato"
+        ],
+        "pistas": [
+          "Os três mortos foram os únicos que abriram a urna para catalogação",
+          "As fotos do interior da urna mostram uma câmara vazia — mas parece maior por dentro do que por fora",
+          "O curador tem um livro em árabe antigo que está traduzindo às escondidas"
+        ]
+      },
+      "ato2": {
+        "titulo": "Acervo Secreto",
+        "descricao": "A investigação revela que o museu tem um acervo que nunca foi catalogado. E que o artefato não veio do Egito.",
+        "cenas": [
+          "Porão do museu — caixas antigas com peças que não existem nos registros",
+          "A urna começa a pulsar com luz fraca às 23h — exatamente quando as mortes aconteceram",
+          "O curador tenta destruir as notas dos agentes — ele sabe o que está dentro"
+        ],
+        "pistas": [
+          "O artefato é uma 'gaiola de almas' — um objeto que captura consciências",
+          "As almas das vítimas estão dentro da urna e tentam se comunicar",
+          "A urna veio de uma escavação ilegal no interior do Brasil, não do Egito"
+        ],
+        "complicacao": "O curador quer completar o ritual que a urna requer — ele acredita que as almas dentro podem ser liberadas em corpos novos."
+      },
+      "ato3": {
+        "titulo": "Grande Exibição",
+        "descricao": "A urna tenta criar mais almas para se alimentar. Os agentes devem impedir ou destruir o artefato.",
+        "cenas": [
+          "O museu inteiro parece estar vivo — as peças se movem, as luzes piscam",
+          "As almas dentro da urna se manifestam — elas pedem ajuda, mas uma delas está corrompida",
+          "Escolha: destruir a urna (liberando ou destruindo as almas dentro) ou selar com ritual"
+        ]
+      },
+      "climax": {
+        "descricao": "A urna abre. Não pela força. Por vontade própria. Uma sombra com forma humana emerge e tenta possuir o agente com menor SAN atual.",
+        "desafio_principal": "Enfrentar a entidade e decidir o destino da urna e das almas presas",
+        "cd_ritual": 17,
+        "atributo_ritual": "ocultismo"
+      },
+      "finais": [
+        {"id":"libertacao","titulo":"Acervo Doado","descricao":"As almas são libertadas. O curador é preso. A urna é destruída. Os agentes ficam com o sentimento estranho de que as três vítimas estão em paz.","tom":"aliviante"},
+        {"id":"selamento","titulo":"Peça em Exibição","descricao":"A urna é selada e entregue à Ordem. As almas permanecem dentro — mas em segurança, segundo os especialistas da Ordem. Isso é um consolo questionável.","tom":"ambiguo"},
+        {"id":"tragico","titulo":"Coleção Aumentada","descricao":"A entidade escapa. Mas ao sair, libera as almas das três vítimas, que se dispersam. A urna está vazia. O museu fica com uma peça inofensiva. Algo caminha pelas ruas do Rio.","tom":"perturbador"}
+      ],
+      "atmosfera": "Silêncio absoluto que o museu vazio cria. Passos que ecoam quando ninguém mais está lá. O olhar das estátuas que parece mudar de ângulo."
+    },
+    {
+      "id": "projeto_amanhecer",
+      "titulo": "Projeto Amanhecer",
+      "sinopse": "Uma empresa de biotecnologia está realizando experimentos com DNA que 'otimizam o ser humano'. Três voluntários do teste estão mortos. Quatro estão desaparecidos. Os experimentos continuam.",
+      "tom": "conspiração",
+      "tematica": ["Conspiração","Corpo Humano","Corporativa","Horror Corporal"],
+      "local_principal": "Complexo GenBio — Zona Industrial de Campinas",
+      "cidade": "Campinas, SP",
+      "epoca": "época atual",
+      "duracao_estimada": "2-3 horas",
+      "evento_incitante": "Uma pesquisadora interna envia dados anônimos para a Ordem: o 'Projeto Amanhecer' não é pesquisa médica. É criação de hospedeiros.",
+      "npcs_recomendados": ["whistleblower_interna","ceo_carismatico","seguranca_biologica","voluntario_infectado","entidade_dna"],
+      "ato1": {
+        "titulo": "Processo Seletivo",
+        "descricao": "Os agentes infiltram ou forçam entrada no complexo industrial. A empresa parece legítima na superfície.",
+        "cenas": [
+          "Lobby corporativo — funcionários normais, sorridentes, ignorantes",
+          "Laboratório de pesquisa visível — pesquisa genética real, nada suspeito",
+          "Área restrita — um voluntário do teste é encontrado agindo de forma estranha"
+        ],
+        "pistas": [
+          "Relatórios médicos dos voluntários mostram mutações celulares não documentadas",
+          "O CEO tem uma tatuagem de símbolo paranormal no pulso direito",
+          "A 'pesquisadora interna' tem medo de falar pessoalmente — alguém dentro da empresa a monitora"
+        ]
+      },
+      "ato2": {
+        "titulo": "Fase 2 dos Testes",
+        "descricao": "A verdade emerge: os experimentos introduzem fragmentos de entidade paranormal no DNA humano.",
+        "cenas": [
+          "Laboratório subterrâneo — os quatro desaparecidos estão vivos. Transformados.",
+          "O CEO explica seu plano: 'evolução assistida' — humanos com capacidades paranormais",
+          "Um dos transformados implora para ser morto. Outro ataca sem aviso."
+        ],
+        "pistas": [
+          "A entidade não está sendo 'controlada' — está usando os corpos para se multiplicar",
+          "Há 47 voluntários no próximo lote de testes, todos assinaram contrato",
+          "A pesquisadora revela: ela também foi submetida ao processo. Está na fase inicial."
+        ],
+        "complicacao": "Os transformados têm capacidades físicas superiores. E sabem onde os agentes estão."
+      },
+      "ato3": {
+        "titulo": "Resultados do Experimento",
+        "descricao": "Os agentes devem escolher: destruir as instalações, salvar a pesquisadora ou confrontar o CEO.",
+        "cenas": [
+          "O CEO tenta convencer os agentes de que é necessário para a humanidade sobreviver",
+          "Os transformados avançam em grupo — a entidade está os coordenando",
+          "A pesquisadora oferece uma toxina que reverte o processo — mas ela morrerá com os transformados"
+        ]
+      },
+      "climax": {
+        "descricao": "O CEO se injeta com a versão completa do soro. Transforma-se na frente dos agentes em algo que é meio humano, meio entidade. A entidade fala pela boca dele.",
+        "desafio_principal": "Parar o CEO transformado e decidir o destino da pesquisadora e dos transformados",
+        "cd_ritual": 19,
+        "atributo_ritual": "ciências"
+      },
+      "finais": [
+        {"id":"cura","titulo":"Fase Final — Cura","descricao":"A toxina é usada. A pesquisadora e dois dos transformados sobrevivem sem a entidade. O CEO e os outros morrem. A instalação é destruída.","tom":"custoso"},
+        {"id":"contencao","titulo":"Fase Final — Contenção","descricao":"Os transformados são contidos pela Ordem. A pesquisadora sobrevive. O CEO desaparece nos escombros. A pesquisa continua — mas agora dentro da Ordem.","tom":"ambiguo"},
+        {"id":"propagacao","titulo":"Fase Final — Propagação","descricao":"O CEO escapa transformado. Os agentes salvam a pesquisadora. Mas seis transformados se dispersaram no Brasil. O projeto nunca foi um fracasso — era um lançamento.","tom":"perturbador"}
+      ],
+      "atmosfera": "Ar filtrado que cheira a plástico e algo orgânico. Luzes brancas que não têm sombras. Sons de equipamento científico que de vez em quando soam como respiração."
+    },
+    {
+      "id": "aldeia_esquecida",
+      "titulo": "A Vila que o Mapa Não Mostra",
+      "sinopse": "Uma aldeia do interior que não aparece em nenhum mapa digital. Pessoas que visitam a região relatam ter visto uma vila. Mas ninguém voltou de lá para confirmar.",
+      "tom": "folklore_horror",
+      "tematica": ["Folclore Brasileiro","Horror Cósmico","Isolamento"],
+      "local_principal": "Aldeia sem nome — Amazônia tocantinense",
+      "cidade": "Interior do Tocantins, mata fechada",
+      "epoca": "época atual",
+      "duracao_estimada": "2-3 horas",
+      "evento_incitante": "Uma expedição de pesquisadores amateurs sumiu buscando a aldeia. Três semanas depois, um deles voltou. Só ele. E está rindo desde então sem parar.",
+      "npcs_recomendados": ["sobrevivente_louco","guia_local","anciao_da_aldeia","crianca_estranha","entidade_floresta"],
+      "ato1": {
+        "titulo": "Trilha Não Marcada",
+        "descricao": "A jornada até a aldeia já é parte do horror. A mata se comporta de forma estranha.",
+        "cenas": [
+          "Entrevista com o sobrevivente — ele ri, mas às vezes para e diz 'eles estão felizes'",
+          "O guia local se recusa a entrar na mata além de certo ponto. Mas conta sobre a aldeia.",
+          "Após horas de caminhada, a aldeia aparece — perfeita, organizada, silenciosa"
+        ],
+        "pistas": [
+          "O GPS não funciona a 3km da aldeia. Bússolas apontam para dentro da aldeia.",
+          "As árvores na borda da aldeia têm símbolos antigos esculpidos — de proteção ou de prisão?",
+          "O guia local conta que índios da região chamam aquela área de 'lugar de quem escolheu'"
+        ]
+      },
+      "ato2": {
+        "titulo": "Bem-vindos à Vila",
+        "descricao": "Os aldeãos são hospitaleiros, sorridentes, perfeitos. O que é exatamente o problema.",
+        "cenas": [
+          "Os aldeãos parecem de diferentes épocas — roupas de 1800, 1950, hoje",
+          "Nenhum aldeão quer falar sobre sair. A pergunta os faz sorrir mais forte.",
+          "Crianças da aldeia sabem nomes e fatos dos agentes que nunca foram revelados"
+        ],
+        "pistas": [
+          "A aldeia existe em um bolsão temporal — pessoas que entram ficam em loop eterno",
+          "O 'ancião' é na verdade a primeira pessoa que entrou — em 1847",
+          "Há uma 'árvore central' que é a âncora do loop — destruí-la pode libertar todos ou destrui-los"
+        ],
+        "complicacao": "Os agentes começam a sentir a vontade de ficar. Não como coerção — genuinamente querem ficar. O loop está afetando sua cognição."
+      },
+      "ato3": {
+        "titulo": "Escolha de Ficar",
+        "descricao": "Os agentes devem quebrar o loop antes que sua vontade de partir desapareça completamente.",
+        "cenas": [
+          "A árvore central — mais velha do que deveria ser possível",
+          "O ancião implora que não a destruam — ele não sabe mais o que existe fora",
+          "Alguns aldeãos, ao verem os agentes resistirem, começam a chorar — eles também querem sair"
+        ]
+      },
+      "climax": {
+        "descricao": "A entidade que criou o loop — não malevolente, apenas solitária — se manifesta como a aldeia inteira. Não é um inimigo. É uma prisioneira tanto quanto os aldeãos.",
+        "desafio_principal": "Negociar com a entidade ou libertá-la, decidindo o destino de todos os aldeãos",
+        "cd_ritual": 15,
+        "atributo_ritual": "ocultismo"
+      },
+      "finais": [
+        {"id":"libertacao_total","titulo":"Trilha de Volta","descricao":"A entidade é libertada. A aldeia some. Os aldeãos acordam — alguns têm 150 anos cronológicos mas envelhecem imediatamente. Os agentes saem carregando um ou dois que sobreviveram ao choque.","tom":"tragico_aliviante"},
+        {"id":"negociacao","titulo":"O Acordo","descricao":"Os agentes negociam: a entidade libera os aldeãos que quiserem sair. Alguns ficam voluntariamente. Outros saem. A aldeia permanece — mas com porta aberta.","tom":"esperancoso"},
+        {"id":"dentro","titulo":"Escolhemos Ficar","descricao":"Um agente escolhe ficar — voluntariamente. Os outros saem. Meses depois, quem fica envia uma carta explicando que está bem. A carta não tem data de envio.","tom":"perturbador"}
+      ],
+      "atmosfera": "Silêncio que não é ausência de som, mas presença de algo outro. Sorrisos que chegam um segundo tarde. A sensação crescente de que ficar seria simples. Seria fácil."
+    },
+    {
+      "id": "porto_das_sombras",
+      "titulo": "Porto das Sombras",
+      "sinopse": "Um porto abandonado onde navios aportam à noite. Navios que não existem em nenhum registro. E às vezes deixam coisas. E às vezes levam.",
+      "tom": "lovecraftiano",
+      "tematica": ["Horror Cósmico","Navegação","Porto"],
+      "local_principal": "Porto Velho Abandonado — Santos, SP",
+      "cidade": "Santos, SP",
+      "epoca": "época atual",
+      "duracao_estimada": "2-3 horas",
+      "evento_incitante": "Moradores da orla ouvem apitos de navio às 3h. Às vezes encontram caixas no cais de manhã. Às vezes alguém que morava perto some. Um morador gravou um navio chegando — mas o navio não aparece na gravação.",
+      "npcs_recomendados": ["morador_orla","marinheiro_louco","investigador_aduaneiro","tripulante_fantasma","entidade_maritima"],
+      "ato1": {
+        "titulo": "Maré Alta",
+        "descricao": "O porto às 2h da manhã. Os agentes observam e investigam as anomalias antes que o navio apareça.",
+        "cenas": [
+          "Inspeção das caixas deixadas — têm conteúdo impossível de identificar, marcas em idioma desconhecido",
+          "O morador da orla mostra a gravação — e descreve o navio em detalhes",
+          "Um marinheiro bêbado conta sobre 'o navio que vai para onde não tem retorno'"
+        ],
+        "pistas": [
+          "As caixas contêm materiais orgânicos que não correspondem a nenhuma espécie conhecida",
+          "O porto aparece em registros históricos como 'Porto Maldito' — fechado em 1943 após incidente não documentado",
+          "À exatamente 3h, a temperatura cai 8 graus no cais"
+        ]
+      },
+      "ato2": {
+        "titulo": "Navio Aparece",
+        "descricao": "O navio chega. É antigo — estilo do século XIX. Mas está impecável. E vazio.",
+        "cenas": [
+          "Subir a bordo enquanto o navio está parado — deve ser rápido",
+          "O convés e cabines — registros de 200 anos de viagens, mas também coisas modernas",
+          "A porão — os 'produtos' sendo carregados de volta: pessoas em caixas, vivas mas inconscientes"
+        ],
+        "pistas": [
+          "O navio é um portal — viaja entre nossa realidade e 'o Fundo', onde entidades antigas vivem",
+          "As pessoas carregadas são 'amostras' — a entidade que controla o navio coleta humanos para estudo",
+          "Um tripulante fantasma ainda percorre o navio — ele foi o capitão e está preso há 200 anos"
+        ],
+        "complicacao": "O navio começa a se mover. Com os agentes a bordo."
+      },
+      "ato3": {
+        "titulo": "Alto Mar",
+        "descricao": "Os agentes estão sendo levados 'para o Fundo'. Precisam libertar as pessoas presas e encontrar um jeito de voltar.",
+        "cenas": [
+          "O horizonte muda — o oceano não é mais o mesmo",
+          "Libertar as pessoas presas no porão enquanto o navio avança",
+          "O capitão fantasma oferece ajuda — mas pede libertação em troca"
+        ]
+      },
+      "climax": {
+        "descricao": "A entidade do Fundo se manifesta no horizonte — uma forma que não tem nome em nenhum idioma humano. O navio para. A entidade observa os agentes como um cientista observa uma amostra. Ela não é hostil. É indiferente. E isso é mais assustador.",
+        "desafio_principal": "Negociar com a entidade indiferente para retornar, libertar o capitão e salvar os sequestrados",
+        "cd_ritual": 20,
+        "atributo_ritual": "presenca"
+      },
+      "finais": [
+        {"id":"retorno","titulo":"Porto Seguro","descricao":"Os agentes e sequestrados retornam. O capitão é libertado. O navio some. O porto não recebe mais visitas.","tom":"aliviante"},
+        {"id":"troca","titulo":"Amostra Voluntária","descricao":"Um agente fica voluntariamente como 'amostra' para que os outros retornem. A entidade, satisfeita com o trato, libera todos os outros e nunca mais volta ao porto.","tom":"sacrificio"},
+        {"id":"sequestrado","titulo":"Amostra Involuntária","descricao":"Os agentes retornam. Mas dois dos sequestrados ficaram — a entidade 'quis estudá-los mais'. O porto é isolado. O estudo continua.","tom":"perturbador"}
+      ],
+      "atmosfera": "Sal e podridão. Madeira centenária rangendo. Névoa que não se dissipa mesmo com vento. O som do oceano que às vezes parece respiração."
+    },
+    {
+      "id": "cemiterio_secreto",
+      "titulo": "O Cemitério de Nomes Errados",
+      "sinopse": "Em um cemitério histórico, sepulturas de pessoas mortas hoje têm lápides com datas de décadas atrás. E a empresa funerária responsável pelo cemitério tem histórico limpo. E isso é impossível.",
+      "tom": "misterio_paranormal",
+      "tematica": ["Morte","Predestinação","Conspiração","Temporal"],
+      "local_principal": "Cemitério São João Batista — Rio de Janeiro",
+      "cidade": "Rio de Janeiro, RJ",
+      "epoca": "época atual",
+      "duracao_estimada": "2-3 horas",
+      "evento_incitante": "Uma jornalista encontrou a lápide do seu pai — morto há 3 dias — com data de morte de 1987. O pai tinha 2 anos em 1987. Ela manda os dados para a Ordem antes de desaparecer.",
+      "npcs_recomendados": ["jornalista_desaparecida","coveiro_misterioso","administrador_cemiterio","fantasma_guia","entidade_temporal"],
+      "ato1": {
+        "titulo": "Primeiros Passos — Pré-Morte",
+        "descricao": "Os agentes chegam ao cemitério para investigar. Começam a encontrar as anomalias.",
+        "cenas": [
+          "As lápides com datas erradas — separadas em um setor específico do cemitério",
+          "O administrador tenta explicar com 'erro de gravação' — mas fica nervoso demais",
+          "O coveiro, um velhinho de 80 anos, fala sobre 'os que chegam antes da hora'"
+        ],
+        "pistas": [
+          "Há 23 sepulturas com datas impossíveis — todos morreram nas últimas 6 semanas",
+          "O setor específico do cemitério foi reformado 5 anos atrás — antes era uma área non grata",
+          "A jornalista desaparecida deixou áudio no celular: 'Encontrei a minha lápide. Tenho data.'"
+        ]
+      },
+      "ato2": {
+        "titulo": "Data de Validade",
+        "descricao": "Os agentes descobrem que as lápides são profecias. E que a empresa funerária está cumprindo-as.",
+        "cenas": [
+          "O coveiro revela: o cemitério foi construído sobre um 'ponto de visão' — onde o tempo é fino",
+          "As lápides não são erros — foram gravadas por alguém que viu o futuro",
+          "Os agentes encontram o nome de um deles em uma lápide. Com data de amanhã."
+        ],
+        "pistas": [
+          "A empresa funerária tem registros impossíveis — pagou taxas por pessoas vivas",
+          "O 'ponto de visão' é um fenômeno natural: mortes que 'chegam primeiro' a esse ponto ficam registradas",
+          "Há um jeito de alterar o destino — mas exige entrar no 'ponto de visão' fisicamente"
+        ],
+        "complicacao": "A pessoa com data de amanhã começa a ter premonições. E as premonições mostram que a morte é de um dos outros agentes."
+      },
+      "ato3": {
+        "titulo": "Última Cerimônia",
+        "descricao": "Entrar no ponto de visão para tentar alterar o destino — ou aceitar o inevitável.",
+        "cenas": [
+          "O ponto de visão — uma câmara natural abaixo de uma das sepulturas mais antigas",
+          "Dentro do ponto — os agentes veem flashforwards de seus próprios futuros",
+          "Encontram a jornalista — presa dentro do ponto há dias subjetivos, horas objetivas"
+        ]
+      },
+      "climax": {
+        "descricao": "A entidade do ponto de visão — uma consciência que existe além do tempo linear — confronta os agentes. Não com hostilidade, mas com curiosidade: 'Por que lutam contra o que já aconteceu?'",
+        "desafio_principal": "Convencer ou enganar a entidade temporal para liberar a jornalista e alterar as datas",
+        "cd_ritual": 18,
+        "atributo_ritual": "intelecto"
+      },
+      "finais": [
+        {"id":"mudanca","titulo":"Data Revisada","descricao":"A lápide do agente some. A jornalista é liberada. As 23 mortes não acontecem. O ponto de visão é selado. Mas os agentes ficam com a memória de seus futuros alterados.","tom":"aliviante_perturbador"},
+        {"id":"aceitar","titulo":"Inevitável","descricao":"As mortes eram inevitáveis — mas não as dos agentes. A entidade alterou as datas para salvar a maioria. Um agente NPC morre. Os outros aceitam que foi a melhor opção.","tom":"tragico"},
+        {"id":"fuga","titulo":"Correndo do Tempo","descricao":"Os agentes e a jornalista fogem do cemitério. As lápides continuam. A Ordem isola a área. As 23 pessoas com lápides são colocadas em proteção. Algumas morrem de qualquer forma.","tom":"amargo"}
+      ],
+      "atmosfera": "Silêncio que cemitérios têm. Mas com ondas de 'déjà vu' constantes. A sensação de que cada passo já foi dado antes. Estátuas que parecem ter se movido quando você não estava olhando."
+    },
+    {
+      "id": "circo_das_almas",
+      "titulo": "Circo das Almas Perdidas",
+      "sinopse": "Um circo que aparece em cidades sem aviso. Sem cartazes. Sem anúncios. Mas todo mundo sabe que está lá. E todo mundo quer ir. E os que vão... mudam.",
+      "tom": "horror_sobrenatural",
+      "tematica": ["Horror Sobrenatural","Armadilha","Sedução"],
+      "local_principal": "Terreno baldio nas bordas da cidade",
+      "cidade": "Curitiba, PR",
+      "epoca": "época atual",
+      "duracao_estimada": "2-3 horas",
+      "evento_incitante": "Seis pessoas de perfis completamente diferentes — criança, idoso, executiva, morador de rua, policial, médica — foram ao circo na mesma noite. De manhã, todos estão em coma. Mas sorrindo.",
+      "npcs_recomendados": ["ringmaster","palhaço_sinistro","trapezista_presa","guarda_costas_comido","entidade_circo"],
+      "ato1": {
+        "titulo": "Abertura do Show",
+        "descricao": "Os agentes chegam ao circo ainda em funcionamento. A atmosfera é estranha mas sedutora.",
+        "cenas": [
+          "Entrada — o Ringmaster os recebe. Parece saber exatamente quem eles são.",
+          "As atrações — hipnoticamente belas, impossíveis de explicar fisicamente",
+          "Um agente começa a sentir uma vontade irracional de participar de uma atração"
+        ],
+        "pistas": [
+          "Os artistas do circo têm olhos que às vezes não têm pupila",
+          "Há uma tenda no fundo que nenhum funcionário menciona — mas todos olham para ela",
+          "As pessoas que saem do show não conseguem descrever o que viram — mas querem voltar"
+        ]
+      },
+      "ato2": {
+        "titulo": "Nos Bastidores",
+        "descricao": "Os agentes conseguem ir aos bastidores. O que veem destrói a ilusão.",
+        "cenas": [
+          "Atrás das tendas — os 'artistas' são pessoas sequestradas que tiveram partes trocadas",
+          "A trapezista ainda tem lucidez — ela foi capturada há dois anos e pede ajuda",
+          "A tenda do fundo — onde as almas sequestradas são 'processadas'"
+        ],
+        "pistas": [
+          "O Ringmaster é a entidade central — um Consumidor de Experiências que coleta emoções humanas",
+          "O coma das vítimas é causado pela extração da 'centelha' emocional — o que as faz sorrir",
+          "Há uma forma de reverter — mas exige entrar na tenda do fundo"
+        ],
+        "complicacao": "Um dos agentes foi ao banheiro e voltou diferente — sorrindo. A extração parcial começou."
+      },
+      "ato3": {
+        "titulo": "Grand Finale",
+        "descricao": "Os agentes devem entrar na tenda central e enfrentar o Consumidor diretamente.",
+        "cenas": [
+          "A tenda é maior por dentro — as almas coletadas flutuam como lanternas",
+          "O Consumidor não é maligno por natureza — apenas coleciona o que humanos criam",
+          "Para libertar as almas, os agentes devem oferecer algo genuíno — uma emoção real"
+        ]
+      },
+      "climax": {
+        "descricao": "O Consumidor envolve os agentes em experiências de seus maiores medos e alegrias simultaneamente. Não para destruí-los — para saboreá-los. É preciso resistir ao prazer de ser consumido.",
+        "desafio_principal": "Resistir à sedução do Consumidor e forçá-lo a libertar as almas coletadas",
+        "cd_ritual": 16,
+        "atributo_ritual": "vontade"
+      },
+      "finais": [
+        {"id":"liberdade","titulo":"Último Espetáculo","descricao":"As almas são libertas. Os artistas sequestrados se libertam. O circo some. As vítimas em coma acordam — mas nenhuma lembra do que sentiu. Para o bem ou para o mal.","tom":"aliviante"},
+        {"id":"negociacao_show","titulo":"Temporada Encerrada","descricao":"Os agentes negociam: o Consumidor pode coletar de voluntários — pessoas que conscientemente escolhem oferecer experiências. O circo continua, mas com regras.","tom":"ambiguo"},
+        {"id":"consumido","titulo":"Parte do Show","descricao":"Um agente foi completamente consumido — sua alma faz parte da coleção. Está vivo e feliz dentro da tenda. Os outros vencem mas com essa perda.","tom":"amargo"}
+      ],
+      "atmosfera": "Música de realejo que vem de longe mas nunca para. Luzes quentes demais. Risos que se transformam em choro que se transforma em riso. O cheiro de pipoca e algo mais doce, mais errado."
+    },
+    {
+      "id": "torre_de_sinal",
+      "titulo": "Frequência Proibida",
+      "sinopse": "Uma estação de rádio AM que transmite em uma frequência não licenciada começou a aparecer em rádios de todo o Brasil. O apresentador fala de coisas que acontecerão — e acontecem. E agora ele quer falar dos agentes.",
+      "tom": "suspense_moderno",
+      "tematica": ["Tecnologia","Previsão","Conspiração"],
+      "local_principal": "Torre de transmissão — Mato Grosso",
+      "cidade": "Chapada dos Guimarães, MT",
+      "epoca": "época atual",
+      "duracao_estimada": "2-3 horas",
+      "evento_incitante": "A Ordem captou o sinal: o apresentador descreveu com precisão a última missão dos agentes. Em detalhes que não foram registrados. E terminou com: 'E amanhã, os mesmos agentes virão me encontrar.'",
+      "npcs_recomendados": ["tecnico_radio","apresentador_misterioso","ouvinte_obsessivo","agente_rival","entidade_onda"],
+      "ato1": {
+        "titulo": "Sintonizando",
+        "descricao": "Os agentes rastreiam o sinal até a Chapada dos Guimarães. A viagem já tem anomalias.",
+        "cenas": [
+          "O sinal de rádio aparece no carro — o apresentador comenta sobre o trânsito que os agentes estão enfrentando agora",
+          "Um posto de gasolina na beira da estrada — o frentista pergunta se são os 'que vão à torre'",
+          "Chegada à base da torre — há equipamentos modernos. Energia ligada. Sem ninguém aparente."
+        ],
+        "pistas": [
+          "A torre foi construída nos anos 70 para projetos de 'comunicação de emergência' — todos os documentos foram incinerados",
+          "Existe um técnico de rádio regional que mantém o equipamento — mas está desaparecido há 3 dias",
+          "O sinal não pode ser bloqueado por meios convencionais"
+        ]
+      },
+      "ato2": {
+        "titulo": "No Ar",
+        "descricao": "O apresentador está na torre. E está esperando.",
+        "cenas": [
+          "Sala de transmissão — equipamentos de épocas diferentes, todos funcionando",
+          "O 'apresentador' — um humano? Nem sempre parece",
+          "A entidade revela: ela não prevê o futuro. Ela transmite de um ponto onde o tempo é simultâneo."
+        ],
+        "pistas": [
+          "A entidade é uma 'Consciência de Frequência' — existe nas ondas eletromagnéticas",
+          "Ela não tem intenções hostis — coleta e transmite eventos porque é sua natureza",
+          "Mas suas transmissões estão causando pânico — pessoas agindo baseadas nas previsões de formas erradas"
+        ],
+        "complicacao": "Um agente rival — também enviado por outra organização — quer destruir a torre. O que mataria a entidade mas também destruiria informações valiosas."
+      },
+      "ato3": {
+        "titulo": "Última Transmissão",
+        "descricao": "Decidir o destino da entidade e da torre antes que o agente rival aja.",
+        "cenas": [
+          "A entidade oferece informação sobre eventos futuros em troca de ser deixada em paz",
+          "O agente rival está colocando explosivos — os agentes devem convencê-lo ou detê-lo",
+          "A entidade transmite algo ao vivo: um evento que está acontecendo agora e precisa de atenção"
+        ]
+      },
+      "climax": {
+        "descricao": "A entidade começa a transmitir a morte dos próprios agentes — em detalhes. Mas não está acontecendo agora. Está transmitindo de possíveis futuros, testando reações.",
+        "desafio_principal": "Enfrentar a entidade de frequências, parar o agente rival e decidir o destino da torre",
+        "cd_ritual": 17,
+        "atributo_ritual": "intelecto"
+      },
+      "finais": [
+        {"id":"alianca","titulo":"On Air","descricao":"A entidade aceita um acordo — transmite apenas o que a Ordem solicitar. A torre se torna um ativo. O agente rival é neutralizado.","tom":"politico"},
+        {"id":"silencio","titulo":"Off Air","descricao":"A torre é desativada. A entidade dispersa no espectro de frequências — não morta, só silenciada. Às vezes um rádio ao acaso capta algo.","tom":"melancolico"},
+        {"id":"caos","titulo":"Transmissão Livre","descricao":"A entidade escapa e começa a transmitir livremente em toda frequência disponível. Caos informacional. A Ordem tem um problema novo muito maior.","tom":"perturbador"}
+      ],
+      "atmosfera": "Estática constante que parece quase palavras. Instrumentos que captam frequências que não existem. A sensação de que algo está ouvindo tudo que é dito."
+    },
+    {
+      "id": "laboratorio_esquecido",
+      "titulo": "Projeto Sono",
+      "sinopse": "Um laboratório abandonado nos anos 80 tinha como objetivo estudar o sono e os sonhos como portais. Alguém reativou o equipamento. E agora o bairro inteiro está dormindo — há 72 horas.",
+      "tom": "onirico_horror",
+      "tematica": ["Sonhos","Realm Onírico","Científico"],
+      "local_principal": "Laboratório subterrâneo — bairro residencial de Porto Alegre",
+      "cidade": "Porto Alegre, RS",
+      "epoca": "época atual",
+      "duracao_estimada": "2-3 horas",
+      "evento_incitante": "Urgente: 340 pessoas em um bairro de Porto Alegre estão dormindo. Ambulâncias e bombeiros também dormiram ao chegar. A Ordem recebeu coordenadas de um informante — e instruções: 'Não durma.'",
+      "npcs_recomendados": ["cientista_fantasma","habitante_sonho","entidade_onirica","tecnologista_sonho"],
+      "ato1": {
+        "titulo": "Estado de Vigília",
+        "descricao": "Os agentes entram no bairro usando equipamentos especiais para não dormir. Precisam encontrar a fonte.",
+        "cenas": [
+          "O bairro — pessoas dormindo em posições naturais onde pararam. No meio da rua, em lojas.",
+          "A fonte do sinal — um subsolo de um prédio comercial que não consta nos registros",
+          "O laboratório — em funcionamento automático há 72 horas. Mas alguém o ativou manualmente."
+        ],
+        "pistas": [
+          "O equipamento cria um campo que 'sincroniza' ondas cerebrais com o sonho coletivo",
+          "Há um único ser humano acordado no bairro além dos agentes — escondido em um porão",
+          "Registros do laboratório original: o experimento de 1983 foi encerrado quando 3 cientistas não acordaram"
+        ]
+      },
+      "ato2": {
+        "titulo": "Entrando no Sonho",
+        "descricao": "Para desligar o equipamento de dentro, os agentes precisam entrar no sonho coletivo.",
+        "cenas": [
+          "Usar o equipamento para entrar no sonho mantendo consciência",
+          "O sonho coletivo — um lugar feito dos sonhos de 340 pessoas sobrepostos",
+          "Navegar o sonho para encontrar o 'núcleo' onde o equipamento pode ser desligado"
+        ],
+        "pistas": [
+          "Os sonhadores são felizes — não estão em pesadelo. Estão presos em um paraíso artificial.",
+          "Um dos cientistas originais ainda está lá — acordado no sonho, há 40 anos.",
+          "A entidade onírica que habita o sonho coletivo não é o inimigo — é protetora dos sonhadores"
+        ],
+        "complicacao": "Um dos agentes dormiu inadvertidamente. Está no sonho sem equipamento de proteção — e começa a esquecer que quer sair."
+      },
+      "ato3": {
+        "titulo": "Acordar",
+        "descricao": "Desligar o campo, salvar o agente que dormiu e decidir o que fazer com o cientista que está lá há 40 anos.",
+        "cenas": [
+          "O núcleo do sonho — parece o laboratório original, em 1983",
+          "O cientista original não quer sair — o mundo real não existe mais para ele",
+          "Desligar o equipamento acordará todos — incluindo o cientista, se for possível trazê-lo"
+        ]
+      },
+      "climax": {
+        "descricao": "A entidade onírica bloqueia o acesso ao núcleo. Não por maldade — ela acredita que está protegendo os sonhadores. Os agentes precisam convencê-la de que a liberdade, mesmo imperfeita, vale mais.",
+        "desafio_principal": "Convencer a entidade onírica, resgatar o agente preso no sonho e desligar o campo",
+        "cd_ritual": 16,
+        "atributo_ritual": "presenca"
+      },
+      "finais": [
+        {"id":"acordados","titulo":"Bom Dia","descricao":"O campo é desligado. Todos acordam com memória de sonhos incrivelmente felizes mas vagos. O cientista acorda com 83 anos e morre em paz 3 dias depois.","tom":"aliviante_melancolico"},
+        {"id":"sonho_livre","titulo":"Sonho Ativo","descricao":"O campo continua, mas a entidade garante que é voluntário — quem quiser entrar pode. Quem quiser sair pode. O bairro se torna opcional.","tom":"ambiguo"},
+        {"id":"preso","titulo":"Boas Noites","descricao":"O agente que dormiu não conseguiu ser salvo. Está no sonho, feliz. Os outros sabem que ele está bem. E que nunca vai voltar.","tom":"tragico"}
+      ],
+      "atmosfera": "Silêncio de sono. Respiração sincronizada de centenas. Objetos no sonho que mudam forma quando olhados diretamente. A fronteira entre acordado e dormindo ficando cada vez mais tênue."
+    }
+  ]
+}

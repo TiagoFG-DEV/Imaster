@@ -1,0 +1,38 @@
+{
+  "_descricao": "Itens do universo Ordem Paranormal para inventário e equipamento dos personagens.",
+  "armas": [
+    {"id":"faca_tatica","nome":"Faca Tática","tipo":"corpo_a_corpo","dano":"1d4+FOR","alcance":"adjacente","descricao":"Lâmina de aço carbono com empunhadura ergonômica. Silenciosa e confiável.","raridade":"comum","custo_pe":0},
+    {"id":"pistola_9mm","nome":"Pistola 9mm","tipo":"arma_de_fogo","dano":"1d8","alcance":"curto","descricao":"Pistola semiautomática padrão. Confiável, com boa capacidade de carregador.","raridade":"comum","custo_pe":0},
+    {"id":"espingarda","nome":"Espingarda","tipo":"arma_de_fogo","dano":"2d8 (curto) / 1d8 (médio)","alcance":"curto_medio","descricao":"Alta capacidade de parada. Barulhenta. Excelente em ambientes fechados.","raridade":"comum","custo_pe":0},
+    {"id":"rifle_assault","nome":"Fuzil de Assalto","tipo":"arma_de_fogo","dano":"1d10","alcance":"longo","descricao":"Arma militar. Precisa de treinamento. Alta cadência de fogo.","raridade":"incomum","custo_pe":0},
+    {"id":"barra_ferro","nome":"Barra de Ferro","tipo":"corpo_a_corpo","dano":"1d6+FOR","alcance":"adjacente","descricao":"Improvisada. Pesada. Funciona.","raridade":"improviso","custo_pe":0},
+    {"id":"katana","nome":"Katana","tipo":"corpo_a_corpo","dano":"1d8+FOR","alcance":"adjacente","descricao":"Lâmina japonesa afiada. Raramente vista, mas eficaz. Quem carrega tem uma história.","raridade":"incomum","custo_pe":0},
+    {"id":"machado_simbolico","nome":"Machado de Caçador","tipo":"corpo_a_corpo","dano":"1d8+FOR+1 vs paranormais","alcance":"adjacente","descricao":"Machado entalhado com símbolos protetores. +1 de dano contra entidades do Outro Lado.","raridade":"raro","custo_pe":0},
+    {"id":"besta","nome":"Besta","tipo":"arma_de_fogo","dano":"1d8","alcance":"medio","descricao":"Silenciosa. Lenta de recarregar. Flechas podem ser encantadas ou ter pontas especiais.","raridade":"incomum","custo_pe":0}
+  ],
+  "equipamentos": [
+    {"id":"kit_medico","nome":"Kit Médico","tipo":"suprimento","efeito":"Cura 1d6+2 PV (ação padrão). Ou estabiliza personagem Morrendo (CD Medicina 10). 3 usos.","raridade":"comum","custo_pe":0},
+    {"id":"kit_cirurgico","nome":"Kit Cirúrgico de Campo","tipo":"suprimento","efeito":"Cura 2d8+4 PV (5 minutos de aplicação). Estabiliza com 1 PV. 2 usos.","raridade":"incomum","custo_pe":0},
+    {"id":"radio_comunicacao","nome":"Rádio de Comunicação","tipo":"equipamento","efeito":"Comunicação em até 5km. Pode captar frequências anômalas com teste de Tecnologia.","raridade":"comum","custo_pe":0},
+    {"id":"camera_termica","nome":"Câmera Térmica","tipo":"equipamento","efeito":"Visão térmica em área. Detecta entidades com temperatura anômala. CD Percepção -5.","raridade":"incomum","custo_pe":0},
+    {"id":"sal_grosso","nome":"Sal Grosso (1kg)","tipo":"suprimento","efeito":"Barreira contra entidades — cria linha de 3m que entidades menores não podem cruzar. Pode ser usado como 'granada de sal' (área 3m, 1d6 dano a entidades vulneráveis).","raridade":"comum","custo_pe":0},
+    {"id":"agua_benta","nome":"Água Benta","tipo":"suprimento","efeito":"1d4 dano a entidades vulneráveis (arremesso). Ou benzer área (entidades -2 em testes por 1 cena). 3 usos.","raridade":"comum","custo_pe":0},
+    {"id":"gravador_digital","nome":"Gravador Digital","tipo":"equipamento","efeito":"Captura sons inaudíveis ao ouvido humano. Com teste de Tecnologia, pode captar comunicações do Outro Lado.","raridade":"incomum","custo_pe":0},
+    {"id":"lanterna_tatica","nome":"Lanterna Tática","tipo":"equipamento","efeito":"Ilumina 15m. Entidades sensíveis à luz recebem -2 em testes na área iluminada.","raridade":"comum","custo_pe":0},
+    {"id":"explosivo_improvisado","nome":"Explosivo Improvisado","tipo":"arma","efeito":"Área 5m — 3d6 dano (CD Reflexos 15 para metade). Destrói estruturas físicas menores.","raridade":"raro","custo_pe":0},
+    {"id":"luvas_isolantes","nome":"Luvas de Isolamento Paranormal","tipo":"equipamento","efeito":"Toque em objetos amaldiçoados não transmite efeito. Permite manusear artefatos com segurança.","raridade":"raro","custo_pe":0}
+  ],
+  "artefatos_paranormais": [
+    {"id":"amuleto_protecao","nome":"Amuleto de Proteção","tipo":"artefato","efeito":"+2 em testes de Vontade e SAN. Quando SAN chegar a 0, o amuleto se quebra e restaura 1d6 SAN (1 vez por missão).","raridade":"raro","custo_pe":0},
+    {"id":"diario_ocultista","nome":"Diário de Ocultista","tipo":"artefato","efeito":"Contém 1d4+1 rituais escritos. Ocultista pode aprender sem custo. Outros precisam de 1 semana de estudo + CD Ocultismo 15.","raridade":"raro","custo_pe":0},
+    {"id":"chave_dimensao","nome":"Chave Dimensional","tipo":"artefato","efeito":"Abre passagens entre locais do mesmo plano (teleporte de curta distância, até 100m). 2 PE por uso. Só funciona em locais de alta energia paranormal.","raridade":"muito_raro","custo_pe":2},
+    {"id":"espelho_verdade","nome":"Espelho da Verdade","tipo":"artefato","efeito":"Reflete a natureza real de entidades e possuidores. Entidades possuindo humanos são reveladas. CD Vontade 18 para entidade resistir à revelação.","raridade":"raro","custo_pe":1},
+    {"id":"cristal_focalizador","nome":"Cristal Focalizador","tipo":"artefato","efeito":"Ocultistas: rituais custam 1 PE a menos (mínimo 1). Outros: primeiro ritual do dia não exige teste (mas ainda custa PE).","raridade":"muito_raro","custo_pe":0},
+    {"id":"reliquio_caçador","nome":"Relíquia do Caçador","tipo":"artefato","efeito":"Arma encantada com esse relíquio causa +1d6 de dano sagrado contra entidades do Outro Lado. Dura 1 cena por carga. 3 cargas por missão.","raridade":"raro","custo_pe":1}
+  ],
+  "itens_especiais": [
+    {"id":"munição_benta","nome":"Munição Benta","tipo":"especial","efeito":"Munição de arma de fogo encantada com água benta. Causa +1d6 dano extra a entidades vulneráveis ao sagrado. 12 balas.","raridade":"incomum","custo_pe":0},
+    {"id":"erva_proteção","nome":"Ervas de Proteção","tipo":"especial","efeito":"Queimadas, criam fumaça que confunde entidades menores (-4 em testes por 1 cena). Área 10m.","raridade":"comum","custo_pe":0},
+    {"id":"simbolo_sagrado","nome":"Símbolo Sagrado","tipo":"especial","efeito":"Presentar o símbolo como ação padrão. Entidades menores CD Vontade 14 ou recuam 3m. Pode ser usado como foco para rituais de banimento.","raridade":"comum","custo_pe":0}
+  ]
+}
