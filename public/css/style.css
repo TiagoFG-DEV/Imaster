@@ -243,8 +243,11 @@ textarea {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 6px 24px rgba(0, 0, 0, .9));
-  padding-inline: 12px;
+  padding: 4px 50px 8px 30px;
+  display: inline-block;
+  overflow: visible;
 }
+
 
 
 .logo-sub {
