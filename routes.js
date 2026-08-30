@@ -144,36 +144,36 @@ router.post("/suggestions", async (req, res) => {
 router.get("/actions", (req, res) => {
   res.json({
     exploracao: [
-      { texto: "Explorar a área", icon: "🗺", atributo: "intelecto" },
-      { texto: "Investigar objeto suspeito", icon: "🔍", atributo: "intelecto" },
-      { texto: "Observar a cena", icon: "👁", atributo: "intelecto" },
-      { texto: "Procurar pistas", icon: "🕵", atributo: "intelecto" },
-      { texto: "Vasculhar o ambiente", icon: "📦", atributo: "intelecto" },
-      { texto: "Identificar símbolo/ritual", icon: "🔮", atributo: "ocultismo" },
-      { texto: "Fotografar evidências", icon: "📷", atributo: "intelecto" },
-      { texto: "Mapear o local", icon: "📍", atributo: "intelecto" }
+      { texto: "Explorar a área minuciosamente", icon: "◈", atributo: "intelecto" },
+      { texto: "Investigar objeto suspeito", icon: "◈", atributo: "intelecto" },
+      { texto: "Observar a cena e arredores", icon: "👁", atributo: "intelecto" },
+      { texto: "Procurar pistas e vestígios", icon: "✦", atributo: "intelecto" },
+      { texto: "Vasculhar o ambiente", icon: "⊞", atributo: "intelecto" },
+      { texto: "Identificar símbolo/ritual", icon: "⸸", atributo: "ocultismo" },
+      { texto: "Fotografar evidências", icon: "◈", atributo: "intelecto" },
+      { texto: "Mapear o local", icon: "✦", atributo: "intelecto" }
     ],
     social: [
-      { texto: "Falar com o NPC", icon: "💬", atributo: "presenca" },
-      { texto: "Ser amigável", icon: "🤝", atributo: "presenca" },
-      { texto: "Intimidar", icon: "😠", atributo: "presenca" },
-      { texto: "Persuadir", icon: "🗣", atributo: "presenca" },
-      { texto: "Enganar", icon: "🎭", atributo: "presenca" },
-      { texto: "Confiar no NPC", icon: "❤", atributo: "presenca" },
-      { texto: "Ir contra a decisão", icon: "✋", atributo: "presenca" },
-      { texto: "Dissertar sobre o caso", icon: "📋", atributo: "intelecto" },
-      { texto: "Repudiar a situação", icon: "🚫", atributo: "presenca" }
+      { texto: "Falar com o NPC / Aliado", icon: "✦", atributo: "presenca" },
+      { texto: "Abordagem amigável", icon: "✧", atributo: "presenca" },
+      { texto: "Intimidar com firmeza", icon: "⚔", atributo: "presenca" },
+      { texto: "Persuadir com lógica", icon: "◈", atributo: "presenca" },
+      { texto: "Enganar ou blefar", icon: "❖", atributo: "presenca" },
+      { texto: "Demonstrar confiança", icon: "✧", atributo: "presenca" },
+      { texto: "Questionar decisão", icon: "◈", atributo: "presenca" },
+      { texto: "Dissertar sobre o caso", icon: "◈", atributo: "intelecto" },
+      { texto: "Repudiar a situação", icon: "✕", atributo: "presenca" }
     ],
     movimento: [
-      { texto: "Correr", icon: "💨", atributo: "agilidade" },
-      { texto: "Esconder-se", icon: "🌑", atributo: "agilidade" },
-      { texto: "Acrobacia", icon: "🤸", atributo: "agilidade" },
-      { texto: "Escalar", icon: "🧗", atributo: "agilidade" },
-      { texto: "Arrombar porta", icon: "🚪", atributo: "forca" },
-      { texto: "Recuar", icon: "⬅", atributo: "agilidade" },
+      { texto: "Correr para cobertura", icon: "►", atributo: "agilidade" },
+      { texto: "Esconder-se nas sombras", icon: "☽", atributo: "agilidade" },
+      { texto: "Manobra acrobática", icon: "▲", atributo: "agilidade" },
+      { texto: "Escalar ou transpor", icon: "▲", atributo: "agilidade" },
+      { texto: "Arrombar passagem", icon: "⚔", atributo: "forca" },
+      { texto: "Recuar taticamente", icon: "►", atributo: "agilidade" },
       { texto: "Auxiliar aliado", icon: "🛡", atributo: "presenca" },
-      { texto: "Primeiros socorros", icon: "🩺", atributo: "intelecto" },
-      { texto: "Ritual/Rezar", icon: "🕯", atributo: "ocultismo" }
+      { texto: "Prestar primeiros socorros", icon: "✚", atributo: "intelecto" },
+      { texto: "Canalizar ritual", icon: "⸸", atributo: "ocultismo" }
     ]
   });
 });

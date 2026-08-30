@@ -543,6 +543,26 @@ async function processPlayerAction(action, session, diceResult) {
     narration += `\n\n🌀 INSANIDADE TOTAL: A barreira mental se rompeu completamente. A mente do agente foi devorada pelo Outro Lado.`;
   }
 
+  if (!contextual_suggestions || contextual_suggestions.length === 0) {
+    const loc = sh?.current_location || session.world_data?.local_nome || "ambiente";
+    const entity = session.current_entity?.nome || session.world_data?.entidade_principal?.nome;
+    if (entity) {
+      contextual_suggestions = [
+        `Desferir ataque tático de precisão contra ${entity}`,
+        "Buscar cobertura sólida e manter guarda defensiva",
+        "Analisar anomalia para identificar fraqueza elemental",
+        "Comunicar tática de contenção com os aliados"
+      ];
+    } else {
+      contextual_suggestions = [
+        `Investigar vestígios e pistas ocultas em ${loc}`,
+        "Observar perímetro atentamente em busca de anomalias",
+        "Examinar escrituras ou objetos com cautela",
+        "Preparar equipamento ou ritual para imprevistos"
+      ];
+    }
+  }
+
   return {
     narration: narration || "O ambiente permanece tenso. Aguardem o próximo movimento.",
     cinematica,

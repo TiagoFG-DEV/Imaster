@@ -183,6 +183,10 @@ window.addEventListener("DOMContentLoaded", async () => {
   currentTurnIdx  = intro.current_turn_index || 0;
   isMultiplayer   = allCharacters.length > 1;
 
+  if (intro.contextual_suggestions && intro.contextual_suggestions.length > 0) {
+    currentSuggestions = intro.contextual_suggestions;
+  }
+
   if (intro.visual_background) applyDynamicBackground(intro.visual_background);
 
   // Renderiza HUD padrão: ficha do jogador ativo, seletor de fichas e tema de classe
@@ -277,27 +281,18 @@ function openCharSheet(index) {
 // ═══════════════════════════════════════════════════════════════════════════════
 // ─── ARENA DE INICIATIVA COM DESEMPATE SUAVE (2º DADO) ────────────────────────
 // ═══════════════════════════════════════════════════════════════════════════════
-let arenaData = []; // [{char, agi, bonus, dice:[null,null], best:null, second:null, tiebreak:null}]
+let arenaData = []; // [{char, die: null, isTied: false}]
 
 function checkAndStartInitiativeSequence(intro) {
   introDataGlobal = intro;
   const initKey = "initiative_done_" + sessionId;
   if (localStorage.getItem(initKey)) return;
 
-  arenaData = allCharacters.map(char => {
-    const agi = char.attributes?.agilidade || 0;
-    const trained = (char.skills || []).includes("Iniciativa");
-    const bonus = trained ? 5 : 0;
-    return {
-      char,
-      agi,
-      bonus,
-      dice: [null, null],
-      best: null,
-      second: null,
-      tiebreak: null
-    };
-  });
+  arenaData = allCharacters.map(char => ({
+    char,
+    die: null,
+    isTied: false
+  }));
 
   showInitiativeArena();
 }
@@ -316,26 +311,18 @@ function showInitiativeArena() {
   grid.innerHTML = arenaData.map((entry, pi) => {
     const char = entry.char;
     const avatarSrc = getSafeAvatar(char.avatar_url, char.name);
-    const agiText = entry.agi >= 0 ? `+${entry.agi}` : `${entry.agi}`;
     return `
       <div class="initiative-player-card" id="ipc-${pi}">
         <div class="ipc-avatar-wrap">
           <img class="ipc-avatar" src="${avatarSrc}" alt="${esc(char.name)}">
-          <div class="ipc-agi-badge" title="Agilidade">${agiText}</div>
         </div>
         <div class="ipc-info">
           <div class="ipc-name" title="${esc(char.name)}">${esc(char.name)}</div>
           <div class="ipc-class">${esc(char.class || 'Especialista')}</div>
         </div>
         <div class="ipc-dice">
-          <div class="ipc-die" id="ipc-die-${pi}-0" onclick="arenaRollDie(${pi},0)" title="Clique para rolar o 1º Dado">
-            <span class="ipc-die-tag">Dado 1</span>
-            <div class="ipc-die-val" id="ipc-dv-${pi}-0">d20</div>
-            <div class="ipc-die-label">ROLAR</div>
-          </div>
-          <div class="ipc-die" id="ipc-die-${pi}-1" onclick="arenaRollDie(${pi},1)" title="Clique para rolar o 2º Dado">
-            <span class="ipc-die-tag">Dado 2</span>
-            <div class="ipc-die-val" id="ipc-dv-${pi}-1">d20</div>
+          <div class="ipc-die" id="ipc-die-${pi}" onclick="arenaRollDie(${pi})" title="Clique para rolar 1d20">
+            <div class="ipc-die-val" id="ipc-dv-${pi}">d20</div>
             <div class="ipc-die-label">ROLAR</div>
           </div>
         </div>
@@ -353,25 +340,24 @@ function showInitiativeArena() {
   if (rollAllBtn) rollAllBtn.disabled = false;
 
   const sub = el("arena-subtitle");
-  if (sub) sub.textContent = "Cada agente rola 2d20 — o maior valor define a ordem. Em caso de empate, o 2º dado desempata!";
+  if (sub) sub.textContent = "Role 1d20 por agente. O maior resultado define a ordem. Em empate, os empatados rolam novamente!";
 
   arena.classList.remove("fading");
   arena.classList.add("active");
 }
 
-function arenaRollDie(pi, di) {
+function arenaRollDie(pi) {
   const entry = arenaData[pi];
-  if (!entry || entry.dice[di] !== null) return;
+  if (!entry || entry.die !== null) return;
 
   const val = Math.floor(Math.random() * 20) + 1;
-  const dieEl = el(`ipc-die-${pi}-${di}`);
-  const valEl = el(`ipc-dv-${pi}-${di}`);
+  const dieEl = el(`ipc-die-${pi}`);
+  const valEl = el(`ipc-dv-${pi}`);
   if (!dieEl || !valEl) return;
 
   dieEl.classList.add("ipc-rolling", "ipc-die-rolled");
   if (typeof Dice3D !== "undefined" && Dice3D.playDiceSound) Dice3D.playDiceSound();
 
-  // Rolagem suave com desaceleração física progressiva
   const delays = [35, 45, 60, 80, 110, 145, 190, 245, 310];
   let step = 0;
 
@@ -381,51 +367,21 @@ function arenaRollDie(pi, di) {
       setTimeout(nextStep, delays[step]);
       step++;
     } else {
-      entry.dice[di] = val;
+      entry.die = val;
       valEl.textContent = val;
       dieEl.classList.remove("ipc-rolling");
       if (typeof Dice3D !== "undefined" && Dice3D.playDiceSettleSound) Dice3D.playDiceSettleSound();
-      checkArenaPlayerDone(pi);
+      
+      const scoreEl = el(`ipc-score-${pi}`);
+      if (scoreEl) scoreEl.innerHTML = `<span style="font-size:16px;color:var(--gold);font-weight:700;">${val}</span>`;
+
+      const allRolled = arenaData.every(e => e.die !== null);
+      if (allRolled) {
+        setTimeout(checkArenaResults, 400);
+      }
     }
   }
   nextStep();
-}
-
-function checkArenaPlayerDone(pi) {
-  const entry = arenaData[pi];
-  if (entry.dice[0] === null || entry.dice[1] === null) return;
-
-  const d0 = entry.dice[0];
-  const d1 = entry.dice[1];
-  const bestRaw = entry.agi < 0 ? Math.min(d0, d1) : Math.max(d0, d1);
-  const secondRaw = entry.agi < 0 ? Math.max(d0, d1) : Math.min(d0, d1);
-
-  entry.best = bestRaw + entry.bonus;
-  entry.second = secondRaw;
-
-  const d0El = el(`ipc-die-${pi}-0`);
-  const d1El = el(`ipc-die-${pi}-1`);
-
-  if (d0 >= d1) {
-    d0El?.classList.add("ipc-best");
-    d1El?.classList.add("ipc-second");
-  } else {
-    d1El?.classList.add("ipc-best");
-    d0El?.classList.add("ipc-second");
-  }
-
-  const scoreEl = el(`ipc-score-${pi}`);
-  if (scoreEl) {
-    scoreEl.innerHTML = `
-      <span style="font-size:18px;color:var(--gold);">${entry.best}</span>
-      <span class="ipc-score-sub">(2º dado: ${entry.second}${entry.bonus ? ` · +${entry.bonus} Bônus` : ''})</span>
-    `;
-  }
-
-  const allDone = arenaData.every(e => e.best !== null);
-  if (allDone) {
-    setTimeout(arenaRevealResults, 400);
-  }
 }
 
 function arenaRollAll() {
@@ -433,74 +389,101 @@ function arenaRollAll() {
   if (btn) btn.disabled = true;
 
   arenaData.forEach((entry, pi) => {
-    [0, 1].forEach((di) => {
-      if (entry.dice[di] === null) {
-        setTimeout(() => arenaRollDie(pi, di), pi * 240 + di * 150);
-      }
-    });
+    if (entry.die === null) {
+      setTimeout(() => arenaRollDie(pi), pi * 220);
+    }
   });
 }
 
-// ─── DESEMPATE E REVELAÇÃO SUAVE ──────────────────────────────────────────────
-function arenaRevealResults() {
+// ─── DESEMPATE E REVELAÇÃO SUAVE (SEM VANTAGEM · REROLAGEM EM EMPATE) ─────────
+function checkArenaResults() {
   const banner = el("initiative-tiebreak-banner");
   const sub = el("arena-subtitle");
 
-  const scoreCounts = {};
+  // Conta frequências dos valores tirados
+  const counts = {};
   arenaData.forEach(e => {
-    scoreCounts[e.best] = (scoreCounts[e.best] || 0) + 1;
+    counts[e.die] = (counts[e.die] || 0) + 1;
   });
 
-  const hasTies = Object.values(scoreCounts).some(count => count > 1);
+  const tiedScores = Object.keys(counts).filter(k => counts[k] > 1);
 
-  if (hasTies && banner) {
-    banner.style.display = "inline-flex";
-    banner.classList.add("active");
-    if (sub) sub.textContent = "⚔ EMPATE NA INICIATIVA! O 2º dado decide quem vem primeiro entre os empatados.";
+  if (tiedScores.length > 0) {
+    // EMPATE DETECTADO: Exibe banner e rerola apenas os empatados
+    if (banner) {
+      banner.style.display = "inline-flex";
+      banner.classList.add("active");
+      banner.textContent = `⚔ EMPATE (${tiedScores.join(", ")}) — ROLANDO NOVAMENTE PARA OS EMPATADOS ⚔`;
+    }
+    if (sub) sub.textContent = `Empate detectado (${tiedScores.join(", ")}). Rerolando os dados dos agentes empatados...`;
+
+    arenaData.forEach((entry, pi) => {
+      const card = el(`ipc-${pi}`);
+      if (counts[entry.die] > 1) {
+        card?.classList.add("tied-player");
+      } else {
+        card?.classList.remove("tied-player");
+      }
+    });
+
+    setTimeout(() => {
+      // Reseta e rerola somente os que empataram
+      arenaData.forEach((entry, pi) => {
+        if (counts[entry.die] > 1) {
+          entry.die = null;
+          const valEl = el(`ipc-dv-${pi}`);
+          if (valEl) valEl.textContent = "d20";
+          const dieEl = el(`ipc-die-${pi}`);
+          if (dieEl) dieEl.classList.remove("ipc-die-rolled", "ipc-rolling");
+          const scoreEl = el(`ipc-score-${pi}`);
+          if (scoreEl) scoreEl.innerHTML = `<span>—</span>`;
+        }
+      });
+
+      let delayIdx = 0;
+      arenaData.forEach((entry, pi) => {
+        if (entry.die === null) {
+          setTimeout(() => arenaRollDie(pi), delayIdx * 240);
+          delayIdx++;
+        }
+      });
+    }, 1100);
+
+    return;
   }
 
-  const sorted = [...arenaData].sort((a, b) => {
-    if (b.best !== a.best) return b.best - a.best;
-    if (b.second !== a.second) return b.second - a.second;
-    if (a.tiebreak === null) a.tiebreak = Math.floor(Math.random() * 20) + 1;
-    if (b.tiebreak === null) b.tiebreak = Math.floor(Math.random() * 20) + 1;
-    return b.tiebreak - a.tiebreak;
+  // SEM EMPATES: Todos os valores são únicos e distintos
+  if (banner) {
+    banner.classList.remove("active");
+    banner.style.display = "none";
+  }
+
+  arenaData.forEach((_, pi) => {
+    el(`ipc-${pi}`)?.classList.remove("tied-player");
   });
 
-  const highestScore = sorted[0]?.best;
+  const sorted = [...arenaData].sort((a, b) => b.die - a.die);
+  const highestScore = sorted[0]?.die;
 
   sorted.forEach((entry, rankIdx) => {
     const pi = arenaData.indexOf(entry);
     const card = el(`ipc-${pi}`);
     const rankEl = el(`ipc-rank-${pi}`);
-    const isTied = scoreCounts[entry.best] > 1;
 
     setTimeout(() => {
-      if (card) {
-        if (entry.best === highestScore) card.classList.add("best-player");
-        if (isTied) {
-          card.classList.add("tied-player");
-          const secondDieIdx = entry.dice[0] <= entry.dice[1] ? 0 : 1;
-          el(`ipc-die-${pi}-${secondDieIdx}`)?.classList.add("ipc-tiebreak-highlight");
-        }
-      }
-
+      if (card && entry.die === highestScore) card.classList.add("best-player");
       if (rankEl) {
         rankEl.textContent = `${rankIdx + 1}º Lugar`;
         rankEl.className = `ipc-rank visible rank-${rankIdx + 1 <= 3 ? rankIdx + 1 : 'other'}`;
       }
-    }, rankIdx * 350);
+    }, rankIdx * 280);
   });
 
   setTimeout(() => {
     const confirmBtn = el("arena-confirm-btn");
     if (confirmBtn) confirmBtn.disabled = false;
-    if (sub) {
-      sub.textContent = hasTies
-        ? "Desempate pelo 2º dado resolvido! Ordem de iniciativa consolidada."
-        : "Ordem de iniciativa definida! Confirme para continuar.";
-    }
-  }, sorted.length * 350 + 300);
+    if (sub) sub.textContent = "Ordem de iniciativa definida! Confirme para iniciar a investigação.";
+  }, sorted.length * 280 + 200);
 }
 
 async function arenaConfirm() {
@@ -513,40 +496,33 @@ async function arenaConfirm() {
     }, 400);
   }
 
-  const sorted = [...arenaData].sort((a, b) => {
-    if (b.best !== a.best) return b.best - a.best;
-    if (b.second !== a.second) return b.second - a.second;
-    return (b.tiebreak || 0) - (a.tiebreak || 0);
-  });
+  const sorted = [...arenaData].sort((a, b) => b.die - a.die);
 
   const playerResults = sorted.map(e => ({
     tipo: "jogador",
     nome: e.char.name,
-    iniciativa: e.best,
-    segundo_dado: e.second,
+    iniciativa: e.die,
     sheet: e.char,
     player_index: e.char.player_index
   }));
 
-  // Adiciona NPCs / Entidades à ordem de iniciativa
+  // NPCs também recebem 1d20 puro sem empates com os jogadores
+  const usedScores = new Set(playerResults.map(p => p.iniciativa));
   const npcs = (introDataGlobal?.world_data?.npcs_ativos || []).map(n => {
-    const d1 = Math.floor(Math.random() * 20) + 1;
-    const d2 = Math.floor(Math.random() * 20) + 1;
-    const best = Math.max(d1, d2) + (n.stats?.iniciativa_bonus || 0);
-    const second = Math.min(d1, d2);
+    let d = Math.floor(Math.random() * 20) + 1;
+    while (usedScores.has(d)) {
+      d = Math.floor(Math.random() * 20) + 1;
+    }
+    usedScores.add(d);
     return {
       tipo: "npc",
       nome: n.nome || "Ameaça",
-      iniciativa: best,
-      segundo_dado: second,
+      iniciativa: d,
       npc: n
     };
   });
 
-  const fullOrder = [...playerResults, ...npcs].sort((a, b) => {
-    if (b.iniciativa !== a.iniciativa) return b.iniciativa - a.iniciativa;
-    return (b.segundo_dado || 0) - (a.segundo_dado || 0);
-  });
+  const fullOrder = [...playerResults, ...npcs].sort((a, b) => b.iniciativa - a.iniciativa);
 
   initiativeOrder = fullOrder;
   currentTurnIdx  = 0;
@@ -555,7 +531,7 @@ async function arenaConfirm() {
   localStorage.setItem("initiative_done_" + sessionId, "true");
 
   const rankingText = fullOrder.map((item, idx) =>
-    `${idx + 1}º ${item.nome} (${item.iniciativa}${item.segundo_dado !== undefined ? ` [2º: ${item.segundo_dado}]` : ''})`
+    `${idx + 1}º ${item.nome} (${item.iniciativa})`
   ).join(" ➔ ");
 
   await addMsg("system", `ORDEM DE INICIATIVA DEFINIDA:\n${rankingText}`);
@@ -564,7 +540,6 @@ async function arenaConfirm() {
   if (introDataGlobal && introDataGlobal.narration) {
     document.body.classList.add("master-narrating");
     await addMsg("narrator", introDataGlobal.narration, "intro");
-    // Aguarda o fechamento do modo narração e retorno suave dos menus
     await new Promise(r => setTimeout(r, 850));
   }
 
@@ -918,6 +893,9 @@ async function narrateRound(actions) {
       })
     });
     const data = await r.json();
+    if (data.contextual_suggestions && data.contextual_suggestions.length > 0) {
+      currentSuggestions = data.contextual_suggestions;
+    }
     if (data.narration) await addMsg("narrator", data.narration);
     if (data.cinematica) playCinematic(data.cinematica);
     if (data.sheet) renderSheet(data.sheet);
@@ -1022,6 +1000,20 @@ function openActionMenu() {
   openMenu("action-menu");
 }
 
+function getContextualSuggestionsList() {
+  if (currentSuggestions && Array.isArray(currentSuggestions) && currentSuggestions.length > 0) {
+    return currentSuggestions.map(s => typeof s === "string" ? s : (s.texto || s.text || "Investigar com cautela"));
+  }
+  const sh = getCurrentSheet();
+  const cl = sh?.class || "Especialista";
+  return [
+    `Investigar pistas e anomalias na cena`,
+    `Adotar postura defensiva em cobertura`,
+    `Interagir com o ambiente para obter vantagem tática`,
+    `Comunicar estratégia aos outros agentes`
+  ];
+}
+
 function showActionTab(tab) {
   currentActionTab = tab;
   document.querySelectorAll(".card-tab").forEach(t => t.classList.remove("active"));
@@ -1030,15 +1022,16 @@ function showActionTab(tab) {
   const actions = actionsDB?.[tab] || getDefaultActions(tab);
   let html = "";
 
-  if (tab === "exploracao" && currentSuggestions && currentSuggestions.length > 0) {
-    html += `<div style="width:100%;font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin:4px 0;">Sugestões Contextuais</div>`;
-    html += currentSuggestions.map((sug, i) =>
-      `<button class="menu-action-btn" style="border-color:var(--gold-d);" id="action-sug-btn-${i}" onclick="selectAction('${esc(sug.texto || sug)}')">
-        <span class="menu-action-icon">✦</span>
-        <span>${esc(sug.texto || sug)}</span>
+  const sugs = getContextualSuggestionsList();
+  if (sugs.length > 0) {
+    html += `<div style="width:100%;font-size:10px;color:var(--gold);font-family:var(--font-t);font-weight:700;text-transform:uppercase;letter-spacing:2px;margin:2px 0 6px;">✦ Sugestões do Mestre</div>`;
+    html += sugs.map((sug, i) =>
+      `<button class="menu-action-btn" style="border-color:rgba(201,168,76,0.6);background:linear-gradient(135deg,rgba(26,20,38,0.92),rgba(12,10,18,0.98));margin-bottom:6px;" id="action-sug-btn-${i}" onclick="selectAction('${esc(sug)}')">
+        <span class="menu-action-icon" style="color:var(--gold);">✦</span>
+        <span>${esc(sug)}</span>
       </button>`
     ).join("");
-    html += `<div style="width:100%;height:1px;background:var(--border2);margin:8px 0;"></div>`;
+    html += `<div style="width:100%;height:1px;background:var(--border2);margin:6px 0 8px;"></div>`;
   }
 
   html += actions.map((a, i) =>
@@ -1268,7 +1261,7 @@ function showDiceModal(diceReq, action) {
   allRolled    = false;
   pendingDiceReq = diceReq;
 
-  const rollAllBtn = `<button class="roll-all-btn" id="dice-roll-all" onclick="rollAllDice(${sides},${qty},${cd},'${pick}','${esc(action)}')">🎲 Rolar Todos os Dados</button>`;
+  const rollAllBtn = `<button class="roll-all-btn" id="dice-roll-all" onclick="rollAllDice(${sides},${qty},${cd},'${pick}','${esc(action)}')">✦ Rolar Todos os Dados</button>`;
 
   const diceHTML = Array.from({length: qty}, (_, i) =>
     `<div class="die" id="die-${i}" onclick="rollDie(${i},${sides},${qty},${cd},'${pick}','${esc(action)}')" title="Clique para rolar o dado 3D">
@@ -1436,6 +1429,10 @@ async function confirmRoll() {
       body: JSON.stringify({ action, sessionId, diceResult: rollResult })
     });
     const data = await r.json();
+
+    if (data.contextual_suggestions && data.contextual_suggestions.length > 0) {
+      currentSuggestions = data.contextual_suggestions;
+    }
 
     if (data.sheet && prevSheet) {
       checkAndTriggerStatCinematics(prevSheet, data.sheet);

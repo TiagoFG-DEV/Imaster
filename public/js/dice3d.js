@@ -292,7 +292,8 @@ const Dice3D = (function() {
 
     renderer.setSize(w, h);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.domElement.style.cssText = "position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;";
+    renderer.domElement.style.cssText = "position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;display:block;";
+    renderer.domElement.addEventListener("webglcontextlost", (e) => e.preventDefault(), false);
     
     while (containerEl.firstChild) {
       containerEl.removeChild(containerEl.firstChild);
