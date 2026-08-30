@@ -1378,7 +1378,604 @@ body.master-narrating .chat-box {
   background: rgba(8, 7, 12, 0.85);
 }
 
-.btn-full-sheet {
+/* ══════════════════════════════════════════════════════════
+   NOVO SIDEBAR GRÁFICO — SP (Sheet Panel) v2
+══════════════════════════════════════════════════════════ */
+
+/* ─── Linha decorativa de topo ──────────────────────────── */
+.sp-header-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px 8px;
+  position: relative;
+}
+.sp-header-line::before,
+.sp-header-line::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,.35), transparent);
+}
+.sp-header-sigil {
+  font-size: 13px;
+  color: var(--gold-d);
+  margin: 0 10px;
+  opacity: .6;
+  letter-spacing: 3px;
+}
+
+/* ─── Bloco de Identidade ─────────────────────────────── */
+.sp-identity {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px 14px;
+  border-bottom: 1px solid rgba(201,168,76,.08);
+  background: linear-gradient(160deg, rgba(201,168,76,.05) 0%, transparent 60%);
+  position: relative;
+}
+
+/* Avatar */
+.sp-avatar-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.sp-avatar-frame {
+  position: relative;
+  width: 68px;
+  height: 68px;
+}
+.sp-avatar-img {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  object-fit: cover;
+  position: absolute;
+  top: 3px; left: 3px;
+  z-index: 1;
+  border: 2px solid rgba(201,168,76,.15);
+}
+.sp-avatar-ring {
+  width: 68px;
+  height: 68px;
+  position: absolute;
+  top: 0; left: 0;
+  transform: rotate(-90deg);
+  z-index: 2;
+}
+.sp-ring-track {
+  fill: none;
+  stroke: rgba(201,168,76,.1);
+  stroke-width: 2.5;
+}
+.sp-ring-glow {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 2.5;
+  stroke-dasharray: 289;
+  stroke-dashoffset: 72; /* ~75% */
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px rgba(201,168,76,.6));
+  animation: sp-ring-shimmer 4s ease-in-out infinite alternate;
+}
+@keyframes sp-ring-shimmer {
+  0%   { stroke-dashoffset: 72; opacity: .8; }
+  100% { stroke-dashoffset: 50; opacity: 1; }
+}
+.sp-avatar-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  border: 2px solid var(--bg2);
+  position: absolute;
+  bottom: 4px; right: 4px;
+  z-index: 3;
+  animation: sp-dot-pulse 2.5s ease-in-out infinite;
+}
+@keyframes sp-dot-pulse {
+  0%, 100% { box-shadow: 0 0 4px #22c55e; }
+  50%       { box-shadow: 0 0 12px #22c55e; }
+}
+.sp-avatar-status-dot.dying   { background: #ef4444; box-shadow: 0 0 10px #ef4444; }
+.sp-avatar-status-dot.mad     { background: #a855f7; box-shadow: 0 0 10px #a855f7; }
+.sp-avatar-status-dot.wounded { background: #f97316; box-shadow: 0 0 8px #f97316; }
+
+/* NEX badge abaixo do avatar */
+.sp-nex-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  background: rgba(201,168,76,.07);
+  border: 1px solid rgba(201,168,76,.2);
+  border-radius: 5px;
+  padding: 2px 7px;
+}
+.sp-nex-label {
+  font-family: var(--font-t);
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  color: var(--gold-d);
+}
+.sp-nex-val {
+  font-family: var(--font-t);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold2);
+}
+
+/* Info lateral */
+.sp-identity-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-top: 2px;
+}
+.sp-agent-tag {
+  font-family: var(--font-t);
+  font-size: 7.5px;
+  letter-spacing: 2.5px;
+  color: var(--gold-d);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.sp-agent-name {
+  font-family: var(--font-t);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: .5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+.sp-agent-class {
+  font-family: var(--font-t);
+  font-size: 10.5px;
+  color: var(--gold);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: .85;
+}
+.sp-location-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+  padding: 3px 8px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 20px;
+  width: fit-content;
+  max-width: 100%;
+}
+.sp-location-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 6px var(--gold);
+  flex-shrink: 0;
+  animation: sp-dot-pulse 2.5s ease-in-out infinite;
+}
+.sp-location-text {
+  font-size: 10px;
+  color: var(--text2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+/* Decoração de fundo do painel */
+.sp-bg-sigil {
+  position: absolute;
+  bottom: 60px;
+  right: 10px;
+  font-size: 120px;
+  color: rgba(201,168,76,.025);
+  font-family: var(--font-d);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  letter-spacing: -10px;
+}
+
+/* ─── Status Effects ──────────────────────────────────── */
+.sp-status-zone {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 6px 16px;
+  min-height: 0;
+}
+.sp-status-zone:empty { padding: 0; }
+/* Os status-tag existentes continuam funcionando aqui */
+
+/* ─── Zona de Recursos Vitais (Anéis) ─────────────────── */
+.sp-vitals-zone {
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid rgba(201,168,76,.08);
+  position: relative;
+  z-index: 1;
+}
+.sp-vitals-label {
+  font-family: var(--font-t);
+  font-size: 8.5px;
+  letter-spacing: 2.5px;
+  color: var(--gold-d);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* Linha dos 3 anéis */
+.sp-rings-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+/* Unidade de anel individual */
+.sp-ring-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  position: relative;
+  flex: 1;
+}
+.sp-ring-wrap {
+  position: relative;
+  width: 74px;
+  height: 74px;
+}
+.sp-ring-svg {
+  width: 74px;
+  height: 74px;
+  transform: rotate(-90deg);
+  display: block;
+}
+
+/* SVG circles */
+.sp-ring-bg {
+  fill: none;
+  stroke: rgba(255,255,255,.06);
+  stroke-width: 5;
+}
+.sp-ring-fill {
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;
+  transition: stroke-dashoffset .7s cubic-bezier(.22, 1, .36, 1), stroke .3s;
+}
+.sp-ring-pv {
+  stroke: #ef4444;
+  filter: drop-shadow(0 0 5px rgba(239,68,68,.6));
+}
+.sp-ring-pe {
+  stroke: #60a5fa;
+  filter: drop-shadow(0 0 5px rgba(96,165,250,.6));
+}
+.sp-ring-san {
+  stroke: #c084fc;
+  filter: drop-shadow(0 0 5px rgba(192,132,252,.6));
+}
+
+/* Centro do anel */
+.sp-ring-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  pointer-events: none;
+}
+.sp-ring-delta {
+  font-family: var(--font-t);
+  font-size: 9px;
+  font-weight: 800;
+  min-height: 12px;
+  opacity: 0;
+  transition: opacity .3s, transform .3s;
+  position: absolute;
+  top: 8px;
+}
+.sp-ring-delta.active.damage {
+  opacity: 1;
+  color: #ef4444;
+  transform: translateY(-3px);
+}
+.sp-ring-delta.active.heal {
+  opacity: 1;
+  color: #22c55e;
+  transform: translateY(-3px);
+}
+.sp-ring-num {
+  font-family: var(--font-t);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+}
+.sp-ring-sep {
+  font-size: 9px;
+  color: var(--text-d);
+  line-height: 1;
+}
+.sp-ring-max {
+  font-family: var(--font-t);
+  font-size: 10px;
+  color: var(--text-d);
+  line-height: 1;
+}
+
+/* Ícone e label abaixo do anel */
+.sp-ring-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+.res-group-pv  .sp-ring-icon { color: #f87171; }
+.res-group-pe  .sp-ring-icon { color: #93c5fd; }
+.res-group-san .sp-ring-icon { color: #d8b4fe; }
+
+.sp-ring-label {
+  font-family: var(--font-t);
+  font-size: 7.5px;
+  letter-spacing: 1.5px;
+  color: var(--text-d);
+  text-transform: uppercase;
+}
+
+/* Estados críticos nos anéis */
+.res-group-pv.is-dying .sp-ring-pv {
+  stroke: #fca5a5;
+  animation: sp-ring-crit 1.1s infinite alternate ease-in-out;
+}
+.res-group-san.is-mad .sp-ring-san {
+  stroke: #e9d5ff;
+  animation: sp-ring-crit 1.1s infinite alternate ease-in-out;
+}
+.res-group-pe.is-exhausted .sp-ring-pe {
+  stroke: #fbbf24;
+  opacity: .7;
+}
+@keyframes sp-ring-crit {
+  0%   { filter: drop-shadow(0 0 5px rgba(239,68,68,.5)); }
+  100% { filter: drop-shadow(0 0 14px rgba(239,68,68,.95)); }
+}
+
+/* Barra NEX Paranormal */
+.sp-nex-bar-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.sp-nex-bar-label {
+  font-family: var(--font-t);
+  font-size: 7.5px;
+  letter-spacing: 1.5px;
+  color: var(--text-d);
+  text-transform: uppercase;
+}
+.sp-nex-bar-pct {
+  font-family: var(--font-t);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--gold2);
+}
+.sp-nex-track {
+  height: 6px;
+  background: rgba(0,0,0,.5);
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.05);
+  position: relative;
+}
+.sp-nex-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #7f1d1d 0%, var(--gold) 100%);
+  border-radius: 3px;
+  box-shadow: 0 0 10px rgba(201,168,76,.5);
+  transition: width .6s cubic-bezier(.22,1,.36,1);
+}
+.sp-nex-ghost {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 8px,
+    rgba(255,255,255,.03) 8px,
+    rgba(255,255,255,.03) 9px
+  );
+}
+
+/* ─── Atributos (Hexágonos) ──────────────────────────── */
+.sp-attrs-zone {
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid rgba(201,168,76,.08);
+}
+.sp-section-label {
+  font-family: var(--font-t);
+  font-size: 8.5px;
+  letter-spacing: 2.5px;
+  color: var(--gold-d);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sp-section-icon {
+  color: var(--gold);
+  font-size: 10px;
+}
+.sp-attr-hex-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+}
+.sp-attr-hex {
+  flex: 1;
+  aspect-ratio: 1;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background: rgba(201,168,76,.06);
+  transition: background .2s;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.sp-attr-hex::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background: rgba(13,11,20,.85);
+}
+.sp-attr-hex:hover {
+  background: rgba(201,168,76,.18);
+}
+.sp-attr-hex-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  position: relative;
+  z-index: 1;
+}
+.sp-attr-val {
+  font-family: var(--font-d);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold2);
+  line-height: 1;
+}
+.sp-attr-name {
+  font-size: 7px;
+  letter-spacing: 1px;
+  color: var(--text-d);
+  font-weight: 700;
+  font-family: var(--font-t);
+}
+
+/* ─── Seções (Habilidades, Perícias, Inventário) ──────── */
+.sp-section-block {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  position: relative;
+  z-index: 1;
+}
+.sp-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+.sp-tag-empty {
+  font-size: 11px;
+  color: var(--text-d);
+  font-style: italic;
+}
+
+/* Tags novas do SP — mapeadas de tag-* para sp-* via JS */
+.sp-section-block .tag { border-radius: 4px; }
+.sp-section-block .tag-ability {
+  background: rgba(168,85,247,.1);
+  border: 1px solid rgba(168,85,247,.25);
+  color: #d8b4fe;
+}
+.sp-section-block .tag-skill {
+  background: rgba(59,130,246,.1);
+  border: 1px solid rgba(59,130,246,.25);
+  color: #93c5fd;
+}
+.sp-section-block .tag-item {
+  background: rgba(201,168,76,.08);
+  border: 1px solid rgba(201,168,76,.22);
+  color: var(--gold2);
+}
+
+/* ─── Alerta de Crise (novo posicionamento) ────────────── */
+.crisis-alert {
+  margin: 4px 12px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.crisis-box {
+  padding: 10px 14px;
+  font-size: 11px;
+  line-height: 1.45;
+  font-family: var(--font-b);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: pulseAlertBox 1.4s infinite alternate ease-in-out;
+  border-radius: 8px;
+}
+.crisis-box.crisis-dying {
+  background: linear-gradient(135deg, rgba(127,29,29,.9), rgba(69,10,10,.95));
+  border: 1px solid #ef4444;
+  color: #fee2e2;
+  box-shadow: 0 0 18px rgba(239,68,68,.3), inset 0 1px 0 rgba(255,255,255,.07);
+}
+.crisis-box.crisis-madness {
+  background: linear-gradient(135deg, rgba(88,28,135,.9), rgba(46,16,101,.95));
+  border: 1px solid #c084fc;
+  color: #f3e8ff;
+  box-shadow: 0 0 18px rgba(192,132,252,.3), inset 0 1px 0 rgba(255,255,255,.07);
+}
+.crisis-box.crisis-exhausted {
+  background: linear-gradient(135deg, rgba(120,53,15,.9), rgba(69,26,3,.95));
+  border: 1px solid #f59e0b;
+  color: #fef3c7;
+  box-shadow: 0 0 18px rgba(245,158,11,.3), inset 0 1px 0 rgba(255,255,255,.07);
+}
+.crisis-icon { font-size: 18px; flex-shrink: 0; }
+
+/* Pulse animations */
+.res-group-pv.is-dying  { animation: sp-group-crit 1.4s infinite alternate ease-in-out; }
+.res-group-san.is-mad   { animation: sp-group-mad  1.4s infinite alternate ease-in-out; }
+@keyframes sp-group-crit {
+  0%   { filter: none; }
+  100% { filter: drop-shadow(0 0 6px rgba(239,68,68,.5)); }
+}
+@keyframes sp-group-mad {
+  0%   { filter: none; }
+  100% { filter: drop-shadow(0 0 6px rgba(192,132,252,.5)); }
+}
+
+/* ─── Pulse de dano nas barras (compatibilidade) ─────── */
+.pulse-damage { animation: bar-pulse-dmg .6s ease-out !important; }
+.pulse-heal   { animation: bar-pulse-heal .6s ease-out !important; }
+@keyframes bar-pulse-dmg {
+  0%   { filter: brightness(1); }
+  50%  { filter: brightness(1.8) saturate(2); }
+  100% { filter: brightness(1); }
+}
+@keyframes bar-pulse-heal {
+  0%   { filter: brightness(1); }
+  50%  { filter: brightness(1.6) hue-rotate(60deg); }
+  100% { filter: brightness(1); }
+}
+
+
   width: 100%;
   padding: 11px 16px;
   background: linear-gradient(135deg, rgba(201, 168, 76, 0.15), rgba(201, 168, 76, 0.05));

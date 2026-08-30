@@ -626,18 +626,28 @@ function renderSheet(sh) {
     el("sh-class").textContent = origin ? `${sh.class || '—'} · ${origin}` : (sh.class || "—");
   }
   if (el("sh-nex")) el("sh-nex").textContent = sh.nex || "5%";
+  if (el("sh-nex-bar-pct")) el("sh-nex-bar-pct").textContent = sh.nex || "5%";
   if (el("sh-location")) {
-    el("sh-location").textContent = sh.current_location || "Desconhecido";
-    el("sh-location").setAttribute("title", `Localização Atual: ${sh.current_location || "Desconhecido"}`);
+    el("sh-location").textContent = sh.current_location || "Localização desconhecida";
   }
 
   const avatarEl = el("sh-avatar");
   if (avatarEl) avatarEl.src = getSafeAvatar(sh.avatar_url, sh.name);
 
+  // Dot de status no avatar — indica condição crítica visualmente
+  const statusDot = el("sp-status-dot");
+  if (statusDot) {
+    statusDot.className = "sp-avatar-status-dot";
+    if (sh.pv_current <= 0) statusDot.classList.add("dying");
+    else if (sh.san_current <= 0) statusDot.classList.add("mad");
+    else if (sh.pv_current < Math.floor(sh.pv_max * 0.4)) statusDot.classList.add("wounded");
+  }
+
   document.body.setAttribute("data-player-class", (sh.class || "comum").toLowerCase());
 
   const nexPct = parseInt(sh.nex || "5%") || 5;
   if (el("nex-bar")) el("nex-bar").style.width = nexPct + "%";
+
 
   setBar("pv",  sh.pv_current,  sh.pv_max);
   setBar("pe",  sh.pe_current,  sh.pe_max);
@@ -723,8 +733,23 @@ function renderSheet(sh) {
 
 function setBar(key, cur, max) {
   const pct = max > 0 ? Math.round((cur / max) * 100) : 0;
-  if (el(`sh-${key}`)) el(`sh-${key}`).textContent = `${cur ?? "?"}/${max ?? "?"}`;
-  if (el(`bar-${key}`)) el(`bar-${key}`).style.width = clamp(pct, 0, 100) + "%";
+  const safePct = clamp(pct, 0, 100);
+
+  // Legacy bar (hidden in new layout but kept for compatibility)
+  if (el(`sh-${key}`)) el(`sh-${key}`).textContent = `${cur ?? '?'}/${max ?? '?'}`;
+  if (el(`bar-${key}`)) el(`bar-${key}`).style.width = safePct + "%";
+
+  // New: separate cur/max number labels
+  if (el(`sh-${key}-cur`)) el(`sh-${key}-cur`).textContent = cur ?? '?';
+  if (el(`sh-${key}-max`)) el(`sh-${key}-max`).textContent = max ?? '?';
+
+  // New: SVG ring stroke-dashoffset (circumference = 207.3 for r=33)
+  const ringEl = el(`ring-${key}`);
+  if (ringEl) {
+    const circumference = 207.3;
+    const offset = circumference * (1 - safePct / 100);
+    ringEl.style.strokeDashoffset = offset.toFixed(2);
+  }
 }
 
 function useSidebarItem(itemName) {

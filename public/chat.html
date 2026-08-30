@@ -8,9 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;600;700;800;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=65">
+  <link rel="stylesheet" href="css/style.css?v=70">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="js/dice3d.js?v=65"></script>
+  <script src="js/dice3d.js?v=70"></script>
 </head>
 <body class="chat-page">
 
@@ -31,7 +31,12 @@
        PAINEL LATERAL — DOSSIÊ DO AGENTE (Controlado pelo Mestre)
   ══════════════════════════════════════════════════════════ -->
   <aside id="sheet-panel" class="sheet-panel">
-    
+
+    <!-- Linha decorativa superior -->
+    <div class="sp-header-line">
+      <div class="sp-header-sigil">⸸</div>
+    </div>
+
     <!-- Seletor de Fichas (Modo Multiplayer) -->
     <div id="character-switcher" class="character-switcher" style="display:none"></div>
 
@@ -42,116 +47,188 @@
       <div class="turn-indicator-bar" id="turn-bar"></div>
     </div>
 
-    <!-- Cabeçalho do Agente (Identidade & Aura) -->
-    <div class="sheet-identity-block">
-      <div class="sheet-avatar-wrap">
-        <img id="sh-avatar" class="sheet-avatar" src="" alt="Retrato do Agente">
-        <div class="sheet-avatar-glow"></div>
+    <!-- ══ BLOCO DE IDENTIDADE ══ -->
+    <div class="sp-identity">
+      <div class="sp-avatar-zone">
+        <div class="sp-avatar-frame">
+          <img id="sh-avatar" class="sp-avatar-img" src="" alt="Retrato do Agente">
+          <svg class="sp-avatar-ring" viewBox="0 0 100 100">
+            <circle class="sp-ring-track" cx="50" cy="50" r="46"/>
+            <circle class="sp-ring-glow" cx="50" cy="50" r="46"/>
+          </svg>
+          <div class="sp-avatar-status-dot" id="sp-status-dot"></div>
+        </div>
+        <div class="sp-nex-badge">
+          <span class="sp-nex-label">NEX</span>
+          <span class="sp-nex-val" id="sh-nex">5%</span>
+        </div>
       </div>
-      <div class="sheet-identity-info">
-        <div class="sheet-agent-badge">AGENTE ORDO REALITAS</div>
-        <div class="sheet-agent-name" id="sh-name">—</div>
-        <div class="sheet-agent-class-row">
-          <span class="sheet-agent-class" id="sh-class">—</span>
-          <span class="sheet-location-pill" title="Localização Atual">
-            <span class="location-dot"></span>
-            <span id="sh-location">Desconhecido</span>
-          </span>
+
+      <div class="sp-identity-info">
+        <div class="sp-agent-tag">ORDO REALITAS</div>
+        <div class="sp-agent-name" id="sh-name">—</div>
+        <div class="sp-agent-class" id="sh-class">—</div>
+        <div class="sp-location-row">
+          <span class="sp-location-dot"></span>
+          <span class="sp-location-text" id="sh-location">Localização desconhecida</span>
         </div>
       </div>
     </div>
 
-    <!-- NEX & Exposição Paranormal -->
-    <div class="sheet-block sheet-nex-block">
-      <div class="sheet-block-header">
-        <span class="sheet-block-label">EXPOSIÇÃO PARANORMAL</span>
-        <span class="nex-val" id="sh-nex">5%</span>
-      </div>
-      <div class="nex-bar-track">
-        <div class="nex-bar-fill" id="nex-bar" style="width:5%"></div>
-      </div>
-      <div class="status-effects-row" id="sh-status-row"></div>
-    </div>
-
-    <!-- Alerta Dinâmico de Crise (Morte / Insanidade / Exaustão) -->
+    <!-- ══ ALERTA DE CRISE ══ -->
     <div id="crisis-alert" class="crisis-alert" style="display:none"></div>
 
-    <!-- Medidores de Recursos Vitais (PV, PE, SAN) -->
-    <div class="sheet-block sheet-vitals-block">
-      <div class="sheet-block-label">RECURSOS VITAIS</div>
-      <div class="res-bars">
-        
+    <!-- ══ STATUS EFFECTS ══ -->
+    <div class="sp-status-zone" id="sh-status-row"></div>
+
+    <!-- ══ RECURSOS VITAIS — ANÉIS CIRCULARES ══ -->
+    <div class="sp-vitals-zone">
+      <div class="sp-vitals-label">SINAIS VITAIS</div>
+      <div class="sp-rings-row">
+
         <!-- PV -->
-        <div class="res-bar-group res-group-pv" id="group-pv">
-          <div class="res-bar-header">
-            <div class="res-title"><span class="res-icon">❤</span> <span class="res-name">PONTOS DE VIDA</span></div>
-            <div class="res-val-wrap">
-              <span class="res-delta" id="delta-pv"></span>
-              <span class="res-val" id="sh-pv">—</span>
+        <div class="sp-ring-unit res-group-pv" id="group-pv">
+          <div class="sp-ring-wrap">
+            <svg class="sp-ring-svg" viewBox="0 0 80 80">
+              <circle class="sp-ring-bg" cx="40" cy="40" r="33"/>
+              <circle class="sp-ring-fill sp-ring-pv" id="ring-pv" cx="40" cy="40" r="33"
+                stroke-dasharray="207.3" stroke-dashoffset="0"/>
+            </svg>
+            <div class="sp-ring-inner">
+              <span class="sp-ring-delta" id="delta-pv"></span>
+              <span class="sp-ring-num" id="sh-pv-cur">—</span>
+              <span class="sp-ring-sep">/</span>
+              <span class="sp-ring-max" id="sh-pv-max">—</span>
             </div>
           </div>
-          <div class="res-track"><div class="res-fill res-fill-pv" id="bar-pv"></div></div>
+          <div class="sp-ring-icon">❤</div>
+          <div class="sp-ring-label">VIDA</div>
+          <!-- compatibilidade com renderSheet -->
+          <span id="sh-pv" style="display:none"></span>
+          <div class="res-track" style="display:none"><div class="res-fill res-fill-pv" id="bar-pv"></div></div>
         </div>
 
         <!-- PE -->
-        <div class="res-bar-group res-group-pe" id="group-pe">
-          <div class="res-bar-header">
-            <div class="res-title"><span class="res-icon">✦</span> <span class="res-name">PONTOS DE ESFORÇO</span></div>
-            <div class="res-val-wrap">
-              <span class="res-delta" id="delta-pe"></span>
-              <span class="res-val" id="sh-pe">—</span>
+        <div class="sp-ring-unit res-group-pe" id="group-pe">
+          <div class="sp-ring-wrap">
+            <svg class="sp-ring-svg" viewBox="0 0 80 80">
+              <circle class="sp-ring-bg" cx="40" cy="40" r="33"/>
+              <circle class="sp-ring-fill sp-ring-pe" id="ring-pe" cx="40" cy="40" r="33"
+                stroke-dasharray="207.3" stroke-dashoffset="0"/>
+            </svg>
+            <div class="sp-ring-inner">
+              <span class="sp-ring-delta" id="delta-pe"></span>
+              <span class="sp-ring-num" id="sh-pe-cur">—</span>
+              <span class="sp-ring-sep">/</span>
+              <span class="sp-ring-max" id="sh-pe-max">—</span>
             </div>
           </div>
-          <div class="res-track"><div class="res-fill res-fill-pe" id="bar-pe"></div></div>
+          <div class="sp-ring-icon">✦</div>
+          <div class="sp-ring-label">ESFORÇO</div>
+          <span id="sh-pe" style="display:none"></span>
+          <div class="res-track" style="display:none"><div class="res-fill res-fill-pe" id="bar-pe"></div></div>
         </div>
 
         <!-- SAN -->
-        <div class="res-bar-group res-group-san" id="group-san">
-          <div class="res-bar-header">
-            <div class="res-title"><span class="res-icon">☽</span> <span class="res-name">SANIDADE</span></div>
-            <div class="res-val-wrap">
-              <span class="res-delta" id="delta-san"></span>
-              <span class="res-val" id="sh-san">—</span>
+        <div class="sp-ring-unit res-group-san" id="group-san">
+          <div class="sp-ring-wrap">
+            <svg class="sp-ring-svg" viewBox="0 0 80 80">
+              <circle class="sp-ring-bg" cx="40" cy="40" r="33"/>
+              <circle class="sp-ring-fill sp-ring-san" id="ring-san" cx="40" cy="40" r="33"
+                stroke-dasharray="207.3" stroke-dashoffset="0"/>
+            </svg>
+            <div class="sp-ring-inner">
+              <span class="sp-ring-delta" id="delta-san"></span>
+              <span class="sp-ring-num" id="sh-san-cur">—</span>
+              <span class="sp-ring-sep">/</span>
+              <span class="sp-ring-max" id="sh-san-max">—</span>
             </div>
           </div>
-          <div class="res-track"><div class="res-fill res-fill-san" id="bar-san"></div></div>
+          <div class="sp-ring-icon">☽</div>
+          <div class="sp-ring-label">SANIDADE</div>
+          <span id="sh-san" style="display:none"></span>
+          <div class="res-track" style="display:none"><div class="res-fill res-fill-san" id="bar-san"></div></div>
         </div>
 
       </div>
-    </div>
 
-    <!-- Relação de Atributos (Runas) -->
-    <div class="sheet-block sheet-attrs-block">
-      <div class="sheet-block-label">ATRIBUTOS BASE</div>
-      <div class="attr-grid-sheet">
-        <div class="attr-cell"><div class="attr-cell-val" id="at-agi">0</div><div class="attr-cell-name">AGI</div></div>
-        <div class="attr-cell"><div class="attr-cell-val" id="at-for">0</div><div class="attr-cell-name">FOR</div></div>
-        <div class="attr-cell"><div class="attr-cell-val" id="at-int">0</div><div class="attr-cell-name">INT</div></div>
-        <div class="attr-cell"><div class="attr-cell-val" id="at-pre">0</div><div class="attr-cell-name">PRE</div></div>
-        <div class="attr-cell"><div class="attr-cell-val" id="at-vig">0</div><div class="attr-cell-name">VIG</div></div>
+      <!-- NEX Bar Paranormal -->
+      <div class="sp-nex-bar-row">
+        <span class="sp-nex-bar-label">EXPOSIÇÃO PARANORMAL</span>
+        <span class="sp-nex-bar-pct" id="sh-nex-bar-pct">5%</span>
+      </div>
+      <div class="sp-nex-track">
+        <div class="sp-nex-fill" id="nex-bar" style="width:5%"></div>
+        <div class="sp-nex-ghost"></div>
       </div>
     </div>
 
-    <!-- Habilidades & Rituais -->
-    <div class="sheet-block" id="abilities-block">
-      <div class="sheet-block-label">HABILIDADES & RITUAIS</div>
-      <div class="tag-list" id="sh-abilities"><span class="tag-empty">—</span></div>
+    <!-- ══ ATRIBUTOS — HEXÁGONOS ══ -->
+    <div class="sp-attrs-zone">
+      <div class="sp-section-label">ATRIBUTOS</div>
+      <div class="sp-attr-hex-row">
+        <div class="sp-attr-hex" id="sp-hex-agi">
+          <div class="sp-attr-hex-inner">
+            <span class="sp-attr-val" id="at-agi">0</span>
+            <span class="sp-attr-name">AGI</span>
+          </div>
+        </div>
+        <div class="sp-attr-hex" id="sp-hex-for">
+          <div class="sp-attr-hex-inner">
+            <span class="sp-attr-val" id="at-for">0</span>
+            <span class="sp-attr-name">FOR</span>
+          </div>
+        </div>
+        <div class="sp-attr-hex" id="sp-hex-int">
+          <div class="sp-attr-hex-inner">
+            <span class="sp-attr-val" id="at-int">0</span>
+            <span class="sp-attr-name">INT</span>
+          </div>
+        </div>
+        <div class="sp-attr-hex" id="sp-hex-pre">
+          <div class="sp-attr-hex-inner">
+            <span class="sp-attr-val" id="at-pre">0</span>
+            <span class="sp-attr-name">PRE</span>
+          </div>
+        </div>
+        <div class="sp-attr-hex" id="sp-hex-vig">
+          <div class="sp-attr-hex-inner">
+            <span class="sp-attr-val" id="at-vig">0</span>
+            <span class="sp-attr-name">VIG</span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Perícias Treinadas -->
-    <div class="sheet-block">
-      <div class="sheet-block-label">PERÍCIAS TREINADAS</div>
-      <div class="tag-list" id="sh-skills"><span class="tag-empty">—</span></div>
+    <!-- ══ HABILIDADES ══ -->
+    <div class="sp-section-block" id="abilities-block">
+      <div class="sp-section-label">
+        <span class="sp-section-icon">◈</span> HABILIDADES
+      </div>
+      <div class="sp-tags" id="sh-abilities"><span class="sp-tag-empty">Nenhuma</span></div>
     </div>
 
-    <!-- Inventário & Equipamentos -->
-    <div class="sheet-block">
-      <div class="sheet-block-label">INVENTÁRIO</div>
-      <div class="tag-list inv-list" id="sh-inventory"><span class="tag-empty">Vazio</span></div>
+    <!-- ══ PERÍCIAS ══ -->
+    <div class="sp-section-block">
+      <div class="sp-section-label">
+        <span class="sp-section-icon">◇</span> PERÍCIAS
+      </div>
+      <div class="sp-tags" id="sh-skills"><span class="sp-tag-empty">—</span></div>
     </div>
 
-    <!-- Lista de Agentes na Missão (Multiplayer) -->
+    <!-- ══ INVENTÁRIO ══ -->
+    <div class="sp-section-block">
+      <div class="sp-section-label">
+        <span class="sp-section-icon">⊞</span> INVENTÁRIO
+      </div>
+      <div class="sp-tags sp-inv-tags" id="sh-inventory"><span class="sp-tag-empty">Vazio</span></div>
+    </div>
+
+    <!-- Compatibilidade com código legado -->
     <div class="sheet-block sheet-full-btn-wrap" id="sheet-full-btn-wrap" style="display:none"></div>
+
+    <!-- Decoração de fundo do painel -->
+    <div class="sp-bg-sigil">⸸</div>
 
   </aside>
 
