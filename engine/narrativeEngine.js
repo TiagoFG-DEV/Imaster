@@ -336,9 +336,10 @@ function buildRichCampaignScenes(story, entity) {
 
 // ─── GERAÇÃO DE GRAFO DE LOCAIS E PLANTA BAIXA TÁTICA (MÍNIMO 10 LOCAIS) ──────
 function generateStoryLocationMap(story, entity) {
-  const storyId = (story?.id || "missao_paranormal").toLowerCase();
+  const storyId = (story?.id || story?.titulo || story?.tema || story?.local_principal || "missao_paranormal").toLowerCase();
   const locMain = story?.local_principal || "Complexo Principal";
   const bossName = entity?.nome || story?.climax?.boss_nome || "A Entidade Abissal";
+
 
   if (storyId.includes("hospital")) {
     return [
@@ -2081,6 +2082,7 @@ function resumeSessionLocal(session) {
 module.exports = {
   generateCharacterSheet,
   generateStory,
+  generateStoryLocationMap,
   generateNPCPool,
   selectEntity,
   generateOpeningNarration,
@@ -2091,3 +2093,4 @@ module.exports = {
   prepareSessionLocal,
   resumeSessionLocal,
 };
+
