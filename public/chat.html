@@ -521,13 +521,39 @@
     </div>
   </div>
 
-  <!-- Vinheta Dinâmica de Clima de Cena (Combate, Perseguição, Investigação) -->
-  <div id="scene-vignette-overlay" class="scene-vignette-overlay"></div>
+  <!-- ══════════════════════════════════════════════════════════
+       CINEMÁTICA DE INVESTIGAÇÃO (RELATÓRIO DE BUSCA & ACHADOS)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="investigation-cinematic-overlay" id="investigation-cinematic-overlay" onclick="closeInvestigationCinematicIfOutside(event)" style="display:none">
+    <div class="investigation-cinematic-card" id="investigation-cinematic-card">
+      <div class="inv-cine-header">
+        <span class="inv-cine-tag">⸸ ORDO REALITAS — REGISTRO DE INVESTIGAÇÃO</span>
+        <button class="inv-cine-close" onclick="closeInvestigationCinematic()">✕</button>
+      </div>
+      <div class="inv-cine-body">
+        <div class="inv-cine-icon-wrap" id="inv-cine-icon-wrap">
+          <span class="inv-cine-icon" id="inv-cine-icon">🔍</span>
+          <div class="inv-cine-glow" id="inv-cine-glow"></div>
+        </div>
+        <h3 class="inv-cine-title" id="inv-cine-title">PONTO DE BUSCA</h3>
+        <div class="inv-cine-badge" id="inv-cine-badge">SUCESSO (18 vs CD 12)</div>
+        <div class="inv-cine-desc" id="inv-cine-desc">Detalhes da descoberta da equipe...</div>
+        <div class="inv-cine-reward" id="inv-cine-reward" style="display:none">
+          <span class="reward-tag">📦 ITEM OBTIDO:</span>
+          <span class="reward-name" id="inv-cine-reward-name"></span>
+        </div>
+      </div>
+      <div class="inv-cine-footer">
+        <button class="arena-btn arena-btn-primary" onclick="closeInvestigationCinematic()">✓ Integrar ao Dossiê da Missão</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ══════════════════════════════════════════════════════════
        MODAL DE MAPA TÁTICO INTERATIVO (PAN & ZOOM)
   ══════════════════════════════════════════════════════════ -->
   <div class="map-overlay" id="map-overlay" onclick="closeMapModalIfOutside(event)">
+
     <div class="map-modal" id="map-modal">
       <div class="map-modal-header">
         <div class="map-header-title-wrap">

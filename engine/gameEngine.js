@@ -229,7 +229,7 @@ async function resumeSession(sessionId) {
 }
 
 // ─── Ação do jogador (100% Local) ────────────────────────────────────────────
-async function playerAction(action, sessionId, diceResult) {
+async function playerAction(action, sessionId, diceResult, playerIndex) {
   if (!sessionId) throw new Error("Sem sessão ativa");
   const session = loadSession(sessionId);
 
@@ -244,29 +244,129 @@ async function playerAction(action, sessionId, diceResult) {
   }
 
   session.master_internal_flags.session_started = true;
+  if (!session.world_data) session.world_data = {};
+  if (!Array.isArray(session.world_data.pontos_explorados)) session.world_data.pontos_explorados = [];
 
-  // Atualiza localização se o jogador estiver se movendo pelo mapa
+  const actingIdx = (playerIndex !== undefined && playerIndex !== null) ? playerIndex : (session.current_player_index || 0);
+
+  // 1. Atualiza localização se o jogador estiver se movendo pelo mapa
+  let targetRoomObj = null;
   if (action && (action.startsWith("Mover e explorar:") || action.startsWith("Mover para:") || action.startsWith("Destrancar e adentrar:"))) {
     const targetRoomName = action.replace(/^(Mover e explorar:|Mover para:|Destrancar e adentrar:)\s*/i, "").trim();
+    if (session.world_data?.mapa_locais) {
+      targetRoomObj = session.world_data.mapa_locais.find(r => r.nome.toLowerCase() === targetRoomName.toLowerCase() || r.id === targetRoomName);
+    }
+    const finalRoomName = targetRoomObj ? targetRoomObj.nome : targetRoomName;
+    const finalRoomId = targetRoomObj ? targetRoomObj.id : (session.character_sheet?.current_location_id || "loc_recepcao");
+
     if (session.character_sheet) {
-      session.character_sheet.current_location = targetRoomName;
-      if (session.world_data?.mapa_locais) {
-        const found = session.world_data.mapa_locais.find(r => r.nome.toLowerCase() === targetRoomName.toLowerCase());
-        if (found) {
-          session.character_sheet.current_location_id = found.id;
-          session.world_data.local_nome = found.nome;
-          session.world_data.local_id = found.id;
-          if (found.gatilho) {
-            session.world_data.tipo_cena_atual = found.gatilho;
-          }
-        }
+      session.character_sheet.current_location = finalRoomName;
+      session.character_sheet.current_location_id = finalRoomId;
+    }
+    if (session.all_characters && session.all_characters[actingIdx]) {
+      session.all_characters[actingIdx].current_location = finalRoomName;
+      session.all_characters[actingIdx].current_location_id = finalRoomId;
+    }
+    if (session.world_data) {
+      session.world_data.local_nome = finalRoomName;
+      session.world_data.local_id = finalRoomId;
+      if (targetRoomObj?.gatilho) {
+        session.world_data.tipo_cena_atual = targetRoomObj.gatilho;
       }
     }
-    if (session.all_characters && session.character_sheet) {
-      const curIdx = session.current_player_index || 0;
-      if (session.all_characters[curIdx]) {
-        session.all_characters[curIdx].current_location = session.character_sheet.current_location;
-        session.all_characters[curIdx].current_location_id = session.character_sheet.current_location_id;
+  }
+
+  // 2. Intercepta e processa Teste de Investigação em Ponto de Busca
+  let investigationResult = null;
+  const isInvestigateAction = action && (action.includes("Examinar e investigar") || action.includes("Investigar Ponto de Busca"));
+
+  if (isInvestigateAction) {
+    let pontoObj = null;
+    const allRooms = session.world_data?.mapa_locais || [];
+
+    for (const room of allRooms) {
+      for (const pi of (room.pontos_investigacao || [])) {
+        if (action.toLowerCase().includes(pi.nome.toLowerCase()) || action.includes(pi.id)) {
+          pontoObj = pi;
+          break;
+        }
+      }
+      if (pontoObj) break;
+    }
+
+    if (pontoObj) {
+      if (session.world_data.pontos_explorados.includes(pontoObj.id)) {
+        return {
+          narration: `Este ponto (${pontoObj.nome}) já foi completamente vasculhado e examinado anteriormente. Não há novos vestígios ou itens a serem encontrados aqui.`,
+          bgm_mood: "calmo",
+          dice_request: null,
+          sheet: session.character_sheet,
+          all_characters: session.all_characters || null,
+          world_data: session.world_data,
+          investigation_result: {
+            point_name: pontoObj.nome,
+            icon: pontoObj.icone || "🔍",
+            success: false,
+            already_explored: true,
+            description: "Este ponto já foi totalmente investigado pela equipe."
+          }
+        };
+      }
+
+      if (!diceResult) {
+        return {
+          narration: `Você se aproxima para examinar detalhadamente: ${pontoObj.nome}. Role Intelecto/Investigação para desvendar os segredos deste ponto.`,
+          dice_request: {
+            label: `INVESTIGAÇÃO: ${pontoObj.nome.toUpperCase()}`,
+            pending_narration: `Investigando ${pontoObj.nome} (CD ${pontoObj.cd || 12}). Role seu teste de Investigação.`,
+            dice: "d20",
+            quantity: 1,
+            cd: pontoObj.cd || 12,
+            attribute: pontoObj.atributo || "intelecto",
+            allow_crits: false
+          },
+          sheet: session.character_sheet,
+          all_characters: session.all_characters || null,
+          world_data: session.world_data
+        };
+      } else {
+        const success = (diceResult.total >= (pontoObj.cd || 12));
+        session.world_data.pontos_explorados.push(pontoObj.id);
+
+        if (success) {
+          const itemFound = pontoObj.sucesso;
+          if (session.character_sheet) {
+            if (!Array.isArray(session.character_sheet.inventory)) session.character_sheet.inventory = [];
+            if (!session.character_sheet.inventory.some(i => (typeof i === 'string' ? i : i.nome) === itemFound)) {
+              session.character_sheet.inventory.push(itemFound);
+            }
+          }
+          if (session.all_characters && session.all_characters[actingIdx]) {
+            if (!Array.isArray(session.all_characters[actingIdx].inventory)) session.all_characters[actingIdx].inventory = [];
+            if (!session.all_characters[actingIdx].inventory.some(i => (typeof i === 'string' ? i : i.nome) === itemFound)) {
+              session.all_characters[actingIdx].inventory.push(itemFound);
+            }
+          }
+
+          investigationResult = {
+            point_name: pontoObj.nome,
+            icon: pontoObj.icone || "🔍",
+            success: true,
+            roll_total: diceResult.total,
+            cd: pontoObj.cd || 12,
+            reward: itemFound,
+            description: pontoObj.sucesso
+          };
+        } else {
+          investigationResult = {
+            point_name: pontoObj.nome,
+            icon: pontoObj.icone || "🔍",
+            success: false,
+            roll_total: diceResult.total,
+            cd: pontoObj.cd || 12,
+            description: pontoObj.falha || "Nenhum documento ou mecanismo útil foi encontrado após a busca."
+          };
+        }
       }
     }
   }
@@ -283,7 +383,6 @@ async function playerAction(action, sessionId, diceResult) {
   session.turn_count = (session.turn_count || 0) + 1;
 
   pushHistory(session, { player: action, ai: result.narration, time: new Date().toISOString() });
-
 
   if (Array.isArray(result.new_events)) {
     result.new_events.forEach(ev => pushHistory(session, { system_event: ev, time: new Date().toISOString() }));
@@ -303,6 +402,7 @@ async function playerAction(action, sessionId, diceResult) {
     scene_title:     result.scene_title || session.world_data?.cena_atual_obj?.titulo || "Investigação",
     scene_progress:  result.scene_progress || null,
     cinematica:      result.cinematica || null,
+    investigation_result: investigationResult || result.investigation_result || null,
     dice_request:    result.dice_request || null,
     contextual_suggestions: session.contextual_suggestions || [],
     sheet:           session.character_sheet,
@@ -317,6 +417,7 @@ async function playerAction(action, sessionId, diceResult) {
     dead:            session.ended && session.dead
   };
 }
+
 
 
 // ─── Sugestões — agora locais, sem IA ────────────────────────────────────────

@@ -1277,7 +1277,11 @@ function showActionTab(tab) {
   if (tab === "locais") {
     const sh = getCurrentSheet();
     const mapData = introDataGlobal?.world_data?.mapa_locais || getFallbackMap();
-    const currentRoom = mapData.find(r => r.nome === sh?.current_location || r.id === sh?.current_location_id) || mapData[0];
+    let currentRoom = null;
+    if (sh?.current_location_id) currentRoom = mapData.find(r => r.id === sh.current_location_id);
+    if (!currentRoom && sh?.current_location) currentRoom = mapData.find(r => r.nome.toLowerCase() === sh.current_location.toLowerCase());
+    if (!currentRoom) currentRoom = mapData.find(r => r.inicial) || mapData[0];
+
     const connections = currentRoom ? (currentRoom.conexoes || []) : [];
 
     html += `<div style="width:100%;font-size:10px;color:var(--gold);font-family:var(--font-t);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin:2px 0 8px;">
@@ -1307,8 +1311,13 @@ function showActionTab(tab) {
   } else if (tab === "investigar") {
     const sh = getCurrentSheet();
     const mapData = introDataGlobal?.world_data?.mapa_locais || getFallbackMap();
-    const currentRoom = mapData.find(r => r.nome === sh?.current_location || r.id === sh?.current_location_id) || mapData[0];
+    let currentRoom = null;
+    if (sh?.current_location_id) currentRoom = mapData.find(r => r.id === sh.current_location_id);
+    if (!currentRoom && sh?.current_location) currentRoom = mapData.find(r => r.nome.toLowerCase() === sh.current_location.toLowerCase());
+    if (!currentRoom) currentRoom = mapData.find(r => r.inicial) || mapData[0];
+
     const pInvestigacao = currentRoom?.pontos_investigacao || [];
+    const explorados = introDataGlobal?.world_data?.pontos_explorados || [];
 
     html += `<div style="width:100%;font-size:10px;color:var(--gold);font-family:var(--font-t);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin:2px 0 8px;">
       🔍 PONTOS DE BUSCA EM: <span style="color:#fff;">${esc(currentRoom?.nome || "Local Atual")}</span>
@@ -1318,14 +1327,26 @@ function showActionTab(tab) {
       html += `<div style="color:var(--text-d);font-size:13px;padding:8px;">Nenhum ponto específico registrado nesta sala. Você pode fazer uma busca geral na aba 'Exploração'.</div>`;
     } else {
       html += pInvestigacao.map((pi, i) => {
-        return `<button class="menu-action-btn" id="action-investigate-btn-${i}" onclick="selectInvestigatePoint('${esc(pi.nome)}', ${pi.cd || 12})">
-          <span class="menu-action-icon" style="font-size:18px;">${pi.icone || "🔍"}</span>
-          <div style="display:flex;flex-direction:column;align-items:flex-start;text-align:left;flex:1;">
-            <strong style="font-size:13px;color:var(--text);">${esc(pi.nome)}</strong>
-            <span style="font-size:10px;color:var(--gold-d);">Teste de Investigação (CD ${pi.cd || 12})</span>
-          </div>
-          <span class="menu-action-cost" style="color:var(--gold);border-color:rgba(201,168,76,0.5)">Examinar ➔</span>
-        </button>`;
+        const isExplored = explorados.includes(pi.id);
+        if (isExplored) {
+          return `<button class="menu-action-btn" id="action-investigate-btn-${i}" style="opacity:0.5;border-color:rgba(255,255,255,0.15);cursor:not-allowed;" disabled>
+            <span class="menu-action-icon" style="font-size:18px;filter:grayscale(1);">${pi.icone || "🔍"}</span>
+            <div style="display:flex;flex-direction:column;align-items:flex-start;text-align:left;flex:1;">
+              <strong style="font-size:13px;color:var(--text-d);text-decoration:line-through;">${esc(pi.nome)}</strong>
+              <span style="font-size:10px;color:var(--green3);">✓ Já vasculhado pela equipe</span>
+            </div>
+            <span class="menu-action-cost" style="color:var(--text-d);border-color:rgba(255,255,255,0.15)">Explorado</span>
+          </button>`;
+        } else {
+          return `<button class="menu-action-btn" id="action-investigate-btn-${i}" onclick="selectInvestigatePoint('${esc(pi.id)}', '${esc(pi.nome)}', ${pi.cd || 12})">
+            <span class="menu-action-icon" style="font-size:18px;">${pi.icone || "🔍"}</span>
+            <div style="display:flex;flex-direction:column;align-items:flex-start;text-align:left;flex:1;">
+              <strong style="font-size:13px;color:var(--text);">${esc(pi.nome)}</strong>
+              <span style="font-size:10px;color:var(--gold-d);">Teste de Investigação (CD ${pi.cd || 12})</span>
+            </div>
+            <span class="menu-action-cost" style="color:var(--gold);border-color:rgba(201,168,76,0.5)">Examinar ➔</span>
+          </button>`;
+        }
       }).join("");
     }
   } else {
@@ -1361,14 +1382,29 @@ function selectMoveRoom(roomId, roomName) {
     openMinigameKeys(target);
     return;
   }
+  const sh = getCurrentSheet();
+  if (sh) {
+    sh.current_location = roomName;
+    sh.current_location_id = roomId;
+    if (el("sh-location")) el("sh-location").textContent = roomName;
+    if (sh.player_index !== undefined && allCharacters[sh.player_index]) {
+      allCharacters[sh.player_index].current_location = roomName;
+      allCharacters[sh.player_index].current_location_id = roomId;
+    }
+  }
   if (typeof AudioManager !== "undefined") AudioManager.playSFX("turn_change");
   enviarAction(`Mover para: ${roomName}`);
 }
 
-function selectInvestigatePoint(pontoNome, cd) {
+function selectInvestigatePoint(pontoId, pontoNome, cd) {
   closeMenu("action-menu");
+  const explorados = introDataGlobal?.world_data?.pontos_explorados || [];
+  if (explorados.includes(pontoId)) {
+    addMsg("system", `⚠️ Este ponto (${pontoNome}) já foi completamente investigado.`);
+    return;
+  }
   if (typeof AudioManager !== "undefined") AudioManager.playSFX("item");
-  enviarAction(`Examinar e investigar minuciosamente: ${pontoNome}`);
+  enviarAction(`Examinar e investigar: ${pontoNome}`);
 }
 
 function getDefaultActions(tab) {
@@ -1710,7 +1746,7 @@ async function enviarAction(action) {
     const r = await fetch("/api/rpg", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action, sessionId, diceResult: null })
+      body: JSON.stringify({ action, sessionId, diceResult: null, player_index: sh?.player_index })
     });
     const data = await r.json();
 
@@ -1723,6 +1759,12 @@ async function enviarAction(action) {
     if (data.scene_type) applySceneAtmosphere(data.scene_type, data.scene_title, data.scene_progress);
     if (data.bgm_mood && typeof AudioManager !== "undefined") {
       AudioManager.setMood(data.bgm_mood);
+    }
+    if (data.world_data) {
+      introDataGlobal.world_data = data.world_data;
+    }
+    if (data.investigation_result) {
+      showInvestigationCinematic(data.investigation_result);
     }
 
     // Sempre obter a ficha mais atual — preferir a retornada pela API
@@ -1982,7 +2024,7 @@ async function confirmRoll() {
     const r = await fetch("/api/rpg", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action, sessionId, diceResult: rollResult })
+      body: JSON.stringify({ action, sessionId, diceResult: rollResult, player_index: sh?.player_index })
     });
     const data = await r.json();
 
@@ -1992,6 +2034,12 @@ async function confirmRoll() {
     if (data.scene_type) applySceneAtmosphere(data.scene_type, data.scene_title, data.scene_progress);
     if (data.bgm_mood && typeof AudioManager !== "undefined") {
       AudioManager.setMood(data.bgm_mood);
+    }
+    if (data.world_data) {
+      introDataGlobal.world_data = data.world_data;
+    }
+    if (data.investigation_result) {
+      showInvestigationCinematic(data.investigation_result);
     }
 
     // Sempre obter a ficha mais atual — preferir a retornada pela API
@@ -2767,6 +2815,63 @@ function rollFreeD20() {
   pendingAction = `[Rolagem Livre de D20]`;
   showDiceModal(freeReq, pendingAction);
 }
+
+function showInvestigationCinematic(invResult) {
+  if (!invResult) return;
+  const overlay = el("investigation-cinematic-overlay");
+  const iconEl = el("inv-cine-icon");
+  const titleEl = el("inv-cine-title");
+  const badgeEl = el("inv-cine-badge");
+  const descEl = el("inv-cine-desc");
+  const rewardWrap = el("inv-cine-reward");
+  const rewardName = el("inv-cine-reward-name");
+  if (!overlay) return;
+
+  if (iconEl) iconEl.textContent = invResult.icon || "🔍";
+  if (titleEl) titleEl.textContent = invResult.point_name || "PONTO DE INVESTIGAÇÃO";
+
+  if (badgeEl) {
+    if (invResult.already_explored) {
+      badgeEl.textContent = "PONTO JÁ EXPLORADO";
+      badgeEl.className = "inv-cine-badge";
+    } else if (invResult.success) {
+      badgeEl.textContent = `SUCESSO (Rolagem ${invResult.roll_total || '-'} vs CD ${invResult.cd || 12})`;
+      badgeEl.className = "inv-cine-badge success";
+      if (typeof AudioManager !== "undefined") AudioManager.playSFX("crit");
+    } else {
+      badgeEl.textContent = `FALHA (Rolagem ${invResult.roll_total || '-'} vs CD ${invResult.cd || 12})`;
+      badgeEl.className = "inv-cine-badge failure";
+      if (typeof AudioManager !== "undefined") AudioManager.playSFX("turn_change");
+    }
+  }
+
+  if (descEl) descEl.textContent = invResult.description || "Nenhum resultado registrado.";
+
+  if (rewardWrap && rewardName) {
+    if (invResult.reward && invResult.success) {
+      rewardWrap.style.display = "flex";
+      rewardName.textContent = invResult.reward;
+    } else {
+      rewardWrap.style.display = "none";
+    }
+  }
+
+  overlay.style.display = "flex";
+  overlay.classList.add("active");
+}
+
+function closeInvestigationCinematic() {
+  const overlay = el("investigation-cinematic-overlay");
+  if (overlay) {
+    overlay.classList.remove("active");
+    overlay.style.display = "none";
+  }
+}
+
+function closeInvestigationCinematicIfOutside(e) {
+  if (e.target === el("investigation-cinematic-overlay")) closeInvestigationCinematic();
+}
+
 
 function renderTacticalMap(rooms) {
   const world = el("map-canvas-world");

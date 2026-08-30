@@ -7570,4 +7570,177 @@ body.theme-boss #scene-vignette-overlay {
   transform: rotate(25deg) scale(1.15);
 }
 
+/* ════ CINEMÁTICA DE INVESTIGAÇÃO DE CENA ════ */
+.investigation-cinematic-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 2, 8, 0.88);
+  backdrop-filter: blur(12px);
+  z-index: 12000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeInModal .3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.investigation-cinematic-card {
+  width: 100%;
+  max-width: 520px;
+  background: linear-gradient(160deg, rgba(28, 20, 42, 0.98) 0%, rgba(12, 8, 18, 0.99) 100%);
+  border: 1.5px solid var(--gold);
+  border-radius: 14px;
+  box-shadow: 0 0 35px rgba(201, 168, 76, 0.35), 0 20px 50px rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: scaleUpIn .35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.inv-cine-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: rgba(201, 168, 76, 0.1);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.25);
+}
+
+.inv-cine-tag {
+  font-family: var(--font-t);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--gold2);
+  letter-spacing: 1.5px;
+}
+
+.inv-cine-close {
+  background: transparent;
+  border: none;
+  color: var(--text-d);
+  font-size: 16px;
+  cursor: pointer;
+  transition: color .2s;
+}
+
+.inv-cine-close:hover {
+  color: #fff;
+}
+
+.inv-cine-body {
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.inv-cine-icon-wrap {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.25) 0%, rgba(20, 14, 30, 0.8) 100%);
+  border: 2px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  box-shadow: 0 0 20px rgba(201, 168, 76, 0.4);
+}
+
+.inv-cine-glow {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px dashed rgba(201, 168, 76, 0.5);
+  animation: rotateRing 12s linear infinite;
+}
+
+@keyframes rotateRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.inv-cine-title {
+  font-family: var(--font-t);
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1.5px;
+  margin: 0;
+}
+
+.inv-cine-badge {
+  display: inline-block;
+  font-family: var(--font-t);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+.inv-cine-badge.success {
+  background: rgba(34, 197, 94, 0.2);
+  border: 1.5px solid var(--green3);
+  color: #4ade80;
+  box-shadow: 0 0 14px rgba(34, 197, 94, 0.4);
+}
+
+.inv-cine-badge.failure {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1.5px solid var(--red3);
+  color: #fca5a5;
+}
+
+.inv-cine-desc {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text2);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 12px 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.inv-cine-reward {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: linear-gradient(90deg, rgba(201, 168, 76, 0.2), rgba(201, 168, 76, 0.05));
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.reward-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold);
+  font-family: var(--font-t);
+}
+
+.reward-name {
+  font-size: 12px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.inv-cine-footer {
+  padding: 14px 20px;
+  background: rgba(10, 6, 16, 0.6);
+  border-top: 1px solid rgba(201, 168, 76, 0.2);
+  display: flex;
+  justify-content: center;
+}
+
+
 

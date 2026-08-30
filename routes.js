@@ -110,7 +110,7 @@ router.get("/session-state/:sessionId", (req, res) => {
 // ─── Ação do jogador ─────────────────────────────────────────────────────────
 router.post("/rpg", async (req, res) => {
   try {
-    const { action, sessionId, diceResult, is_round_narration, round_actions } = req.body;
+    const { action, sessionId, diceResult, is_round_narration, round_actions, player_index } = req.body;
     if (!action)    return res.status(400).json({ error: "Ação vazia" });
     if (!sessionId) return res.status(400).json({ error: "SessionId ausente" });
 
@@ -122,12 +122,13 @@ router.post("/rpg", async (req, res) => {
 
       const roundAction = `[NARRAR ROUND]\nOs jogadores jogaram este round:\n${roundSummary}\n\nNarre o que aconteceu com cada um, como suas ações se entrelaçaram na cena. Seja cinematográfico, conciso (2-4 parágrafos) e integre tudo numa narrativa única.`;
 
-      const result = await playerAction(roundAction, sessionId, null);
+      const result = await playerAction(roundAction, sessionId, null, player_index);
       return res.json(result);
     }
 
-    const result = await playerAction(action, sessionId, diceResult || null);
+    const result = await playerAction(action, sessionId, diceResult || null, player_index);
     res.json(result);
+
   } catch (err) { console.error(err); res.status(500).json({ error: err.message }); }
 });
 
