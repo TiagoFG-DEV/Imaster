@@ -482,7 +482,10 @@ async function processPlayerAction(action, session, diceResult) {
     } else if (actionType === "social") {
       narration = processSocialAction(action, session, story);
     } else if (actionType === "item") {
-      narration = processItemAction(action, session);
+      const itemRes = processItemAction(action, session);
+      narration = itemRes.narration;
+      Object.assign(state_updates, itemRes.state_updates);
+      if (itemRes.cinematica) cinematica = itemRes.cinematica;
     } else if (actionType === "fuga") {
       narration = processFleeAction(action, session);
     } else {
@@ -492,7 +495,10 @@ async function processPlayerAction(action, session, diceResult) {
     // Progresso de cena local
     if (shouldAdvanceScene(session, action, diceResult)) {
       const nextScene = advanceScene(session, story);
-      if (nextScene) narration += `\n\n📍 *${nextScene}*`;
+      if (nextScene) {
+        narration += `\n\n📍 *${nextScene}*`;
+        state_updates.location = nextScene;
+      }
     }
   }
 
@@ -531,16 +537,29 @@ async function processPlayerAction(action, session, diceResult) {
     }
   }
 
-  // Verifica Morte
+  // ─── Verificação de Crises com Timer de 3 Rodadas (Morte e Insanidade) ───
   if (currentPv <= 0) {
-    cinematica = generateDeathCinematic(sh, session);
-    session.ended = true;
+    const dyingRounds = (sh.dying_rounds || 0) + 1;
+    if (dyingRounds > 3) {
+      cinematica = generateDeathCinematic(sh, session);
+      session.ended = true;
+      session.dead = true;
+      narration += `\n\n☠ MORTE CONFIRMADA: As feridas foram fatais e ${sh.name || "o agente"} sucumbiu após 3 rodadas sem ser estabilizado.`;
+    } else {
+      cinematica = { tipo: "dano_pv", texto: `EM MORTE! Rodada ${dyingRounds}/3 para estabilizar!`, valor: 0, recurso_atual: 0, recurso_maximo: sh.pv_max };
+      narration += `\n\n⚠ ESTADO CRÍTICO (MORRENDO - Rodada ${dyingRounds}/3): ${sh.name || "O agente"} caiu inconsciente e está sangrando! Use Primeiros Socorros ou item curativo antes de 3 rodadas para salvá-lo!`;
+    }
   } else if (currentSan <= 0) {
-    // Verifica Insanidade Permanente (Enlouquecido)
-    cinematica = { tipo: "dano_san", texto: `${sh.name || "O agente"} enlouqueceu perante o Outro Lado!`, valor: 0, recurso_atual: 0, recurso_maximo: sh.san_max };
-    session.ended = true;
-    session.madness = true;
-    narration += `\n\n🌀 INSANIDADE TOTAL: A barreira mental se rompeu completamente. A mente do agente foi devorada pelo Outro Lado.`;
+    const madnessRounds = (sh.madness_rounds || 0) + 1;
+    if (madnessRounds > 3) {
+      cinematica = { tipo: "dano_san", texto: `${sh.name || "O agente"} enlouqueceu perante o Outro Lado!`, valor: 0, recurso_atual: 0, recurso_maximo: sh.san_max };
+      session.ended = true;
+      session.madness = true;
+      narration += `\n\n🌀 INSANIDADE TOTAL: A barreira mental se rompeu completamente. A mente do agente foi devorada pelo Outro Lado após 3 rodadas de colapso.`;
+    } else {
+      cinematica = { tipo: "dano_san", texto: `COLAPSO MENTAL! Rodada ${madnessRounds}/3 de crise!`, valor: 0, recurso_atual: 0, recurso_maximo: sh.san_max };
+      narration += `\n\n🌀 CRISE DE INSANIDADE (COLAPSO MENTAL - Rodada ${madnessRounds}/3): A mente de ${sh.name || "o agente"} está em choque! Restaure a Sanidade para evitar loucura irreversível!`;
+    }
   }
 
   if (!contextual_suggestions || contextual_suggestions.length === 0) {
@@ -757,15 +776,65 @@ function processSocialAction(action, session, story) {
 function processItemAction(action, session) {
   const sh = session.character_sheet;
   const inv = sh.inventory || [];
+  const state_updates = {};
+  let cinematica = null;
+  const a = (action || "").toLowerCase();
 
-  const templates = [
-    "O item é usado. O efeito é imediato.",
-    "Com mãos firmes, o item cumpre seu propósito.",
-    "O equipamento entra em ação.",
-  ];
+  if (!inv.length) {
+    return {
+      narration: "O inventário está vazio. Nenhum item disponível para uso imediato.",
+      state_updates,
+      cinematica
+    };
+  }
 
-  if (!inv.length) return "O inventário está vazio. Nada a usar.";
-  return pick(templates);
+  // Identifica item usado
+  let matchedItem = inv.find(it => {
+    const name = (typeof it === "string" ? it : it.nome || "").toLowerCase();
+    return a.includes(name) || name.split(" ").some(w => w.length > 3 && a.includes(w));
+  }) || inv[0];
+
+  const itemName = typeof matchedItem === "string" ? matchedItem : matchedItem.nome || "Item";
+  const itemLower = itemName.toLowerCase();
+
+  if (/cura|socorro|adrenalina|remedio|bandagem|kit|estancar|curativo/.test(itemLower) || /cura|socorro|adrenalina|remedio|bandagem|kit|estancar|curativo/.test(a)) {
+    const healVal = roll(2, 6) + 6; // 8-18 PV
+    state_updates.pv_current = clamp((sh.pv_current || 0) + healVal, 0, sh.pv_max);
+    state_updates.inventory_remove = [itemName];
+    cinematica = { tipo: "dano_pv", texto: `+${healVal} PV Recuperados!`, valor: healVal, recurso_atual: state_updates.pv_current, recurso_maximo: sh.pv_max };
+    return {
+      narration: `Você aplica ${itemName} com rapidez e precisão. O sangramento estanca e você recupera +${healVal} PV!`,
+      state_updates,
+      cinematica
+    };
+  } else if (/essencia|astral|calmante|elixir|sanidade|mente|purific/.test(itemLower) || /essencia|astral|calmante|elixir|sanidade|mente|purific/.test(a)) {
+    const sanVal = roll(1, 8) + 4; // 5-12 SAN
+    state_updates.san_current = clamp((sh.san_current || 0) + sanVal, 0, sh.san_max);
+    state_updates.inventory_remove = [itemName];
+    cinematica = { tipo: "dano_san", texto: `+${sanVal} SAN Recuperada!`, valor: sanVal, recurso_atual: state_updates.san_current, recurso_maximo: sh.san_max };
+    return {
+      narration: `Você utiliza ${itemName}. A mente se estabiliza e dissipa os pensamentos corrosivos do Outro Lado (+${sanVal} SAN).`,
+      state_updates,
+      cinematica
+    };
+  } else if (/energetico|estimulante|vigor|tonico/.test(itemLower) || /energetico|estimulante|vigor|tonico/.test(a)) {
+    const peVal = roll(1, 4) + 2; // 3-6 PE
+    state_updates.pe_current = clamp((sh.pe_current || 0) + peVal, 0, sh.pe_max);
+    state_updates.inventory_remove = [itemName];
+    cinematica = { tipo: "gasto_pe", texto: `+${peVal} PE Recuperados!`, valor: peVal, recurso_atual: state_updates.pe_current, recurso_maximo: sh.pe_max };
+    return {
+      narration: `Você utiliza ${itemName}. O fôlego renova a capacidade de esforço do agente (+${peVal} PE).`,
+      state_updates,
+      cinematica
+    };
+  }
+
+  // Item genérico/tático
+  return {
+    narration: `Você utiliza ${itemName}. O equipamento entra em ação para cumprir seu propósito.`,
+    state_updates,
+    cinematica
+  };
 }
 
 function processFleeAction(action, session) {

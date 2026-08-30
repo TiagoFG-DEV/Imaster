@@ -270,12 +270,16 @@ function renderCharacterSwitcher() {
 function inspectCharSheet(index) {
   const targetChar = allCharacters[index];
   if (!targetChar) return;
-  renderFullSheet(targetChar);
-  openFullSheet();
+  currentSheet = targetChar;
+  renderSheet(targetChar);
+  renderCharacterSwitcher();
 }
 
 function openCharSheet(index) {
-  inspectCharSheet(index);
+  const targetChar = allCharacters[index];
+  if (!targetChar) return;
+  renderFullSheet(targetChar);
+  openFullSheet();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -575,9 +579,44 @@ async function loadActionsDB() {
 }
 
 // ─── RENDERIZAÇÃO DA FICHA ────────────────────────────────────────────────────
+let prevSheetStats = { pv: null, pe: null, san: null, name: null };
+
+function showDelta(stat, delta) {
+  if (!delta || delta === 0) return;
+  const deltaEl = el(`delta-${stat}`);
+  if (!deltaEl) return;
+
+  deltaEl.textContent = delta > 0 ? `+${delta}` : `${delta}`;
+  deltaEl.className = `res-delta active ${delta > 0 ? 'heal' : 'damage'}`;
+
+  setTimeout(() => {
+    deltaEl.classList.remove("active");
+  }, 1400);
+}
+
 function renderSheet(sh) {
   if (!sh) return;
   currentSheet = sh;
+
+  // Detecta alterações nos recursos e ativa deltas flutuantes
+  if (prevSheetStats.name === sh.name) {
+    if (prevSheetStats.pv !== null && prevSheetStats.pv !== sh.pv_current) {
+      showDelta("pv", (sh.pv_current ?? 0) - prevSheetStats.pv);
+    }
+    if (prevSheetStats.pe !== null && prevSheetStats.pe !== sh.pe_current) {
+      showDelta("pe", (sh.pe_current ?? 0) - prevSheetStats.pe);
+    }
+    if (prevSheetStats.san !== null && prevSheetStats.san !== sh.san_current) {
+      showDelta("san", (sh.san_current ?? 0) - prevSheetStats.san);
+    }
+  }
+
+  prevSheetStats = {
+    pv: sh.pv_current,
+    pe: sh.pe_current,
+    san: sh.san_current,
+    name: sh.name
+  };
 
   const origin = sh.origin || sh.origem || (sh.identity && sh.identity.origem) || "";
   const age = sh.age || sh.idade || (sh.identity && sh.identity.idade) || "";
@@ -588,7 +627,8 @@ function renderSheet(sh) {
   }
   if (el("sh-nex")) el("sh-nex").textContent = sh.nex || "5%";
   if (el("sh-location")) {
-    el("sh-location").textContent = age ? `${sh.current_location || "desconhecido"} (${age}a)` : (sh.current_location || "desconhecido");
+    el("sh-location").textContent = sh.current_location || "Desconhecido";
+    el("sh-location").setAttribute("title", `Localização Atual: ${sh.current_location || "Desconhecido"}`);
   }
 
   const avatarEl = el("sh-avatar");
@@ -603,6 +643,50 @@ function renderSheet(sh) {
   setBar("pe",  sh.pe_current,  sh.pe_max);
   setBar("san", sh.san_current, sh.san_max);
 
+  // Estados Visuais dos Grupos de Recursos
+  el("group-pv")?.classList.toggle("is-dying", (sh.pv_current <= 0));
+  el("group-san")?.classList.toggle("is-mad", (sh.san_current <= 0));
+  el("group-pe")?.classList.toggle("is-exhausted", (sh.pe_current <= 0));
+
+  // ─── ALERTA DINÂMICO DE CRISE (3 Rounds Countdown) ───────────────────────────
+  const crisisAlert = el("crisis-alert");
+  if (crisisAlert) {
+    if ((sh.dying_rounds && sh.dying_rounds > 0) || sh.pv_current <= 0) {
+      crisisAlert.style.display = "block";
+      crisisAlert.innerHTML = `
+        <div class="crisis-box crisis-dying">
+          <span class="crisis-icon">☠</span>
+          <div>
+            <strong>EM MORTE: Rodada ${sh.dying_rounds || 1}/3</strong><br>
+            <span style="font-size:10px;opacity:0.95;">Agente inconsciente e sangrando! Use Primeiros Socorros ou cura!</span>
+          </div>
+        </div>`;
+    } else if ((sh.madness_rounds && sh.madness_rounds > 0) || sh.san_current <= 0) {
+      crisisAlert.style.display = "block";
+      crisisAlert.innerHTML = `
+        <div class="crisis-box crisis-madness">
+          <span class="crisis-icon">🌀</span>
+          <div>
+            <strong>COLAPSO MENTAL: Rodada ${sh.madness_rounds || 1}/3</strong><br>
+            <span style="font-size:10px;opacity:0.95;">A mente está se rompendo! Restaure a Sanidade com urgência!</span>
+          </div>
+        </div>`;
+    } else if (sh.pe_current <= 0) {
+      crisisAlert.style.display = "block";
+      crisisAlert.innerHTML = `
+        <div class="crisis-box crisis-exhausted">
+          <span class="crisis-icon">⚡</span>
+          <div>
+            <strong>EXAUSTO (0 PE)</strong><br>
+            <span style="font-size:10px;opacity:0.95;">Esgotamento total: Habilidades e rituais com custo de PE bloqueados.</span>
+          </div>
+        </div>`;
+    } else {
+      crisisAlert.style.display = "none";
+      crisisAlert.innerHTML = "";
+    }
+  }
+
   const a = sh.attributes || {};
   if (el("at-agi")) el("at-agi").textContent = fmt(a.agilidade);
   if (el("at-for")) el("at-for").textContent = fmt(a.forca);
@@ -610,15 +694,28 @@ function renderSheet(sh) {
   if (el("at-pre")) el("at-pre").textContent = fmt(a.presenca);
   if (el("at-vig")) el("at-vig").textContent = fmt(a.vigor);
 
-  renderTags("sh-abilities", sh.abilities || [], "ability");
+  renderTags("sh-abilities", sh.abilities || [], "ability", sh.pe_current);
   renderTags("sh-skills",    sh.skills    || [], "skill");
   renderTags("sh-inventory", sh.inventory || [], "item");
 
   const row = el("sh-status-row");
   if (row) {
-    row.innerHTML = (sh.status_effects || []).map(s =>
-      `<span class="status-tag">${esc(s)}</span>`
-    ).join("") || "";
+    row.innerHTML = (sh.status_effects || []).map(s => {
+      let tagClass = "status-tag";
+      let icon = "◈";
+      if (s.includes("Morrendo") || s.includes("Morto")) {
+        tagClass += " status-dying"; icon = "☠";
+      } else if (s.includes("Colapso") || s.includes("Enlouquecido")) {
+        tagClass += " status-madness"; icon = "🌀";
+      } else if (s.includes("Exausto")) {
+        tagClass += " status-exhausted"; icon = "⚡";
+      } else if (s.includes("Ferido")) {
+        tagClass += " status-wounded"; icon = "❤";
+      } else if (s.includes("Abalado")) {
+        tagClass += " status-shaken"; icon = "☽";
+      }
+      return `<span class="${tagClass}">${icon} ${esc(s)}</span>`;
+    }).join("") || "";
   }
 
   renderFullSheet(sh);
@@ -630,16 +727,48 @@ function setBar(key, cur, max) {
   if (el(`bar-${key}`)) el(`bar-${key}`).style.width = clamp(pct, 0, 100) + "%";
 }
 
-function renderTags(containerId, items, tagClass) {
+function useSidebarItem(itemName) {
+  if (isWaiting) return;
+  enviarAction(`Usar item: ${itemName}`);
+}
+
+function useSidebarAbility(abilityName, cost) {
+  if (isWaiting) return;
+  const sh = getCurrentSheet();
+  if (sh && cost && cost > (sh.pe_current || 0)) {
+    addMsg("system", `✦ Você está sem PE suficiente para usar ${abilityName} (Requer ${cost} PE).`);
+    return;
+  }
+  enviarAction(`Usar habilidade: ${abilityName}`);
+}
+
+function renderTags(containerId, items, tagClass, currentPe = 999) {
   const c = el(containerId);
   if (!c) return;
   if (!items.length) { c.innerHTML = `<span class="tag-empty">—</span>`; return; }
+
   c.innerHTML = items.map(item => {
-    if (tagClass === "item" && typeof item === "object") {
-      const icon = ACTION_ICONS[item.acao] || "📦";
-      const actionClass = (item.acao || "utilidade").toLowerCase();
-      return `<span class="tag tag-item action-${actionClass}" title="${esc(item.descricao || '')}">${icon} ${esc(item.nome || '?')}</span>`;
+    if (tagClass === "item") {
+      const isObj = typeof item === "object";
+      const nome = isObj ? (item.nome || "?") : item;
+      const acao = isObj ? (item.acao || "utilidade").toLowerCase() : "utilidade";
+      const icon = ACTION_ICONS[isObj ? item.acao : "utilidade"] || "📦";
+      const desc = isObj ? (item.descricao || "") : "Clique para usar este item.";
+      return `<span class="tag tag-item action-${acao}" onclick="useSidebarItem('${esc(nome)}')" title="${esc(desc)} (Clique para Usar)">${icon} ${esc(nome)}</span>`;
     }
+
+    if (tagClass === "ability") {
+      const isObj = typeof item === "object";
+      const nome = isObj ? (item.nome || "?") : item;
+      const cost = isObj ? (item.custo_pe || item.pe || 0) : 0;
+      const desc = isObj ? (item.descricao || "") : "Habilidade de classe.";
+      const isDisabled = cost > 0 && currentPe < cost;
+      const disabledClass = isDisabled ? "disabled-ability" : "";
+      const tooltip = isDisabled ? `Sem PE suficiente (${cost} PE necessários)` : (desc ? `${desc} (${cost ? `${cost} PE` : 'Ação Livre'})` : 'Clique para ativar');
+
+      return `<span class="tag tag-ability ${disabledClass}" onclick="useSidebarAbility('${esc(nome)}', ${cost})" title="${esc(tooltip)}">${cost ? `[${cost}PE] ` : ''}${esc(nome)}</span>`;
+    }
+
     const txt = typeof item === "string" ? item : item.nome || "?";
     return `<span class="tag tag-${tagClass}" title="${esc(typeof item === 'object' ? (item.descricao||'') : '')}">${esc(txt)}</span>`;
   }).join("");

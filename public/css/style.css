@@ -1032,13 +1032,99 @@ body.master-narrating .chat-box {
 
 .status-tag {
   font-size: 9.5px;
-  padding: 2px 7px;
+  padding: 2px 8px;
   border-radius: 4px;
   background: rgba(185, 28, 28, 0.15);
   border: 1px solid rgba(239, 68, 68, 0.3);
   color: #fca5a5;
   font-family: var(--font-t);
   letter-spacing: .5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.25s ease;
+}
+
+.status-tag.status-dying {
+  background: rgba(220, 38, 38, 0.28);
+  border-color: #ef4444;
+  color: #fecaca;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+  animation: pulseDamageGlow 1.2s infinite ease-in-out;
+}
+
+.status-tag.status-madness {
+  background: rgba(126, 34, 206, 0.28);
+  border-color: #a855f7;
+  color: #e9d5ff;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+  animation: pulseDamageGlow 1.2s infinite ease-in-out;
+}
+
+.status-tag.status-exhausted {
+  background: rgba(217, 119, 6, 0.25);
+  border-color: #f59e0b;
+  color: #fde68a;
+}
+
+.status-tag.status-wounded {
+  background: rgba(185, 28, 28, 0.2);
+  border-color: rgba(239, 68, 68, 0.45);
+  color: #fca5a5;
+}
+
+.status-tag.status-shaken {
+  background: rgba(88, 28, 135, 0.2);
+  border-color: rgba(168, 85, 247, 0.45);
+  color: #d8b4fe;
+}
+
+/* Alerta Dinâmico de Crise (3 Rounds Countdown) */
+.crisis-alert {
+  margin: 10px 16px 0;
+}
+
+.crisis-box {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  line-height: 1.4;
+  font-family: var(--font-b);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  animation: pulseAlertBox 1.4s infinite alternate ease-in-out;
+}
+
+.crisis-box.crisis-dying {
+  background: linear-gradient(135deg, rgba(127, 29, 29, 0.85), rgba(69, 10, 10, 0.95));
+  border: 1px solid #ef4444;
+  color: #fee2e2;
+}
+
+.crisis-box.crisis-madness {
+  background: linear-gradient(135deg, rgba(88, 28, 135, 0.85), rgba(46, 16, 101, 0.95));
+  border: 1px solid #c084fc;
+  color: #f3e8ff;
+}
+
+.crisis-box.crisis-exhausted {
+  background: linear-gradient(135deg, rgba(120, 53, 15, 0.85), rgba(69, 26, 3, 0.95));
+  border: 1px solid #f59e0b;
+  color: #fef3c7;
+}
+
+.crisis-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+@keyframes pulseAlertBox {
+  0% { transform: scale(0.99); box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+  100% { transform: scale(1.02); box-shadow: 0 0 18px rgba(239, 68, 68, 0.45); }
 }
 
 /* Recursos Vitais (PV, PE, SAN) */
@@ -1053,6 +1139,21 @@ body.master-narrating .chat-box {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  transition: all 0.3s ease;
+}
+
+.res-bar-group.is-dying {
+  border-left: 2px solid #ef4444;
+  padding-left: 6px;
+}
+
+.res-bar-group.is-mad {
+  border-left: 2px solid #a855f7;
+  padding-left: 6px;
+}
+
+.res-bar-group.is-exhausted {
+  opacity: 0.75;
 }
 
 .res-bar-header {
@@ -1091,11 +1192,40 @@ body.master-narrating .chat-box {
   color: var(--text2);
 }
 
+.res-val-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
 .res-val {
   font-family: var(--font-t);
   font-size: 11.5px;
   font-weight: 700;
   color: var(--text);
+}
+
+.res-delta {
+  font-family: var(--font-t);
+  font-size: 10px;
+  font-weight: 800;
+  opacity: 0;
+  transform: translateY(0);
+  transition: all 0.4s ease;
+  pointer-events: none;
+}
+
+.res-delta.active.damage {
+  opacity: 1;
+  color: #ef4444;
+  transform: translateY(-2px);
+}
+
+.res-delta.active.heal {
+  opacity: 1;
+  color: #22c55e;
+  transform: translateY(-2px);
 }
 
 .res-track {
@@ -1111,6 +1241,34 @@ body.master-narrating .chat-box {
   height: 100%;
   border-radius: 3px;
   transition: width .6s cubic-bezier(.22, 1, .36, 1);
+}
+
+.tag.tag-ability {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tag.tag-ability:hover {
+  border-color: var(--gold);
+  background: rgba(201, 168, 76, 0.15);
+}
+
+.tag.tag-ability.disabled-ability {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-color: rgba(255, 255, 255, 0.1);
+  text-decoration: line-through;
+}
+
+.tag.tag-item {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tag.tag-item:hover {
+  border-color: var(--gold);
+  background: rgba(201, 168, 76, 0.15);
+  transform: translateY(-1px);
 }
 
 .res-fill-pv {

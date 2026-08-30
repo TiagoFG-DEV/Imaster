@@ -73,34 +73,46 @@
       <div class="status-effects-row" id="sh-status-row"></div>
     </div>
 
+    <!-- Alerta Dinâmico de Crise (Morte / Insanidade / Exaustão) -->
+    <div id="crisis-alert" class="crisis-alert" style="display:none"></div>
+
     <!-- Medidores de Recursos Vitais (PV, PE, SAN) -->
     <div class="sheet-block sheet-vitals-block">
       <div class="sheet-block-label">RECURSOS VITAIS</div>
       <div class="res-bars">
         
         <!-- PV -->
-        <div class="res-bar-group res-group-pv">
+        <div class="res-bar-group res-group-pv" id="group-pv">
           <div class="res-bar-header">
             <div class="res-title"><span class="res-icon">❤</span> <span class="res-name">PONTOS DE VIDA</span></div>
-            <span class="res-val" id="sh-pv">—</span>
+            <div class="res-val-wrap">
+              <span class="res-delta" id="delta-pv"></span>
+              <span class="res-val" id="sh-pv">—</span>
+            </div>
           </div>
           <div class="res-track"><div class="res-fill res-fill-pv" id="bar-pv"></div></div>
         </div>
 
         <!-- PE -->
-        <div class="res-bar-group res-group-pe">
+        <div class="res-bar-group res-group-pe" id="group-pe">
           <div class="res-bar-header">
             <div class="res-title"><span class="res-icon">✦</span> <span class="res-name">PONTOS DE ESFORÇO</span></div>
-            <span class="res-val" id="sh-pe">—</span>
+            <div class="res-val-wrap">
+              <span class="res-delta" id="delta-pe"></span>
+              <span class="res-val" id="sh-pe">—</span>
+            </div>
           </div>
           <div class="res-track"><div class="res-fill res-fill-pe" id="bar-pe"></div></div>
         </div>
 
         <!-- SAN -->
-        <div class="res-bar-group res-group-san">
+        <div class="res-bar-group res-group-san" id="group-san">
           <div class="res-bar-header">
             <div class="res-title"><span class="res-icon">☽</span> <span class="res-name">SANIDADE</span></div>
-            <span class="res-val" id="sh-san">—</span>
+            <div class="res-val-wrap">
+              <span class="res-delta" id="delta-san"></span>
+              <span class="res-val" id="sh-san">—</span>
+            </div>
           </div>
           <div class="res-track"><div class="res-fill res-fill-san" id="bar-san"></div></div>
         </div>

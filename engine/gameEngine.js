@@ -27,6 +27,7 @@ const CLASS_BASES = {
 function applyUpdates(session, updates, diceResult) {
   if (!updates) return;
   const sh = session.character_sheet;
+  if (!sh) return;
 
   if (updates.pv_current != null) sh.pv_current = clamp(updates.pv_current, 0, sh.pv_max);
   if (updates.pe_current != null) sh.pe_current = clamp(updates.pe_current, 0, sh.pe_max);
@@ -34,17 +35,88 @@ function applyUpdates(session, updates, diceResult) {
   if (updates.location)  sh.current_location = updates.location;
   if (updates.nex)       sh.nex = updates.nex;
 
-  if (Array.isArray(updates.inventory_add))
-    updates.inventory_add.forEach(i => { if (!sh.inventory.includes(i)) sh.inventory.push(i); });
-  if (Array.isArray(updates.inventory_remove))
-    sh.inventory = sh.inventory.filter(i => !updates.inventory_remove.includes(i));
-  if (Array.isArray(updates.status_add))
+  if (Array.isArray(updates.inventory_add)) {
+    updates.inventory_add.forEach(i => {
+      const name = typeof i === 'string' ? i : i.nome;
+      if (!sh.inventory.some(it => (typeof it === 'string' ? it : it.nome) === name)) {
+        sh.inventory.push(i);
+      }
+    });
+  }
+  if (Array.isArray(updates.inventory_remove)) {
+    sh.inventory = sh.inventory.filter(i => !updates.inventory_remove.includes(typeof i === 'string' ? i : i.nome));
+  }
+  if (!Array.isArray(sh.status_effects)) sh.status_effects = [];
+  if (Array.isArray(updates.status_add)) {
     updates.status_add.forEach(s => { if (!sh.status_effects.includes(s)) sh.status_effects.push(s); });
-  if (Array.isArray(updates.status_remove))
+  }
+  if (Array.isArray(updates.status_remove)) {
     sh.status_effects = sh.status_effects.filter(s => !updates.status_remove.includes(s));
+  }
+
+  // ─── 1. Gerenciamento do Estado MORRENDO (PV == 0, 3 Rounds de Contagem) ───
+  if (sh.pv_current <= 0) {
+    sh.pv_current = 0;
+    sh.dying_rounds = (sh.dying_rounds || 0) + 1;
+    sh.status_effects = sh.status_effects.filter(s => !s.startsWith("Morrendo"));
+    sh.status_effects.push(`Morrendo (Rodada ${sh.dying_rounds}/3)`);
+
+    if (sh.dying_rounds > 3) {
+      session.ended = true;
+      session.dead = true;
+      sh.status_effects = sh.status_effects.filter(s => !s.startsWith("Morrendo"));
+      if (!sh.status_effects.includes("Morto")) sh.status_effects.push("Morto");
+    }
+  } else {
+    sh.dying_rounds = 0;
+    sh.status_effects = sh.status_effects.filter(s => !s.startsWith("Morrendo") && s !== "Morto");
+    if (sh.pv_current <= Math.floor(sh.pv_max * 0.4)) {
+      if (!sh.status_effects.includes("Ferido Gravemente")) sh.status_effects.push("Ferido Gravemente");
+    } else {
+      sh.status_effects = sh.status_effects.filter(s => s !== "Ferido Gravemente");
+    }
+  }
+
+  // ─── 2. Gerenciamento do COLAPSO MENTAL (SAN == 0, 3 Rounds de Crise) ───────
+  if (sh.san_current <= 0) {
+    sh.san_current = 0;
+    sh.madness_rounds = (sh.madness_rounds || 0) + 1;
+    sh.status_effects = sh.status_effects.filter(s => !s.startsWith("Colapso Mental"));
+    sh.status_effects.push(`Colapso Mental (Rodada ${sh.madness_rounds}/3)`);
+
+    if (sh.madness_rounds > 3) {
+      session.ended = true;
+      session.madness = true;
+      sh.status_effects = sh.status_effects.filter(s => !s.startsWith("Colapso Mental"));
+      if (!sh.status_effects.includes("Enlouquecido")) sh.status_effects.push("Enlouquecido");
+    }
+  } else {
+    sh.madness_rounds = 0;
+    sh.status_effects = sh.status_effects.filter(s => !s.startsWith("Colapso Mental") && s !== "Enlouquecido");
+    if (sh.san_current <= Math.floor(sh.san_max * 0.4)) {
+      if (!sh.status_effects.includes("Abalado")) sh.status_effects.push("Abalado");
+    } else {
+      sh.status_effects = sh.status_effects.filter(s => s !== "Abalado");
+    }
+  }
+
+  // ─── 3. Gerenciamento de EXAUSTÃO (PE == 0, Desvantagem) ───────────────────
+  if (sh.pe_current <= 0) {
+    sh.pe_current = 0;
+    if (!sh.status_effects.includes("Exausto")) sh.status_effects.push("Exausto");
+  } else {
+    sh.status_effects = sh.status_effects.filter(s => s !== "Exausto");
+  }
 
   if (diceResult) session.last_dice = diceResult;
-  if (sh.pv_current <= 0) session.ended = true;
+
+  // Sincroniza o personagem ativo no array multiplayer se houver
+  if (Array.isArray(session.all_characters) && session.all_characters.length > 0) {
+    const idx = session.all_characters.findIndex(c => c.name === sh.name);
+    if (idx >= 0) {
+      session.all_characters[idx] = JSON.parse(JSON.stringify(sh));
+    }
+  }
 }
 
 // ─── Push de histórico ────────────────────────────────────────────────────────
