@@ -73,12 +73,14 @@
         <div class="sp-agent-tag">ORDO REALITAS</div>
         <div class="sp-agent-name" id="sh-name">—</div>
         <div class="sp-agent-class" id="sh-class">—</div>
-        <div class="sp-location-row">
+        <div class="sp-location-row" id="sp-location-btn" onclick="openMapModal()" title="Abrir Mapa Interativo de Locais">
           <span class="sp-location-dot"></span>
           <span class="sp-location-text" id="sh-location">Localização desconhecida</span>
+          <span class="sp-map-btn-badge">🗺 MAPA</span>
         </div>
       </div>
     </div>
+
 
     <!-- ══ ALERTA DE CRISE ══ -->
     <div id="crisis-alert" class="crisis-alert" style="display:none"></div>
@@ -509,6 +511,76 @@
 
   <!-- Vinheta Dinâmica de Clima de Cena (Combate, Perseguição, Investigação) -->
   <div id="scene-vignette-overlay" class="scene-vignette-overlay"></div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       MODAL DE MAPA TÁTICO INTERATIVO (PAN & ZOOM)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="map-overlay" id="map-overlay" onclick="closeMapModalIfOutside(event)">
+    <div class="map-modal" id="map-modal">
+      <div class="map-modal-header">
+        <div class="map-header-title-wrap">
+          <span class="map-header-icon">🗺</span>
+          <div>
+            <h2 class="map-header-title">MAPA TÁTICO DA MISSÃO</h2>
+            <p class="map-header-sub">Arraste para mover • Scroll do mouse para Zoom • Clique em uma sala conectada para mover seu agente</p>
+          </div>
+        </div>
+        <div class="map-header-controls">
+          <button class="map-ctrl-btn" onclick="zoomMap(0.2)" title="Aproximar Zoom (Scroll Up)">＋</button>
+          <button class="map-ctrl-btn" onclick="zoomMap(-0.2)" title="Afastar Zoom (Scroll Down)">－</button>
+          <button class="map-ctrl-btn" onclick="resetMapPosition()" title="Centralizar Mapa">⟲</button>
+          <button class="map-close-btn" onclick="closeMapModal()">✕</button>
+        </div>
+      </div>
+
+      <div class="map-viewport" id="map-viewport">
+        <div class="map-canvas-world" id="map-canvas-world">
+          <svg class="map-links-svg" id="map-links-svg"></svg>
+          <div class="map-nodes-container" id="map-nodes-container"></div>
+        </div>
+      </div>
+
+      <div class="map-modal-footer">
+        <div class="map-legend">
+          <span class="legend-item"><span class="legend-dot active"></span> Local Atual</span>
+          <span class="legend-item"><span class="legend-dot visited"></span> Visitado</span>
+          <span class="legend-item"><span class="legend-dot unvisited"></span> Inexplorado</span>
+          <span class="legend-item"><span class="legend-dot locked"></span> Trancado</span>
+        </div>
+        <div id="map-selected-info" class="map-selected-info"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       MINIGAME: O BOLO DE CHAVES (Lock & Key Minigame)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="minigame-overlay" id="minigame-keys-overlay">
+    <div class="minigame-modal">
+      <div class="minigame-header">
+        <span class="minigame-icon">🗝</span>
+        <div>
+          <h3 class="minigame-title">CADEADO REFORÇADO — TESTE DAS CHAVES</h3>
+          <p class="minigame-sub">Você tem poucas chances antes que as chaves quebrem ou o cadeado emperre!</p>
+        </div>
+        <button class="card-menu-close" onclick="closeMinigameKeys()">✕</button>
+      </div>
+      
+      <div class="minigame-body">
+        <div class="minigame-lock-display">
+          <div class="lock-visual" id="lock-visual">🔒</div>
+          <div class="minigame-attempts-box">
+            <span>CHANCES RESTANTES:</span>
+            <strong id="minigame-attempts-count">3</strong>
+          </div>
+        </div>
+
+        <div class="keys-selection-grid" id="keys-selection-grid"></div>
+        <div id="minigame-feedback" class="minigame-feedback"></div>
+      </div>
+    </div>
+  </div>
+
 
   <!-- ══════════════════════════════════════════════════════════
        CINEMÁTICA DE TROCA DE TURNO (Multiplayer)

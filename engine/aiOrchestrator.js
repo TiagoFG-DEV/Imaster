@@ -30,8 +30,13 @@ Sua resposta DEVE ser estritamente em formato JSON válido com TODOS os campos:
   "pending_dice": { "required": false, "attribute": "intelecto", "cd": 15, "reason": "" }
 }
 REGRAS OBRIGATÓRIAS:
-1. Em TODAS as respostas forneça 3 ou 4 "contextual_suggestions" coerentes com a cena, sem spoilers.
-2. Exija rolagens (pending_dice.required = true) para ações arriscadas (explorar, atacar, decifrar, fugir, resistir ao medo).
+1. Em TODAS as respostas forneça 3 ou 4 "contextual_suggestions" coerentes com o local e a cena atual, sem spoilers.
+2. IMPACTO REAL DOS ATRIBUTOS: Exija rolagens (pending_dice.required = true) considerando os atributos do agente:
+   - FORÇA (FOR): Arrombar portas, levantar escombros pesados, agarrar ou empurrar inimigos, impacto físico.
+   - AGILIDADE (AGI): Esquivar de golpes, correr em perseguição, equilibrar-se em beirais, ações furtivas.
+   - VIGOR (VIG): Resistir a venenos/fadiga física, tolerar dor e ferimentos, testes de sobrevivência.
+   - INTELECTO (INT): Investigar pistas forenses, decifrar documentos/códigos, analisar rituais e mecanismos.
+   - PRESENÇA (PRE): Resistir ao medo do Outro Lado (Vontade/Sanidade), liderança tática, interrogar testemunhas.
 3. DANO DE SANIDADE É RARO E EXCLUSIVO DE HORROR EXTREMO: NUNCA reduza Sanidade (san_current) por investigar ambientes escuros, encontrar pistas macabras, ler livros ou ouvir ruídos. Dano de Sanidade é reservado EXCLUSIVAMENTE para choques psicológicos brutais:
    - Presenciar assassinatos de culto ou sacrifícios humanos ocorrendo na frente dos agentes (-2 a -4 SAN).
    - Ataque mental direto de uma entidade ou revelação de sua forma alienígena total (-3 a -6 SAN).
@@ -45,15 +50,17 @@ REGRAS OBRIGATÓRIAS:
    - +3 a +5: Assassinatos ritualísticos, sacrifícios profanos testemunhados, rituais em execução, visões tenebrosas, perda de Sanidade em choque extremo.
    - +5 a +10: Combate direto e derrota de criaturas/monstros do Outro Lado, quebra da membrana, manifestação de entidades completas ou clímax.
    - null: Ações mundanas ou sem novo contato paranormal.
-8. TRILHA SONORA DINÂMICA (bgm_mood): Defina o clima sonoro da cena entre:
+8. NAVEGAÇÃO & MISTÉRIO CENTRAL: Narre a cena respeitando o local atual do mapa e as pistas encontradas. Documentos, chaves e revelações devem sempre convergir para desvendar o segredo da anomalia e preparar o confronto final com o Boss da história.
+9. TRILHA SONORA DINÂMICA (bgm_mood): Defina o clima sonoro da cena entre:
    - "calmo": Diálogos, investigações rotineiras, calmaria ou exploração silenciosa.
    - "tenso": Sinais do Outro Lado, rituais macabros, ameaça oculta à espreita, medo iminente.
    - "batalha": Confronto tático armado ou corporal contra cultistas, criaturas e aberrações.
    - "perseguicao": Fuga desesperada, perseguição em alta velocidade, fuga de perigo mortal.
    - "vitoria": Banimento de entidades, fechamento de portais, triunfo dos agentes.
    - "derrota": Morte de personagens, colapso de insanidade, fracasso trágico.
-9. SEMPRE preencha state_updates com os NOVOS VALORES ABSOLUTOS de PV/PE/SAN (use null para o que não mudar).
-10. Não inclua Markdown ao redor do JSON, apenas o objeto JSON puro.`;
+10. SEMPRE preencha state_updates com os NOVOS VALORES ABSOLUTOS de PV/PE/SAN (use null para o que não mudar).
+11. Não inclua Markdown ao redor do JSON, apenas o objeto JSON puro.`;
+
 
   const userMessage = `ESTADO ATUAL DO PERSONAGEM:
 ${JSON.stringify(stateContext, null, 2)}

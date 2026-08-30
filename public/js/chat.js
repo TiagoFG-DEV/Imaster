@@ -2328,8 +2328,12 @@ document.addEventListener("keydown", (e) => {
     closeMenu("attack-menu");
     closeMenu("action-menu");
     closeMenu("item-menu");
+    closeMenu("target-menu");
+    closeMapModal();
+    closeMinigameKeys();
   }
 });
+
 
 function renderHistory(history) {
   const chat = el("chat");
@@ -2385,3 +2389,372 @@ function toggleSheet() {
   const isCollapsed = panel.classList.toggle("collapsed");
   if (toggle) toggle.textContent = isCollapsed ? "▶" : "◀";
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ─── MOTOR DE MAPA TÁTICO INTERATIVO (PAN, ZOOM, GRAFO & LOCALIZAÇÃO) ─────────
+// ═══════════════════════════════════════════════════════════════════════════════
+let mapScale = 1;
+let mapPanX = 0;
+let mapPanY = 0;
+let isPanning = false;
+let panStartX = 0;
+let panStartY = 0;
+let mapInitialized = false;
+
+function openMapModal() {
+  const overlay = el("map-overlay");
+  if (!overlay) return;
+  overlay.classList.add("active");
+  overlay.style.display = "flex";
+
+  const mapData = introDataGlobal?.world_data?.mapa_locais || getFallbackMap();
+  renderTacticalMap(mapData);
+  initMapInteractions();
+}
+
+function closeMapModal() {
+  const overlay = el("map-overlay");
+  if (overlay) {
+    overlay.classList.remove("active");
+    overlay.style.display = "none";
+  }
+}
+
+function closeMapModalIfOutside(e) {
+  if (e.target === el("map-overlay")) closeMapModal();
+}
+
+function getFallbackMap() {
+  const sh = getCurrentSheet();
+  const current = sh?.current_location || "Recepção Central";
+  return [
+    { id: "loc_1", nome: current, formato: "retangulo", grid_x: 2, grid_y: 0, descricao: "Ponto de partida dos agentes.", conexoes: ["loc_2"], gatilho: "investigacao", inicial: true },
+    { id: "loc_2", nome: "Corredor de Acesso", formato: "quadrado", grid_x: 2, grid_y: 1, descricao: "Passagem conectando as alas.", conexoes: ["loc_1", "loc_3", "loc_4"], gatilho: "investigacao" },
+    { id: "loc_3", nome: "Ala dos Arquivos", formato: "quadrado", grid_x: 1, grid_y: 1, descricao: "Registros e segredos.", conexoes: ["loc_2"], gatilho: "investigacao", trancado: true, minigame: "chaves" },
+    { id: "loc_4", nome: "Câmara Subterrânea", formato: "hexagonal", grid_x: 2, grid_y: 2, descricao: "Santuário do Clímax.", conexoes: ["loc_2"], gatilho: "boss_climax" },
+  ];
+}
+
+function renderTacticalMap(rooms) {
+  const world = el("map-canvas-world");
+  const nodesContainer = el("map-nodes-container");
+  const svgLinks = el("map-links-svg");
+  if (!world || !nodesContainer || !svgLinks) return;
+
+  nodesContainer.innerHTML = "";
+  svgLinks.innerHTML = "";
+
+  const sh = getCurrentSheet();
+  const currentLocName = sh?.current_location || rooms.find(r => r.inicial)?.nome || rooms[0]?.nome;
+
+  const roomMap = {};
+  const originX = 140;
+  const originY = 100;
+  const colSpacing = 240;
+  const rowSpacing = 190;
+
+  rooms.forEach(room => {
+    const gx = room.grid_x !== undefined ? room.grid_x : 2;
+    const gy = room.grid_y !== undefined ? room.grid_y : 0;
+    const x = originX + gx * colSpacing;
+    const y = originY + gy * rowSpacing;
+
+    let w = 150, h = 90;
+    if (room.formato === "quadrado") { w = 110; h = 110; }
+    else if (room.formato === "circular") { w = 120; h = 120; }
+    else if (room.formato === "hexagonal") { w = 150; h = 110; }
+
+    roomMap[room.id] = { x, y, w, h, room };
+  });
+
+  // 1. Linhas dos Corredores / Conexões SVG
+  const drawnEdges = new Set();
+  let linksHtml = "";
+
+  rooms.forEach(room => {
+    const fromPos = roomMap[room.id];
+    if (!fromPos) return;
+
+    (room.conexoes || []).forEach(targetId => {
+      const toPos = roomMap[targetId];
+      if (!toPos) return;
+
+      const edgeKey = [room.id, targetId].sort().join("<->");
+      if (drawnEdges.has(edgeKey)) return;
+      drawnEdges.add(edgeKey);
+
+      const isCurrentRoute = (room.nome === currentLocName) || (toPos.room.nome === currentLocName);
+      linksHtml += `<line class="map-corridor-line${isCurrentRoute ? ' active' : ''}" x1="${fromPos.x}" y1="${fromPos.y}" x2="${toPos.x}" y2="${toPos.y}" />`;
+    });
+  });
+  svgLinks.innerHTML = linksHtml;
+
+  const agentColors = ["#22c55e", "#38bdf8", "#c084fc", "#eab308", "#f43f5e"];
+
+  // 2. Nós / Salas
+  rooms.forEach(room => {
+    const pos = roomMap[room.id];
+    if (!pos) return;
+
+    const isCurrent = (room.nome === currentLocName) || (room.id === sh?.current_location_id);
+    const isBoss = room.gatilho === "boss_climax" || room.formato === "hexagonal";
+    const isLocked = room.trancado;
+
+    const agentsHere = allCharacters.filter(c => {
+      const cLoc = c.current_location || (rooms.find(r => r.inicial)?.nome);
+      return cLoc === room.nome || c.current_location_id === room.id;
+    });
+
+    const nodeEl = document.createElement("div");
+    nodeEl.className = `map-node format-${room.formato || 'retangulo'}${isCurrent ? ' is-current' : ''}${isBoss ? ' is-boss' : ''}${isLocked ? ' is-locked' : ''}`;
+    nodeEl.style.left = `${pos.x}px`;
+    nodeEl.style.top = `${pos.y}px`;
+    nodeEl.style.width = `${pos.w}px`;
+    nodeEl.style.height = `${pos.h}px`;
+
+    const agentsHtml = agentsHere.map((ag, idx) => {
+      const firstName = (ag.name || "Agente").split(" ")[0];
+      const color = agentColors[idx % agentColors.length];
+      return `<div class="map-agent-chip" style="border-color:${color};box-shadow:0 0 6px ${color}">
+        <span class="map-agent-dot" style="background:${color}"></span>
+        <span>${esc(firstName)}</span>
+      </div>`;
+    }).join("");
+
+    nodeEl.innerHTML = `
+      <div class="map-node-title">${esc(room.nome)}</div>
+      <div class="map-node-badge">${isCurrent ? '📍 VOCÊ ESTÁ AQUI' : (isLocked ? '🔒 TRANCADO' : (isBoss ? '⚔ BOSS FINAL' : esc(room.gatilho || 'SALA')))}</div>
+      ${agentsHtml ? `<div class="map-node-agents">${agentsHtml}</div>` : ''}
+    `;
+
+    nodeEl.onclick = () => onMapNodeClick(room, isCurrent);
+    nodesContainer.appendChild(nodeEl);
+  });
+
+  centerOnCurrentRoom(roomMap, currentLocName);
+}
+
+function centerOnCurrentRoom(roomMap, currentLocName) {
+  const currentRoomEntry = Object.values(roomMap).find(e => e.room.nome === currentLocName) || Object.values(roomMap)[0];
+  if (!currentRoomEntry) return;
+
+  const viewport = el("map-viewport");
+  if (!viewport) return;
+
+  const vw = viewport.clientWidth || 800;
+  const vh = viewport.clientHeight || 500;
+
+  mapPanX = (vw / 2) - (currentRoomEntry.x * mapScale);
+  mapPanY = (vh / 2) - (currentRoomEntry.y * mapScale);
+  applyMapTransform();
+}
+
+function onMapNodeClick(room, isCurrent) {
+  if (isCurrent) {
+    addMsg("system", `✦ Você já está em: ${room.nome}.`);
+    return;
+  }
+
+  const sh = getCurrentSheet();
+  const mapData = introDataGlobal?.world_data?.mapa_locais || [];
+  const currentRoom = mapData.find(r => r.nome === sh?.current_location || r.id === sh?.current_location_id);
+
+  const isConnected = !currentRoom || (currentRoom.conexoes || []).includes(room.id);
+
+  if (!isConnected) {
+    addMsg("system", `⚠️ Caminho inacessível diretamente: Você não pode ir direto para "${room.nome}". Avance pelas salas conectadas adjacentes primeiro.`);
+    return;
+  }
+
+  if (room.trancado && room.minigame === "chaves") {
+    closeMapModal();
+    openMinigameKeys(room);
+    return;
+  }
+
+  closeMapModal();
+  if (typeof AudioManager !== "undefined") AudioManager.playSFX("turn_change");
+  enviarAction(`Mover e explorar: ${room.nome}`);
+}
+
+function initMapInteractions() {
+  if (mapInitialized) return;
+  const viewport = el("map-viewport");
+  if (!viewport) return;
+  mapInitialized = true;
+
+  viewport.addEventListener("mousedown", (e) => {
+    if (e.button !== 0) return;
+    isPanning = true;
+    panStartX = e.clientX - mapPanX;
+    panStartY = e.clientY - mapPanY;
+  });
+
+  window.addEventListener("mousemove", (e) => {
+    if (!isPanning) return;
+    mapPanX = e.clientX - panStartX;
+    mapPanY = e.clientY - panStartY;
+    applyMapTransform();
+  });
+
+  window.addEventListener("mouseup", () => {
+    isPanning = false;
+  });
+
+  viewport.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    const zoomFactor = e.deltaY < 0 ? 0.15 : -0.15;
+    zoomMap(zoomFactor);
+  }, { passive: false });
+}
+
+function zoomMap(delta) {
+  mapScale = Math.min(2.5, Math.max(0.5, mapScale + delta));
+  applyMapTransform();
+}
+
+function resetMapPosition() {
+  mapScale = 1;
+  const mapData = introDataGlobal?.world_data?.mapa_locais || getFallbackMap();
+  renderTacticalMap(mapData);
+}
+
+function applyMapTransform() {
+  const world = el("map-canvas-world");
+  if (world) {
+    world.style.transform = `translate(${mapPanX}px, ${mapPanY}px) scale(${mapScale})`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ─── MINIGAME INTERATIVO: O BOLO DE CHAVES (LOCK & KEY PUZZLE) ─────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+let minigameState = {
+  activeRoom: null,
+  correctKeyIndex: null,
+  attemptsRemaining: 3,
+  keys: []
+};
+
+function openMinigameKeys(room) {
+  const overlay = el("minigame-keys-overlay");
+  const grid = el("keys-selection-grid");
+  const lockVisual = el("lock-visual");
+  const attemptsEl = el("minigame-attempts-count");
+  const feedback = el("minigame-feedback");
+  if (!overlay || !grid) return;
+
+  const totalKeys = 8;
+  const correctIdx = Math.floor(Math.random() * totalKeys);
+
+  minigameState = {
+    activeRoom: room,
+    correctKeyIndex: correctIdx,
+    attemptsRemaining: 3,
+    keys: Array.from({ length: totalKeys }, (_, i) => ({
+      id: i,
+      label: `Chave #${i + 1}`,
+      icon: ["🗝", "🔑", "🗝", "🗝", "🔑", "🗝", "🗝", "🔑"][i],
+      isBroken: false
+    }))
+  };
+
+  if (lockVisual) {
+    lockVisual.textContent = "🔒";
+    lockVisual.className = "lock-visual";
+  }
+  if (attemptsEl) attemptsEl.textContent = "3";
+  if (feedback) {
+    feedback.textContent = `Selecione uma chave para tentar destrancar: ${room.nome}`;
+    feedback.style.color = "var(--text)";
+  }
+
+  renderMinigameKeysGrid();
+
+  overlay.classList.add("active");
+  overlay.style.display = "flex";
+}
+
+function renderMinigameKeysGrid() {
+  const grid = el("keys-selection-grid");
+  if (!grid) return;
+
+  grid.innerHTML = minigameState.keys.map((k, i) =>
+    `<button class="key-item-btn${k.isBroken ? ' broken' : ''}" id="key-btn-${i}" onclick="chooseKey(${i})" ${k.isBroken || minigameState.attemptsRemaining <= 0 ? 'disabled' : ''}>
+      <span class="key-item-icon">${k.icon}</span>
+      <span class="key-item-label">${k.label}</span>
+    </button>`
+  ).join("");
+}
+
+function chooseKey(idx) {
+  if (minigameState.attemptsRemaining <= 0) return;
+  const key = minigameState.keys[idx];
+  if (!key || key.isBroken) return;
+
+  const lockVisual = el("lock-visual");
+  const feedback = el("minigame-feedback");
+  const attemptsEl = el("minigame-attempts-count");
+
+  if (idx === minigameState.correctKeyIndex) {
+    // Acertou a chave!
+    if (typeof AudioManager !== "undefined") AudioManager.playSFX("crit");
+    if (lockVisual) {
+      lockVisual.textContent = "🔓";
+      lockVisual.classList.add("unlocked");
+    }
+    if (feedback) {
+      feedback.textContent = `✦ SUCESSO! A chave #${idx + 1} girou com precisão e destrancou o acesso a ${minigameState.activeRoom.nome}!`;
+      feedback.style.color = "var(--green3)";
+    }
+
+    if (minigameState.activeRoom) {
+      minigameState.activeRoom.trancado = false;
+    }
+
+    setTimeout(() => {
+      closeMinigameKeys();
+      enviarAction(`Destrancar e adentrar: ${minigameState.activeRoom.nome}`);
+    }, 1600);
+  } else {
+    // Chave errada: quebra a chave e gasta tentativa
+    key.isBroken = true;
+    minigameState.attemptsRemaining--;
+
+    if (typeof AudioManager !== "undefined") AudioManager.playSFX("damage_pv");
+    if (lockVisual) {
+      lockVisual.classList.remove("shake");
+      void lockVisual.offsetWidth;
+      lockVisual.classList.add("shake");
+    }
+    if (attemptsEl) attemptsEl.textContent = minigameState.attemptsRemaining;
+
+    renderMinigameKeysGrid();
+
+    if (minigameState.attemptsRemaining <= 0) {
+      if (typeof AudioManager !== "undefined") AudioManager.playSFX("disaster");
+      if (feedback) {
+        feedback.textContent = `❌ CADEADO EMPERRADO: Todas as tentativas falharam e as chaves quebraram. É necessário outro agente ou um teste de Força/Arrombamento!`;
+        feedback.style.color = "var(--red3)";
+      }
+      setTimeout(() => {
+        closeMinigameKeys();
+        enviarAction(`Falha ao destrancar o cadeado em ${minigameState.activeRoom?.nome}. A fechadura emperrou!`);
+      }, 2000);
+    } else {
+      if (feedback) {
+        feedback.textContent = `⚡ A chave #${idx + 1} entortou e quebrou no tambor! Restam ${minigameState.attemptsRemaining} tentativa(s).`;
+        feedback.style.color = "var(--orange2)";
+      }
+    }
+  }
+}
+
+function closeMinigameKeys() {
+  const overlay = el("minigame-keys-overlay");
+  if (overlay) {
+    overlay.classList.remove("active");
+    overlay.style.display = "none";
+  }
+}
+

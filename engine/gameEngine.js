@@ -243,6 +243,32 @@ async function playerAction(action, sessionId, diceResult) {
 
   session.master_internal_flags.session_started = true;
 
+  // Atualiza localização se o jogador estiver se movendo pelo mapa
+  if (action && (action.startsWith("Mover e explorar:") || action.startsWith("Mover para:") || action.startsWith("Destrancar e adentrar:"))) {
+    const targetRoomName = action.replace(/^(Mover e explorar:|Mover para:|Destrancar e adentrar:)\s*/i, "").trim();
+    if (session.character_sheet) {
+      session.character_sheet.current_location = targetRoomName;
+      if (session.world_data?.mapa_locais) {
+        const found = session.world_data.mapa_locais.find(r => r.nome.toLowerCase() === targetRoomName.toLowerCase());
+        if (found) {
+          session.character_sheet.current_location_id = found.id;
+          session.world_data.local_nome = found.nome;
+          session.world_data.local_id = found.id;
+          if (found.gatilho) {
+            session.world_data.tipo_cena_atual = found.gatilho;
+          }
+        }
+      }
+    }
+    if (session.all_characters && session.character_sheet) {
+      const curIdx = session.current_player_index || 0;
+      if (session.all_characters[curIdx]) {
+        session.all_characters[curIdx].current_location = session.character_sheet.current_location;
+        session.all_characters[curIdx].current_location_id = session.character_sheet.current_location_id;
+      }
+    }
+  }
+
   // Processamento com IA Min+
   const result = await processPlayerAction(action, session, diceResult);
 
@@ -255,6 +281,7 @@ async function playerAction(action, sessionId, diceResult) {
   session.turn_count = (session.turn_count || 0) + 1;
 
   pushHistory(session, { player: action, ai: result.narration, time: new Date().toISOString() });
+
 
   if (Array.isArray(result.new_events)) {
     result.new_events.forEach(ev => pushHistory(session, { system_event: ev, time: new Date().toISOString() }));

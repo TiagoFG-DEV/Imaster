@@ -334,6 +334,406 @@ function buildRichCampaignScenes(story, entity) {
   ];
 }
 
+// ─── GERAÇÃO DE GRAFO DE LOCAIS E MAPA PROCEDURAL (SEM IA) ───────────────────
+function generateStoryLocationMap(story, entity) {
+  const storyId = (story.id || "missao_paranormal").toLowerCase();
+  const locMain = story.local_principal || "Complexo Principal";
+  const bossName = entity?.nome || story.climax?.boss_nome || "A Entidade Abissal";
+
+  if (storyId.includes("hospital")) {
+    return [
+      {
+        id: "loc_recepcao",
+        nome: "Recepção & Triagem",
+        formato: "retangulo",
+        grid_x: 2,
+        grid_y: 0,
+        descricao: "Balcão de atendimento revirado, computadores chiando e macas perto da entrada.",
+        conexoes: ["loc_corredor_norte", "loc_estacionamento"],
+        gatilho: "investigacao",
+        pistas: ["Prontuário com nome dos primeiros desaparecidos", "Fita de segurança gravada"],
+        trancado: false,
+        inicial: true
+      },
+      {
+        id: "loc_estacionamento",
+        nome: "Ambulatório & Estacionamento",
+        formato: "quadrado",
+        grid_x: 1,
+        grid_y: 0,
+        descricao: "Ambulâncias abandonadas com luzes piscando e poças escuras no asfalto.",
+        conexoes: ["loc_recepcao"],
+        gatilho: "investigacao",
+        pistas: ["Caixa de ferramentas tática", "Pegadas pesadas na lama"],
+        trancado: false
+      },
+      {
+        id: "loc_corredor_norte",
+        nome: "Corredor Central de Enfermarias",
+        formato: "retangulo",
+        grid_x: 2,
+        grid_y: 1,
+        descricao: "Corredor extenso com portas entreabertas. Luzes fluorescentes piscam emitindo zumbido elétrico.",
+        conexoes: ["loc_recepcao", "loc_ala_psiquiatrica", "loc_farmacia", "loc_uti"],
+        gatilho: "investigacao",
+        pistas: ["Símbolos de proteção raspados nas paredes"],
+        trancado: false
+      },
+      {
+        id: "loc_ala_psiquiatrica",
+        nome: "Ala Psiquiátrica Trancada",
+        formato: "quadrado",
+        grid_x: 1,
+        grid_y: 1,
+        descricao: "Porta de ferro maciço reforçada com três travas. Paredes acolchoadas com inscrições em código.",
+        conexoes: ["loc_corredor_norte"],
+        gatilho: "perseguicao",
+        pistas: ["Diário de um paciente que previa a chegada da entidade", "Chave Mestra do Subsolo"],
+        trancado: true,
+        minigame: "chaves"
+      },
+      {
+        id: "loc_farmacia",
+        nome: "Farmácia & Depósito de Sedativos",
+        formato: "circular",
+        grid_x: 3,
+        grid_y: 1,
+        descricao: "Frascos de vidro quebrados e substâncias que evaporam em névoa arroxeada.",
+        conexoes: ["loc_corredor_norte", "loc_escadaria_subsolo"],
+        gatilho: "investigacao",
+        pistas: ["Ampola de Elixir Estabilizador (+SAN)", "Relatório de compras arcanas"],
+        trancado: false
+      },
+      {
+        id: "loc_uti",
+        nome: "Centro de Terapia Intensiva (UTI)",
+        formato: "quadrado",
+        grid_x: 2,
+        grid_y: 2,
+        descricao: "Monitores cardíacos apitando em falso. Respiradores automáticos funcionam sozinhos.",
+        conexoes: ["loc_corredor_norte", "loc_necroterio", "loc_escadaria_subsolo"],
+        gatilho: "combate_comum",
+        pistas: ["Fórmulas de infusão com sangue do Outro Lado"],
+        trancado: false
+      },
+      {
+        id: "loc_necroterio",
+        nome: "Necrotério & Frigorífico",
+        formato: "retangulo",
+        grid_x: 1,
+        grid_y: 2,
+        descricao: "Frio congelante que condensa a respiração. Gavetas de aço entreabertas.",
+        conexoes: ["loc_uti", "loc_laboratorio_secreto"],
+        gatilho: "combate_importante",
+        pistas: ["Cadáver com talismã ritual no peito", "Anotações do médico legista"],
+        trancado: false
+      },
+      {
+        id: "loc_escadaria_subsolo",
+        nome: "Escadaria de Acesso ao Subsolo",
+        formato: "circular",
+        grid_x: 3,
+        grid_y: 2,
+        descricao: "Degraus de concreto úmido descendo para a escuridão. O ar fica quente e sulfuroso.",
+        conexoes: ["loc_farmacia", "loc_uti", "loc_laboratorio_secreto"],
+        gatilho: "perseguicao",
+        pistas: ["Chave da Câmara do Altar perdida no corrimão"],
+        trancado: false
+      },
+      {
+        id: "loc_laboratorio_secreto",
+        nome: "Laboratório Secreto de Consciência",
+        formato: "quadrado",
+        grid_x: 2,
+        grid_y: 3,
+        descricao: "Equipamentos cirúrgicos acoplados a cilindros com fluido escuro pulsante.",
+        conexoes: ["loc_necroterio", "loc_escadaria_subsolo", "loc_camara_ritual"],
+        gatilho: "combate_importante",
+        pistas: ["Fórmula exata para quebrar a imunidade da Entidade"],
+        trancado: true,
+        minigame: "chaves"
+      },
+      {
+        id: "loc_camara_ritual",
+        nome: `Santuário Abissal de ${bossName}`,
+        formato: "hexagonal",
+        grid_x: 2,
+        grid_y: 4,
+        descricao: `O epicentro da quebra da membrana. Vórtice sobrenatural sobre um altar colossal.`,
+        conexoes: ["loc_laboratorio_secreto"],
+        gatilho: "boss_climax",
+        pistas: ["O Selo Místico Final"],
+        trancado: false
+      }
+    ];
+  } else if (storyId.includes("fazenda") || story.tom === "suspense_rural") {
+    return [
+      {
+        id: "loc_porteira",
+        nome: "Porteira & Estrada de Terra",
+        formato: "retangulo",
+        grid_x: 2,
+        grid_y: 0,
+        descricao: "Cerca de madeira destruída, marcas de garras e silêncio sepulcral.",
+        conexoes: ["loc_patio_casarao", "loc_milharal_borda"],
+        gatilho: "investigacao",
+        pistas: ["Rastro de sangue arrastado em direção ao casarão"],
+        trancado: false,
+        inicial: true
+      },
+      {
+        id: "loc_milharal_borda",
+        nome: "Borda do Milharal",
+        formato: "quadrado",
+        grid_x: 1,
+        grid_y: 0,
+        descricao: "Pés de milho secos e altos balançando sem vento.",
+        conexoes: ["loc_porteira", "loc_milharal_profundo"],
+        gatilho: "perseguicao",
+        pistas: ["Espantalho com vestimentas do caseiro desaparecido"],
+        trancado: false
+      },
+      {
+        id: "loc_patio_casarao",
+        nome: "Pátio Central do Casarão",
+        formato: "quadrado",
+        grid_x: 2,
+        grid_y: 1,
+        descricao: "Casarão colonial antigo com tábuas rangendo. Lampião oscila sozinho.",
+        conexoes: ["loc_porteira", "loc_sala_casarao", "loc_celeiro", "loc_poco_antigo"],
+        gatilho: "investigacao",
+        pistas: ["Marcas de tiro de espingarda na parede externa"],
+        trancado: false
+      },
+      {
+        id: "loc_celeiro",
+        nome: "Celeiro & Oficina de Ferramentas",
+        formato: "retangulo",
+        grid_x: 3,
+        grid_y: 1,
+        descricao: "Correntes penduradas no teto alto. Ferramentas agrícolas cobertas de ferrugem.",
+        conexoes: ["loc_patio_casarao", "loc_cemiterio_familiar"],
+        gatilho: "combate_comum",
+        pistas: ["Machado de Caça reforçado (+Ataque)", "Chave do Porão do Casarão"],
+        trancado: true,
+        minigame: "chaves"
+      },
+      {
+        id: "loc_sala_casarao",
+        nome: "Sala de Jantar & Arquivo",
+        formato: "retangulo",
+        grid_x: 1,
+        grid_y: 1,
+        descricao: "Mesa posta com pratos intocados há dias. Retratos de família perfurados.",
+        conexoes: ["loc_patio_casarao", "loc_cozinha_despensa"],
+        gatilho: "investigacao",
+        pistas: ["Árvore genealógica com anotações de sacrifício"],
+        trancado: false
+      },
+      {
+        id: "loc_cozinha_despensa",
+        nome: "Cozinha & Alçapão do Porão",
+        formato: "circular",
+        grid_x: 1,
+        grid_y: 2,
+        descricao: "Alçapão de madeira pesada trancado com correntes no chão da cozinha.",
+        conexoes: ["loc_sala_casarao", "loc_poco_antigo", "loc_porao_oculto"],
+        gatilho: "investigacao",
+        pistas: ["Garrafa de Água Benta/Purificada", "Diário da Matriarca"],
+        trancado: false
+      },
+      {
+        id: "loc_poco_antigo",
+        nome: "Poço Antigo de Pedra",
+        formato: "circular",
+        grid_x: 2,
+        grid_y: 2,
+        descricao: "Poço de pedra esculpida com profundidade anormal. Sons de água fervilhando.",
+        conexoes: ["loc_patio_casarao", "loc_cozinha_despensa", "loc_milharal_profundo", "loc_porao_oculto"],
+        gatilho: "combate_importante",
+        pistas: ["Corda grossa descendo para as galerias subterrâneas"],
+        trancado: false
+      },
+      {
+        id: "loc_milharal_profundo",
+        nome: "Coração do Milharal",
+        formato: "quadrado",
+        grid_x: 3,
+        grid_y: 2,
+        descricao: "Labirinto denso de milho que se fecha atrás dos passos dos agentes.",
+        conexoes: ["loc_milharal_borda", "loc_poco_antigo", "loc_cemiterio_familiar"],
+        gatilho: "perseguicao",
+        pistas: ["Círculo de terra calcinada com ossadas"],
+        trancado: false
+      },
+      {
+        id: "loc_cemiterio_familiar",
+        nome: "Cemitério Clandestino de 1952",
+        formato: "retangulo",
+        grid_x: 3,
+        grid_y: 3,
+        descricao: "Lápides tortas de pedra sem nomes. Covas abertas de dentro para fora.",
+        conexoes: ["loc_celeiro", "loc_milharal_profundo", "loc_porao_oculto"],
+        gatilho: "combate_importante",
+        pistas: ["Escritura de maldição territorial"],
+        trancado: false
+      },
+      {
+        id: "loc_porao_oculto",
+        nome: "Porão Escavado & Cripta",
+        formato: "quadrado",
+        grid_x: 2,
+        grid_y: 3,
+        descricao: "Câmara de terra batida com raízes negras gotejando sangue vegetal.",
+        conexoes: ["loc_cozinha_despensa", "loc_poco_antigo", "loc_cemiterio_familiar", "loc_santuario_rural"],
+        gatilho: "investigacao",
+        pistas: ["O Segredo do Ritual de Sangue"],
+        trancado: true,
+        minigame: "chaves"
+      },
+      {
+        id: "loc_santuario_rural",
+        nome: `Covil das Raízes de ${bossName}`,
+        formato: "hexagonal",
+        grid_x: 2,
+        grid_y: 4,
+        descricao: `Abertura colossal onde as raízes do Outro Lado formam o corpo da Entidade Suprema.`,
+        conexoes: ["loc_porao_oculto"],
+        gatilho: "boss_climax",
+        pistas: ["O Coração da Entidade"],
+        trancado: false
+      }
+    ];
+  } else {
+    // Mapa Geral / Urbano
+    return [
+      {
+        id: "loc_entrada",
+        nome: "Entrada do Perímetro & Guarita",
+        formato: "retangulo",
+        grid_x: 2,
+        grid_y: 0,
+        descricao: `Ponto de acesso a ${locMain}. Portões violados e marcas de invasão.`,
+        conexoes: ["loc_patio_externo", "loc_estacionamento_urbano"],
+        gatilho: "investigacao",
+        pistas: ["Relatório de entrada de veículos suspeitos"],
+        trancado: false,
+        inicial: true
+      },
+      {
+        id: "loc_estacionamento_urbano",
+        nome: "Pátio de Carga & Veículos",
+        formato: "quadrado",
+        grid_x: 1,
+        grid_y: 0,
+        descricao: "Veículos com portas abertas e marcas de garras nas latarias.",
+        conexoes: ["loc_entrada"],
+        gatilho: "investigacao",
+        pistas: ["Kit de Arrombamento e Chaves"],
+        trancado: false
+      },
+      {
+        id: "loc_patio_externo",
+        nome: "Lobby Central & Recepção",
+        formato: "retangulo",
+        grid_x: 2,
+        grid_y: 1,
+        descricao: "Hall amplo com estátuas quebradas. Ecos de passos nos andares superiores.",
+        conexoes: ["loc_entrada", "loc_ala_oeste", "loc_ala_leste", "loc_corredor_norte"],
+        gatilho: "investigacao",
+        pistas: ["Mapa impresso de segurança do edifício"],
+        trancado: false
+      },
+      {
+        id: "loc_ala_oeste",
+        nome: "Setor de Arquivos & Escritórios",
+        formato: "quadrado",
+        grid_x: 1,
+        grid_y: 1,
+        descricao: "Gaveteiros metálicos tombados, papéis confidenciais espalhados e cofres.",
+        conexoes: ["loc_patio_externo"],
+        gatilho: "investigacao",
+        pistas: ["Documento do líder do culto", "Chave do Elevador de Serviço"],
+        trancado: true,
+        minigame: "chaves"
+      },
+      {
+        id: "loc_ala_leste",
+        nome: "Ala de Manutenção & Geradores",
+        formato: "circular",
+        grid_x: 3,
+        grid_y: 1,
+        descricao: "Geradores a diesel falhando com ruídos de engrenagens e faíscas.",
+        conexoes: ["loc_patio_externo", "loc_escadaria_subsolo"],
+        gatilho: "combate_comum",
+        pistas: ["Painel elétrico que desativa as travas de segurança"],
+        trancado: false
+      },
+      {
+        id: "loc_corredor_norte",
+        nome: "Corredor de Segurança Reforçada",
+        formato: "retangulo",
+        grid_x: 2,
+        grid_y: 2,
+        descricao: "Câmeras de segurança quebradas com lentes derretidas pelo calor paranormal.",
+        conexoes: ["loc_patio_externo", "loc_sala_controle", "loc_escadaria_subsolo"],
+        gatilho: "perseguicao",
+        pistas: ["Cartão de acesso nível 3"],
+        trancado: false
+      },
+      {
+        id: "loc_sala_controle",
+        nome: "Centro de Monitoramento & Dados",
+        formato: "quadrado",
+        grid_x: 1,
+        grid_y: 2,
+        descricao: "Monitores estáticos mostrando vultos caminhando em looping.",
+        conexoes: ["loc_corredor_norte", "loc_subsolo_blindado"],
+        gatilho: "combate_importante",
+        pistas: ["Gravação com a fraqueza do ritual"],
+        trancado: false
+      },
+      {
+        id: "loc_escadaria_subsolo",
+        nome: "Escadaria de Emergência Pressurizada",
+        formato: "circular",
+        grid_x: 3,
+        grid_y: 2,
+        descricao: "Portas corta-fogo travadas e grafites ocultistas de contenção.",
+        conexoes: ["loc_ala_leste", "loc_corredor_norte", "loc_subsolo_blindado"],
+        gatilho: "perseguicao",
+        pistas: ["Lanterna de Luz Negra"],
+        trancado: false
+      },
+      {
+        id: "loc_subsolo_blindado",
+        nome: "Câmara de Contenção Subterrânea",
+        formato: "quadrado",
+        grid_x: 2,
+        grid_y: 3,
+        descricao: "Portas de chumbo maciço com símbolos arcanos brilhando em tom incandescente.",
+        conexoes: ["loc_sala_controle", "loc_escadaria_subsolo", "loc_altar_boss"],
+        gatilho: "combate_importante",
+        pistas: ["Artefato de Selamento da Ordem"],
+        trancado: true,
+        minigame: "chaves"
+      },
+      {
+        id: "loc_altar_boss",
+        nome: `Epicentro do Caos: ${bossName}`,
+        formato: "hexagonal",
+        grid_x: 2,
+        grid_y: 4,
+        descricao: `O santuário proibido onde ${bossName} manifesta sua presença total!`,
+        conexoes: ["loc_subsolo_blindado"],
+        gatilho: "boss_climax",
+        pistas: ["O Ponto de Fratura da Membrana"],
+        trancado: false
+      }
+    ];
+  }
+}
+
 // ─── GERAÇÃO DE HISTÓRIA ─────────────────────────────────────────────────────
 function generateStory(themes = [], gameMode = {}) {
   const stories = STORIES_DB.historias || [];
@@ -350,6 +750,8 @@ function generateStory(themes = [], gameMode = {}) {
 
   const story = pick(pool);
   const richScenes = buildRichCampaignScenes(story, null);
+  const mapGraph = generateStoryLocationMap(story, null);
+  const initialLoc = mapGraph.find(l => l.inicial) || mapGraph[0];
 
   // Monta a estrutura final da sessão
   return {
@@ -359,6 +761,8 @@ function generateStory(themes = [], gameMode = {}) {
     tom:             story.tom,
     contexto:        `${story.local_principal} — ${story.cidade}, ${story.epoca}`,
     local_principal: story.local_principal,
+    local_nome:      initialLoc.nome,
+    local_id:        initialLoc.id,
     cidade:          story.cidade,
     evento_incitante: story.evento_incitante,
     atmosfera:       story.atmosfera,
@@ -373,6 +777,7 @@ function generateStory(themes = [], gameMode = {}) {
     cenas_totais:    richScenes,
     cena_atual_obj:  richScenes[0],
     tipo_cena_atual: richScenes[0].tipo,
+    mapa_locais:     mapGraph,
     pistas_reveladas:[],
     climax_ativado:  false,
     final_escolhido: null,
@@ -397,19 +802,26 @@ function _fallbackStory() {
     finais: [{ id: "vitoria", titulo: "Vitória", descricao: "Os agentes sobrevivem.", tom: "aliviante" }],
   };
   const richScenes = buildRichCampaignScenes(base, null);
+  const mapGraph = generateStoryLocationMap(base, null);
+  const initialLoc = mapGraph.find(l => l.inicial) || mapGraph[0];
+
   return {
     ...base,
+    local_nome: initialLoc.nome,
+    local_id: initialLoc.id,
     ato_atual: 1,
     cena_atual: 0,
     cena_atual_idx: 0,
     cenas_totais: richScenes,
     cena_atual_obj: richScenes[0],
     tipo_cena_atual: richScenes[0].tipo,
+    mapa_locais: mapGraph,
     pistas_reveladas: [],
     climax_ativado: false,
     final_escolhido: null,
   };
 }
+
 
 
 // ─── GERAÇÃO DE POOL DE NPCs ─────────────────────────────────────────────────
