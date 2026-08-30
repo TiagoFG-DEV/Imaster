@@ -2226,6 +2226,131 @@ body.master-narrating .chat-box {
   box-shadow: 0 0 14px rgba(201, 168, 76, 0.25);
 }
 
+/* ═══ WIDGET DE ÁUDIO DINÂMICO NO HEADER ═══ */
+.chat-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.audio-control-widget {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(14, 12, 22, 0.85);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: 20px;
+  padding: 4px 12px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  transition: all .25s ease;
+}
+
+.audio-control-widget:hover {
+  border-color: var(--gold);
+  box-shadow: 0 0 15px rgba(201, 168, 76, 0.2);
+}
+
+.audio-track-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: default;
+}
+
+.audio-note-icon {
+  font-size: 12px;
+  animation: pulseAudioNote 2.5s ease-in-out infinite;
+}
+
+@keyframes pulseAudioNote {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 6px var(--gold)); }
+}
+
+.audio-track-title {
+  font-family: var(--font-m);
+  font-size: 10.5px;
+  color: var(--text2);
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.audio-mood-badge {
+  font-family: var(--font-t);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--gold);
+  background: rgba(201, 168, 76, 0.12);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 10px;
+  padding: 1px 7px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.btn-audio-mute {
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+  transition: transform .2s ease;
+  opacity: 0.9;
+}
+
+.btn-audio-mute:hover {
+  transform: scale(1.2);
+  opacity: 1;
+}
+
+.btn-audio-mute.is-muted {
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+
+.audio-vol-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 60px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  transition: opacity .2s;
+}
+
+.audio-vol-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  background: var(--gold);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--gold);
+  cursor: pointer;
+  transition: transform .15s ease;
+}
+
+.audio-vol-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+}
+
+@media (max-width: 768px) {
+  .audio-track-title {
+    display: none;
+  }
+  .audio-vol-slider {
+    width: 45px;
+  }
+}
+
+
 /* Área de Mensagens (Única com Scroll) */
 .chat-box {
   flex: 1;

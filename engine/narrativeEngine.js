@@ -610,8 +610,29 @@ async function processPlayerAction(action, session, diceResult) {
     }
   }
 
+  // ─── Reconhecimento Dinâmico de Trilha Sonora (bgm_mood) ───────────────────
+  let bgm_mood = aiResult?.bgm_mood || null;
+  if (session.ended && session.victory) {
+    bgm_mood = "vitoria";
+  } else if (session.ended && (session.dead || session.madness)) {
+    bgm_mood = "derrota";
+  } else if (currentPv <= 0 || currentSan <= 0) {
+    bgm_mood = "derrota";
+  } else if (!bgm_mood) {
+    if (actionType === "combate" || session.current_entity) {
+      bgm_mood = "batalha";
+    } else if (actionType === "fuga") {
+      bgm_mood = "perseguicao";
+    } else if (diceResult?.isDisaster || (state_updates.san_current != null && state_updates.san_current < sh.san_current)) {
+      bgm_mood = "tenso";
+    } else {
+      bgm_mood = "calmo";
+    }
+  }
+
   return {
     narration: narration || "O ambiente permanece tenso. Aguardem o próximo movimento.",
+    bgm_mood,
     cinematica,
     dice_request,
     state_updates,

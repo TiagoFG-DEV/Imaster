@@ -204,6 +204,10 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   await loadActionsDB();
   initVisualEffects();
+  if (typeof AudioManager !== "undefined") {
+    AudioManager.init();
+    AudioManager.setMood("calmo");
+  }
 
   const initKey = "initiative_done_" + sessionId;
   const isInitiativeDone = !!localStorage.getItem(initKey);
@@ -589,6 +593,13 @@ function showDelta(stat, delta) {
   deltaEl.textContent = delta > 0 ? `+${delta}` : `${delta}`;
   deltaEl.className = `res-delta active ${delta > 0 ? 'heal' : 'damage'}`;
 
+  if (typeof AudioManager !== "undefined") {
+    if (delta < 0) {
+      if (stat === "pv") AudioManager.playSFX("damage_pv");
+      else if (stat === "san") AudioManager.playSFX("damage_san");
+    }
+  }
+
   setTimeout(() => {
     deltaEl.classList.remove("active");
   }, 1400);
@@ -630,6 +641,7 @@ function renderSheet(sh) {
       const newN = parseInt(sh.nex) || 5;
       if (newN > oldN) {
         addMsg("system", `✦ EXPOSIÇÃO PARANORMAL: ${sh.name || "Agente"} ➔ NEX aumentou para ${sh.nex} (+${newN - oldN}% de contato com o Outro Lado)!`);
+        if (typeof AudioManager !== "undefined") AudioManager.playSFX("nex_up");
         const nb = el("nex-bar");
         if (nb) {
           nb.classList.remove("pulse-heal");
@@ -784,6 +796,7 @@ function setBar(key, cur, max) {
 
 function useSidebarItem(itemName) {
   if (isWaiting) return;
+  if (typeof AudioManager !== "undefined") AudioManager.playSFX("item");
   enviarAction(`Usar item: ${itemName}`);
 }
 
@@ -794,6 +807,7 @@ function useSidebarAbility(abilityName, cost) {
     addMsg("system", `✦ Você está sem PE suficiente para usar ${abilityName} (Requer ${cost} PE).`);
     return;
   }
+  if (typeof AudioManager !== "undefined") AudioManager.playSFX("attack");
   enviarAction(`Usar habilidade: ${abilityName}`);
 }
 
@@ -1088,6 +1102,9 @@ async function narrateRound(actions) {
     if (data.narration) await addMsg("narrator", data.narration);
     if (data.cinematica) playCinematic(data.cinematica);
     if (data.sheet) renderSheet(data.sheet);
+    if (data.bgm_mood && typeof AudioManager !== "undefined") {
+      AudioManager.setMood(data.bgm_mood);
+    }
   } catch (e) {
     addMsg("error", "Erro ao narrar o round.");
     document.body.classList.remove("master-narrating");
@@ -1099,6 +1116,7 @@ async function narrateRound(actions) {
 
 async function playTurnTransition(player) {
   if (!player) return;
+  if (typeof AudioManager !== "undefined") AudioManager.playSFX("turn_change");
   return new Promise(resolve => {
     const tt = el("turn-transition");
     if (!tt) { resolve(); return; }
@@ -1405,6 +1423,9 @@ async function enviarAction(action) {
       return;
     }
     if (data.contextual_suggestions) currentSuggestions = data.contextual_suggestions;
+    if (data.bgm_mood && typeof AudioManager !== "undefined") {
+      AudioManager.setMood(data.bgm_mood);
+    }
 
     // Sempre obter a ficha mais atual — preferir a retornada pela API
     const latestSheet = data.sheet || (await fetchSessionSheet()) || sh;
@@ -1540,7 +1561,8 @@ function rollDie(idx, sides, qty, cd, pickMode, action) {
   if (activeDice3DInstances[idx]?.roll) {
     activeDice3DInstances[idx].roll(1100);
   }
-  if (typeof Dice3D !== "undefined" && Dice3D.playDiceSound) Dice3D.playDiceSound();
+  if (typeof AudioManager !== "undefined") AudioManager.playSFX("dice_roll");
+  else if (typeof Dice3D !== "undefined" && Dice3D.playDiceSound) Dice3D.playDiceSound();
 
   const delays = [35, 45, 60, 80, 110, 145, 190, 245, 310];
   let step = 0;
@@ -1610,8 +1632,14 @@ function showResult(values, qty, cd, pickMode, sides) {
     if (isDisaster) dieEl.classList.add("crit-fail");
   });
 
-  if (isCrit)     triggerGoldenRain();
-  if (isDisaster) triggerScreenShake();
+  if (isCrit) {
+    triggerGoldenRain();
+    if (typeof AudioManager !== "undefined") AudioManager.playSFX("crit");
+  }
+  if (isDisaster) {
+    triggerScreenShake();
+    if (typeof AudioManager !== "undefined") AudioManager.playSFX("disaster");
+  }
 
   rollResult = {
     values, best, total: finalTotal, cd,
@@ -1651,6 +1679,9 @@ async function confirmRoll() {
 
     if (data.contextual_suggestions && data.contextual_suggestions.length > 0) {
       currentSuggestions = data.contextual_suggestions;
+    }
+    if (data.bgm_mood && typeof AudioManager !== "undefined") {
+      AudioManager.setMood(data.bgm_mood);
     }
 
     // Sempre obter a ficha mais atual — preferir a retornada pela API
@@ -1693,6 +1724,10 @@ async function confirmRoll() {
 function openVictoryModal(text) {
   const v = el("victory-overlay");
   if (!v) return;
+  if (typeof AudioManager !== "undefined") {
+    AudioManager.setMood("vitoria");
+    AudioManager.playSFX("crit");
+  }
   if (text && el("victory-desc")) {
     el("victory-desc").textContent = text.replace(/🏆 VITÓRIA DA MISSÃO!/g, '').trim() || el("victory-desc").textContent;
   }
@@ -1702,6 +1737,10 @@ function openVictoryModal(text) {
 function openMadnessModal(text) {
   const m = el("madness-overlay");
   if (!m) return;
+  if (typeof AudioManager !== "undefined") {
+    AudioManager.setMood("derrota");
+    AudioManager.playSFX("disaster");
+  }
   if (text && el("madness-desc")) {
     el("madness-desc").textContent = text.replace(/🌀 INSANIDADE TOTAL:/g, '').trim() || el("madness-desc").textContent;
   }

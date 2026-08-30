@@ -1,0 +1,312 @@
+{
+  "versao": "1.0-beta",
+  "descricao": "Banco de Áudios e Trilhas Sonoras Dinâmicas — IMaster RPG",
+  "categorias": {
+    "calmo": [
+      {
+        "id": "hk_dirtmouth",
+        "titulo": "Dirtmouth",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/02%20-%20Dirtmouth.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "hk_greenpath",
+        "titulo": "Greenpath",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/05%20-%20Greenpath.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "hk_reflection",
+        "titulo": "Reflection",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/07%20-%20Reflection.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "hk_city_of_tears",
+        "titulo": "City of Tears",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/09%20-%20City%20of%20Tears.mp3",
+        "volume_padrao": 0.4
+      },
+      {
+        "id": "hk_resting_grounds",
+        "titulo": "Resting Grounds",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/15%20-%20Resting%20Grounds.mp3",
+        "volume_padrao": 0.4
+      },
+      {
+        "id": "mc_sweden",
+        "titulo": "Sweden",
+        "origem": "Minecraft (C418)",
+        "url": "https://archive.org/download/c418-volume-alpha/C418%20%20-%20Sweden%20-%20Minecraft%20Volume%20Alpha%20%5BaBkTkxKDduc%5D.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "mc_wet_hands",
+        "titulo": "Wet Hands",
+        "origem": "Minecraft (C418)",
+        "url": "https://archive.org/download/c418-volume-alpha/C418%20-%20Wet%20Hands%20-%20Minecraft%20Volume%20Alpha%20%5BmukiMaOSLEs%5D.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "incomp_air_prelude",
+        "titulo": "Air Prelude",
+        "origem": "Kevin MacLeod (Incompetech)",
+        "url": "https://archive.org/download/Incompetech/mp3-royaltyfree/Air%20Prelude.mp3",
+        "volume_padrao": 0.4
+      }
+    ],
+    "tenso": [
+      {
+        "id": "hk_enter_hallownest",
+        "titulo": "Enter Hallownest",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/01%20-%20Enter%20Hallownest.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "hk_crossroads",
+        "titulo": "Crossroads",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/03%20-%20Crossroads.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "hk_soul_sanctum",
+        "titulo": "Soul Sanctum",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/14%20-%20Soul%20Sanctum.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "hk_dream",
+        "titulo": "Dream",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/21%20-%20Dream.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "incomp_anguish",
+        "titulo": "Anguish",
+        "origem": "Kevin MacLeod (Incompetech)",
+        "url": "https://archive.org/download/Incompetech/mp3-royaltyfree/Anguish.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "incomp_anxiety",
+        "titulo": "Anxiety",
+        "origem": "Kevin MacLeod (Incompetech)",
+        "url": "https://archive.org/download/Incompetech/mp3-royaltyfree/Anxiety.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "incomp_apprehension",
+        "titulo": "Apprehension",
+        "origem": "Kevin MacLeod (Incompetech)",
+        "url": "https://archive.org/download/Incompetech/mp3-royaltyfree/Apprehension.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "mc_dead_voxel",
+        "titulo": "Dead Voxel",
+        "origem": "Minecraft (C418)",
+        "url": "https://archive.org/download/c418-volume-beta/C418%20-%20Dead%20Voxel%20%28Minecraft%20Volume%20Beta%29%20%5BwGQDJNksrAM%5D.mp3",
+        "volume_padrao": 0.45
+      }
+    ],
+    "batalha": [
+      {
+        "id": "hk_hornet",
+        "titulo": "Hornet",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/06%20-%20Hornet.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "hk_mantis_lords",
+        "titulo": "Mantis Lords",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/08%20-%20Mantis%20Lords.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "hk_false_knight",
+        "titulo": "False Knight",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/04%20-%20False%20Knight.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "hk_decisive_battle",
+        "titulo": "Decisive Battle",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/13%20-%20Decisive%20Battle.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "hk_dung_defender",
+        "titulo": "Dung Defender",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/10%20-%20Dung%20Defender.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "hk_radiance",
+        "titulo": "Radiance",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/25%20-%20Radiance.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "incomp_black_vortex",
+        "titulo": "Black Vortex",
+        "origem": "Kevin MacLeod (Incompetech)",
+        "url": "https://archive.org/download/Incompetech/mp3-royaltyfree/BlackVortex.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "incomp_action",
+        "titulo": "Action",
+        "origem": "Kevin MacLeod (Incompetech)",
+        "url": "https://archive.org/download/Incompetech/mp3-royaltyfree/Action.mp3",
+        "volume_padrao": 0.45
+      }
+    ],
+    "perseguicao": [
+      {
+        "id": "hk_nosk",
+        "titulo": "Nosk",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/20%20-%20Nosk.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "hk_sealed_vessel",
+        "titulo": "Sealed Vessel",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/24%20-%20Sealed%20Vessel.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "hk_broken_vessel",
+        "titulo": "Broken Vessel",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/18%20-%20Broken%20Vessel.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "incomp_ambush",
+        "titulo": "Ambush",
+        "origem": "Kevin MacLeod (Incompetech)",
+        "url": "https://archive.org/download/Incompetech/mp3-royaltyfree/Ambush.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "incomp_accralate",
+        "titulo": "Accralate",
+        "origem": "Kevin MacLeod (Incompetech)",
+        "url": "https://archive.org/download/Incompetech/mp3-royaltyfree/Accralate.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "incomp_mole_men",
+        "titulo": "Attack of the Mole Men",
+        "origem": "Kevin MacLeod (Incompetech)",
+        "url": "https://archive.org/download/Incompetech/mp3-royaltyfree/Attack%20of%20the%20Mole%20Men.mp3",
+        "volume_padrao": 0.45
+      }
+    ],
+    "vitoria": [
+      {
+        "id": "hk_white_palace",
+        "titulo": "White Palace",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/23%20-%20White%20Palace.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "hk_white_lady",
+        "titulo": "The White Lady",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/17%20-%20The%20White%20Lady.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "incomp_aces_high",
+        "titulo": "Aces High",
+        "origem": "Kevin MacLeod (Incompetech)",
+        "url": "https://archive.org/download/Incompetech/mp3-royaltyfree/Aces%20High.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "mc_living_mice",
+        "titulo": "Living Mice",
+        "origem": "Minecraft (C418)",
+        "url": "https://archive.org/download/c418-volume-alpha/C418%20-%20Living%20Mice%20-%20Minecraft%20Volume%20Alpha%20%5BoGxQNQtnr6Q%5D.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "mc_aria_math",
+        "titulo": "Aria Math",
+        "origem": "Minecraft (C418)",
+        "url": "https://archive.org/download/c418-volume-beta/C418%20-%20Aria%20Math%20%28Minecraft%20Volume%20Beta%29%20%5BatgjKEgSqSU%5D.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "mc_mice_on_venus",
+        "titulo": "Mice on Venus",
+        "origem": "Minecraft (C418)",
+        "url": "https://archive.org/download/c418-volume-alpha/C418%20-%20Mice%20on%20Venus%20-%20Minecraft%20Volume%20Alpha%20%5BDZ47H84Bc_Q%5D.mp3",
+        "volume_padrao": 0.45
+      }
+    ],
+    "derrota": [
+      {
+        "id": "hk_theme",
+        "titulo": "Hollow Knight Theme",
+        "origem": "Hollow Knight (Christopher Larkin)",
+        "url": "https://archive.org/download/hollow-knight-original-soundtrack_2017/26%20-%20Hollow%20Knight.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "incomp_aftermath",
+        "titulo": "Aftermath",
+        "origem": "Kevin MacLeod (Incompetech)",
+        "url": "https://archive.org/download/Incompetech/mp3-royaltyfree/Aftermath.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "incomp_bent_broken",
+        "titulo": "Bent and Broken",
+        "origem": "Kevin MacLeod (Incompetech)",
+        "url": "https://archive.org/download/Incompetech/mp3-royaltyfree/Bent%20and%20Broken.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "incomp_singular_perversion",
+        "titulo": "A Singular Perversion",
+        "origem": "Kevin MacLeod (Incompetech)",
+        "url": "https://archive.org/download/Incompetech/mp3-royaltyfree/A%20Singular%20Perversion.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "incomp_upsetting_theme",
+        "titulo": "An Upsetting Theme",
+        "origem": "Kevin MacLeod (Incompetech)",
+        "url": "https://archive.org/download/Incompetech/mp3-royaltyfree/An%20Upsetting%20Theme.mp3",
+        "volume_padrao": 0.45
+      },
+      {
+        "id": "mc_the_end",
+        "titulo": "The End",
+        "origem": "Minecraft (C418)",
+        "url": "https://archive.org/download/c418-volume-beta/C418%20-%20The%20End%20%28Minecraft%20Volume%20Beta%29%20%5B-6mBUPdTmeI%5D.mp3",
+        "volume_padrao": 0.45
+      }
+    ]
+  }
+}

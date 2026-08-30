@@ -250,7 +250,18 @@
       </div>
 
       <div class="chat-header-actions">
-        <a href="index.html" class="menu-link" id="link-menu">
+        <!-- Widget de Áudio Dinâmico com Fade In/Out e Controle de Volume -->
+        <div class="audio-control-widget" id="audio-widget">
+          <div class="audio-track-info" id="audio-track-info" title="Trilha Sonora Dinâmica">
+            <span class="audio-note-icon">🎵</span>
+            <span class="audio-track-title" id="audio-current-title">Sessão Iniciada</span>
+            <span class="audio-mood-badge" id="audio-current-mood">✦ Calmo</span>
+          </div>
+          <button class="btn-audio-mute" id="audio-mute-btn" onclick="AudioManager.toggleMute()" title="Mutar/Desmutar Música">🔊</button>
+          <input type="range" class="audio-vol-slider" id="audio-vol-slider" min="0" max="1" step="0.05" value="0.4" onchange="AudioManager.setVolume(this.value)" oninput="AudioManager.setVolume(this.value)" title="Volume da Trilha Sonora">
+        </div>
+
+        <a href="index.html" class="menu-link" id="link-menu" onclick="AudioManager.stopMusic()">
           <span class="menu-link-icon">⊞</span> Menu Principal
         </a>
       </div>
@@ -559,6 +570,8 @@
     </div>
   </div>
 
-  <script src="js/chat.js?v=65"></script>
+  <script src="js/audioManager.js?v=75"></script>
+  <script src="js/chat.js?v=75"></script>
 </body>
 </html>
+

@@ -269,6 +269,7 @@ async function playerAction(action, sessionId, diceResult) {
 
   return {
     narration:       result.narration || "O Mestre observa em silêncio.",
+    bgm_mood:        result.bgm_mood || "calmo",
     cinematica:      result.cinematica || null,
     dice_request:    result.dice_request || null,
     contextual_suggestions: session.contextual_suggestions || [],

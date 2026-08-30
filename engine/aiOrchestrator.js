@@ -11,6 +11,7 @@ Você recebe a ação do jogador e o estado atual completo (PV, PE, SAN, NEX, in
 Sua resposta DEVE ser estritamente em formato JSON válido com TODOS os campos:
 {
   "narration": "Narração rica e atmosférica do resultado da ação. Descreva o ambiente, tensão e as consequências imediatas.",
+  "bgm_mood": "calmo",
   "state_updates": {
     "pv_current": null,
     "pe_current": null,
@@ -39,8 +40,15 @@ REGRAS OBRIGATÓRIAS:
    - +3 a +5: Assassinatos ritualísticos, sacrifícios profanos testemunhados, rituais em execução, visões tenebrosas, perda brusca de Sanidade.
    - +5 a +10: Combate direto e derrota de criaturas/monstros do Outro Lado, quebra da membrana, manifestação de entidades completas ou clímax.
    - null: Ações mundanas ou sem novo contato paranormal.
-7. SEMPRE preencha state_updates com os NOVOS VALORES ABSOLUTOS de PV/PE/SAN (use null para o que não mudar).
-8. Não inclua Markdown ao redor do JSON, apenas o objeto JSON puro.`;
+7. TRILHA SONORA DINÂMICA (bgm_mood): Defina o clima sonoro da cena entre:
+   - "calmo": Diálogos, investigações rotineiras, calmaria ou exploração silenciosa.
+   - "tenso": Sinais do Outro Lado, rituais macabros, ameaça oculta à espreita, medo.
+   - "batalha": Confronto tático armado ou corporal contra cultistas, criaturas e aberrações.
+   - "perseguicao": Fuga desesperada, perseguição em alta velocidade, fuga de perigo mortal.
+   - "vitoria": Banimento de entidades, fechamento de portais, triunfo dos agentes.
+   - "derrota": Morte de personagens, colapso de insanidade, fracasso trágico.
+8. SEMPRE preencha state_updates com os NOVOS VALORES ABSOLUTOS de PV/PE/SAN (use null para o que não mudar).
+9. Não inclua Markdown ao redor do JSON, apenas o objeto JSON puro.`;
 
   const userMessage = `ESTADO ATUAL DO PERSONAGEM:
 ${JSON.stringify(stateContext, null, 2)}
@@ -123,12 +131,14 @@ IMPORTANTE: Responda apenas com JSON puro. Use os valores atuais de PV/PE/SAN/NE
 function generateFallback(action) {
   return {
     narration: "A entidade não responde. A ação acontece, mas as consequências são imprevisíveis. Você deve prosseguir.",
+    bgm_mood: "calmo",
     state_updates: { pv_current: null, pe_current: null, san_current: null, nex_increase: null, location: null, status_add: [], status_remove: [] },
     inventory_updates: { add: [], remove: [] },
     contextual_suggestions: ["Observar novamente", "Fugir", "Se preparar"],
     pending_dice: { required: true, attribute: "agilidade", cd: 10, reason: "Teste instintivo devido à anomalia." }
   };
 }
+
 
 
 module.exports = { askAI };
