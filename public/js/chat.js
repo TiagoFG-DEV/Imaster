@@ -1247,7 +1247,7 @@ function selectAttack(nome, custo) {
 
 function openActionMenu() {
   if (isWaiting) return;
-  showActionTab(currentActionTab || "exploracao");
+  showActionTab(currentActionTab || "locais");
   openMenu("action-menu");
 }
 
@@ -1270,29 +1270,103 @@ function showActionTab(tab) {
   document.querySelectorAll(".card-tab").forEach(t => t.classList.remove("active"));
   el(`tab-${tab}`)?.classList.add("active");
 
-  const actions = actionsDB?.[tab] || getDefaultActions(tab);
   let html = "";
 
-  const sugs = getContextualSuggestionsList();
-  if (sugs.length > 0) {
-    html += `<div style="width:100%;font-size:10px;color:var(--gold);font-family:var(--font-t);font-weight:700;text-transform:uppercase;letter-spacing:2px;margin:2px 0 6px;">✦ Sugestões do Mestre</div>`;
-    html += sugs.map((sug, i) =>
-      `<button class="menu-action-btn" style="border-color:rgba(201,168,76,0.6);background:linear-gradient(135deg,rgba(26,20,38,0.92),rgba(12,10,18,0.98));margin-bottom:6px;" id="action-sug-btn-${i}" onclick="selectAction('${esc(sug)}')">
-        <span class="menu-action-icon" style="color:var(--gold);">✦</span>
-        <span>${esc(sug)}</span>
+  if (tab === "locais") {
+    const sh = getCurrentSheet();
+    const mapData = introDataGlobal?.world_data?.mapa_locais || getFallbackMap();
+    const currentRoom = mapData.find(r => r.nome === sh?.current_location || r.id === sh?.current_location_id) || mapData[0];
+    const connections = currentRoom ? (currentRoom.conexoes || []) : [];
+
+    html += `<div style="width:100%;font-size:10px;color:var(--gold);font-family:var(--font-t);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin:2px 0 8px;">
+      📍 LOCAL ATUAL: <span style="color:#fff;">${esc(currentRoom?.nome || "Desconhecido")}</span>
+    </div>`;
+
+    if (connections.length === 0) {
+      html += `<div style="color:var(--text-d);font-size:13px;padding:8px;">Nenhum caminho diretamente acessível a partir daqui.</div>`;
+    } else {
+      html += connections.map((targetId, i) => {
+        const targetRoom = mapData.find(r => r.id === targetId);
+        if (!targetRoom) return "";
+        const isLocked = targetRoom.trancado;
+        const icon = isLocked ? "🔒" : "🚪";
+        const lockNote = isLocked ? `<span class="menu-action-cost" style="color:var(--red3);border-color:var(--red3)">Trancada</span>` : `<span class="menu-action-cost" style="color:var(--green3);border-color:var(--green3)">Acesso Livre</span>`;
+
+        return `<button class="menu-action-btn" id="action-move-btn-${i}" onclick="selectMoveRoom('${esc(targetRoom.id)}', '${esc(targetRoom.nome)}')">
+          <span class="menu-action-icon">${icon}</span>
+          <div style="display:flex;flex-direction:column;align-items:flex-start;text-align:left;flex:1;">
+            <strong style="font-size:13px;color:var(--text);">${esc(targetRoom.nome)}</strong>
+            <span style="font-size:10px;color:var(--text-d);">${esc(targetRoom.descricao || "Caminho conectado")}</span>
+          </div>
+          ${lockNote}
+        </button>`;
+      }).join("");
+    }
+  } else if (tab === "investigar") {
+    const sh = getCurrentSheet();
+    const mapData = introDataGlobal?.world_data?.mapa_locais || getFallbackMap();
+    const currentRoom = mapData.find(r => r.nome === sh?.current_location || r.id === sh?.current_location_id) || mapData[0];
+    const pInvestigacao = currentRoom?.pontos_investigacao || [];
+
+    html += `<div style="width:100%;font-size:10px;color:var(--gold);font-family:var(--font-t);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin:2px 0 8px;">
+      🔍 PONTOS DE BUSCA EM: <span style="color:#fff;">${esc(currentRoom?.nome || "Local Atual")}</span>
+    </div>`;
+
+    if (pInvestigacao.length === 0) {
+      html += `<div style="color:var(--text-d);font-size:13px;padding:8px;">Nenhum ponto específico registrado nesta sala. Você pode fazer uma busca geral na aba 'Exploração'.</div>`;
+    } else {
+      html += pInvestigacao.map((pi, i) => {
+        return `<button class="menu-action-btn" id="action-investigate-btn-${i}" onclick="selectInvestigatePoint('${esc(pi.nome)}', ${pi.cd || 12})">
+          <span class="menu-action-icon" style="font-size:18px;">${pi.icone || "🔍"}</span>
+          <div style="display:flex;flex-direction:column;align-items:flex-start;text-align:left;flex:1;">
+            <strong style="font-size:13px;color:var(--text);">${esc(pi.nome)}</strong>
+            <span style="font-size:10px;color:var(--gold-d);">Teste de Investigação (CD ${pi.cd || 12})</span>
+          </div>
+          <span class="menu-action-cost" style="color:var(--gold);border-color:rgba(201,168,76,0.5)">Examinar ➔</span>
+        </button>`;
+      }).join("");
+    }
+  } else {
+    const actions = actionsDB?.[tab] || getDefaultActions(tab);
+    const sugs = getContextualSuggestionsList();
+    if (sugs.length > 0) {
+      html += `<div style="width:100%;font-size:10px;color:var(--gold);font-family:var(--font-t);font-weight:700;text-transform:uppercase;letter-spacing:2px;margin:2px 0 6px;">✦ Sugestões do Mestre</div>`;
+      html += sugs.map((sug, i) =>
+        `<button class="menu-action-btn" style="border-color:rgba(201,168,76,0.6);background:linear-gradient(135deg,rgba(26,20,38,0.92),rgba(12,10,18,0.98));margin-bottom:6px;" id="action-sug-btn-${i}" onclick="selectAction('${esc(sug)}')">
+          <span class="menu-action-icon" style="color:var(--gold);">✦</span>
+          <span>${esc(sug)}</span>
+        </button>`
+      ).join("");
+      html += `<div style="width:100%;height:1px;background:var(--border2);margin:6px 0 8px;"></div>`;
+    }
+
+    html += actions.map((a, i) =>
+      `<button class="menu-action-btn" id="action-tab-btn-${tab}-${i}" onclick="selectAction('${esc(a.texto)}')">
+        <span class="menu-action-icon">${a.icon || "•"}</span>
+        <span>${esc(a.texto)}</span>
       </button>`
     ).join("");
-    html += `<div style="width:100%;height:1px;background:var(--border2);margin:6px 0 8px;"></div>`;
   }
 
-  html += actions.map((a, i) =>
-    `<button class="menu-action-btn" id="action-tab-btn-${tab}-${i}" onclick="selectAction('${esc(a.texto)}')">
-      <span class="menu-action-icon">${a.icon || "•"}</span>
-      <span>${esc(a.texto)}</span>
-    </button>`
-  ).join("");
-
   if (el("action-list")) el("action-list").innerHTML = html;
+}
+
+function selectMoveRoom(roomId, roomName) {
+  closeMenu("action-menu");
+  const mapData = introDataGlobal?.world_data?.mapa_locais || [];
+  const target = mapData.find(r => r.id === roomId || r.nome === roomName);
+  if (target && target.trancado && target.minigame === "chaves") {
+    openMinigameKeys(target);
+    return;
+  }
+  if (typeof AudioManager !== "undefined") AudioManager.playSFX("turn_change");
+  enviarAction(`Mover para: ${roomName}`);
+}
+
+function selectInvestigatePoint(pontoNome, cd) {
+  closeMenu("action-menu");
+  if (typeof AudioManager !== "undefined") AudioManager.playSFX("item");
+  enviarAction(`Examinar e investigar minuciosamente: ${pontoNome}`);
 }
 
 function getDefaultActions(tab) {
@@ -2448,26 +2522,16 @@ function renderTacticalMap(rooms) {
   const currentLocName = sh?.current_location || rooms.find(r => r.inicial)?.nome || rooms[0]?.nome;
 
   const roomMap = {};
-  const originX = 140;
-  const originY = 100;
-  const colSpacing = 240;
-  const rowSpacing = 190;
-
-  rooms.forEach(room => {
-    const gx = room.grid_x !== undefined ? room.grid_x : 2;
-    const gy = room.grid_y !== undefined ? room.grid_y : 0;
-    const x = originX + gx * colSpacing;
-    const y = originY + gy * rowSpacing;
-
-    let w = 150, h = 90;
-    if (room.formato === "quadrado") { w = 110; h = 110; }
-    else if (room.formato === "circular") { w = 120; h = 120; }
-    else if (room.formato === "hexagonal") { w = 150; h = 110; }
-
+  rooms.forEach((room, idx) => {
+    // Coordenadas contíguas baseadas em pos_x, pos_y e dimensões
+    const x = room.pos_x !== undefined ? room.pos_x : 100 + (idx % 3) * 230;
+    const y = room.pos_y !== undefined ? room.pos_y : 80 + Math.floor(idx / 3) * 160;
+    const w = room.width || 180;
+    const h = room.height || 120;
     roomMap[room.id] = { x, y, w, h, room };
   });
 
-  // 1. Linhas dos Corredores / Conexões SVG
+  // 1. Linhas de Paredes e Corredores de Conexão SVG
   const drawnEdges = new Set();
   let linksHtml = "";
 
@@ -2483,35 +2547,52 @@ function renderTacticalMap(rooms) {
       if (drawnEdges.has(edgeKey)) return;
       drawnEdges.add(edgeKey);
 
+      const fromCenterX = fromPos.x + fromPos.w / 2;
+      const fromCenterY = fromPos.y + fromPos.h / 2;
+      const toCenterX = toPos.x + toPos.w / 2;
+      const toCenterY = toPos.y + toPos.h / 2;
+
       const isCurrentRoute = (room.nome === currentLocName) || (toPos.room.nome === currentLocName);
-      linksHtml += `<line class="map-corridor-line${isCurrentRoute ? ' active' : ''}" x1="${fromPos.x}" y1="${fromPos.y}" x2="${toPos.x}" y2="${toPos.y}" />`;
+      linksHtml += `<line class="map-corridor-line${isCurrentRoute ? ' active' : ''}" x1="${fromCenterX}" y1="${fromCenterY}" x2="${toCenterX}" y2="${toCenterY}" />`;
     });
   });
   svgLinks.innerHTML = linksHtml;
 
   const agentColors = ["#22c55e", "#38bdf8", "#c084fc", "#eab308", "#f43f5e"];
 
-  // 2. Nós / Salas
+  // 2. Renderiza as Salas Contíguas (Planta Baixa Sem Spoilers)
   rooms.forEach(room => {
     const pos = roomMap[room.id];
     if (!pos) return;
 
     const isCurrent = (room.nome === currentLocName) || (room.id === sh?.current_location_id);
-    const isBoss = room.gatilho === "boss_climax" || room.formato === "hexagonal";
     const isLocked = room.trancado;
 
+    // Agentes presentes
     const agentsHere = allCharacters.filter(c => {
       const cLoc = c.current_location || (rooms.find(r => r.inicial)?.nome);
       return cLoc === room.nome || c.current_location_id === room.id;
     });
 
     const nodeEl = document.createElement("div");
-    nodeEl.className = `map-node format-${room.formato || 'retangulo'}${isCurrent ? ' is-current' : ''}${isBoss ? ' is-boss' : ''}${isLocked ? ' is-locked' : ''}`;
+    nodeEl.className = `map-node format-${room.formato || 'retangulo'}${isCurrent ? ' is-current' : ''}${isLocked ? ' is-locked' : ''}`;
     nodeEl.style.left = `${pos.x}px`;
     nodeEl.style.top = `${pos.y}px`;
     nodeEl.style.width = `${pos.w}px`;
     nodeEl.style.height = `${pos.h}px`;
+    nodeEl.style.transform = "none"; // Posição contígua absoluta
 
+    // Pontos de investigação dentro da sala
+    const pointsHtml = (room.pontos_investigacao || []).map(pi =>
+      `<span class="map-point-chip" title="${esc(pi.nome)}">${pi.icone || '🔍'} ${esc(pi.nome)}</span>`
+    ).join("");
+
+    // Portas visíveis
+    const doorsHtml = (room.portas || []).map(p =>
+      `<span class="map-door-tag door-${p.direcao || 'sul'}">${p.trancada ? '🔒' : '🚪'}</span>`
+    ).join("");
+
+    // Chips dos agentes
     const agentsHtml = agentsHere.map((ag, idx) => {
       const firstName = (ag.name || "Agente").split(" ")[0];
       const color = agentColors[idx % agentColors.length];
@@ -2522,16 +2603,37 @@ function renderTacticalMap(rooms) {
     }).join("");
 
     nodeEl.innerHTML = `
-      <div class="map-node-title">${esc(room.nome)}</div>
-      <div class="map-node-badge">${isCurrent ? '📍 VOCÊ ESTÁ AQUI' : (isLocked ? '🔒 TRANCADO' : (isBoss ? '⚔ BOSS FINAL' : esc(room.gatilho || 'SALA')))}</div>
+      <div class="map-node-header">
+        <span class="map-node-title">${esc(room.nome)}</span>
+        ${isCurrent ? '<span class="map-current-badge">📍 VOCÊ</span>' : ''}
+      </div>
+      ${pointsHtml ? `<div class="map-node-points">${pointsHtml}</div>` : ''}
       ${agentsHtml ? `<div class="map-node-agents">${agentsHtml}</div>` : ''}
+      ${doorsHtml ? `<div class="map-doors-container">${doorsHtml}</div>` : ''}
     `;
 
-    nodeEl.onclick = () => onMapNodeClick(room, isCurrent);
     nodesContainer.appendChild(nodeEl);
   });
 
   centerOnCurrentRoom(roomMap, currentLocName);
+}
+
+function centerOnCurrentRoom(roomMap, currentLocName) {
+  const currentRoomEntry = Object.values(roomMap).find(e => e.room.nome === currentLocName) || Object.values(roomMap)[0];
+  if (!currentRoomEntry) return;
+
+  const viewport = el("map-viewport");
+  if (!viewport) return;
+
+  const vw = viewport.clientWidth || 800;
+  const vh = viewport.clientHeight || 500;
+
+  const centerX = currentRoomEntry.x + (currentRoomEntry.w / 2);
+  const centerY = currentRoomEntry.y + (currentRoomEntry.h / 2);
+
+  mapPanX = (vw / 2) - (centerX * mapScale);
+  mapPanY = (vh / 2) - (centerY * mapScale);
+  applyMapTransform();
 }
 
 function centerOnCurrentRoom(roomMap, currentLocName) {

@@ -37,29 +37,31 @@ REGRAS OBRIGATÓRIAS:
    - VIGOR (VIG): Resistir a venenos/fadiga física, tolerar dor e ferimentos, testes de sobrevivência.
    - INTELECTO (INT): Investigar pistas forenses, decifrar documentos/códigos, analisar rituais e mecanismos.
    - PRESENÇA (PRE): Resistir ao medo do Outro Lado (Vontade/Sanidade), liderança tática, interrogar testemunhas.
-3. DANO DE SANIDADE É RARO E EXCLUSIVO DE HORROR EXTREMO: NUNCA reduza Sanidade (san_current) por investigar ambientes escuros, encontrar pistas macabras, ler livros ou ouvir ruídos. Dano de Sanidade é reservado EXCLUSIVAMENTE para choques psicológicos brutais:
+3. INVESTIGAÇÃO SEM CRÍTICO/DESASTRE PUNITIVO: Em testes de busca e investigação em pontos de cenário (armários, gavetas, computadores, paredes), NÃO existe dano ou perda de sanidade por 'desastre' ou 'crítico'. O resultado é estritamente binário: Conseguiu encontrar pistas/itens/puzzles (rolagem >= CD) ou Não conseguiu encontrar pistas adicionais (rolagem < CD).
+4. DANO DE SANIDADE É RARO E EXCLUSIVO DE HORROR EXTREMO: NUNCA reduza Sanidade (san_current) por investigar ambientes escuros, encontrar pistas macabras, ler livros ou ouvir ruídos. Dano de Sanidade é reservado EXCLUSIVAMENTE para choques psicológicos brutais:
    - Presenciar assassinatos de culto ou sacrifícios humanos ocorrendo na frente dos agentes (-2 a -4 SAN).
    - Ataque mental direto de uma entidade ou revelação de sua forma alienígena total (-3 a -6 SAN).
    - Desastres em testes de Vontade contra o Outro Lado (-2 a -4 SAN).
    - Em investigações e ações normais, DEIXE san_current como null.
-4. DANO FÍSICO REALISTA: Aplique redução em pv_current quando o personagem for atingido em combate, cair em armadilha ou sofrer dano físico direto (-3 a -8 PV).
-5. Se o personagem usar habilidade com custo de PE informado no contexto, reduza pe_current.
-6. Se o personagem se curar ou receber auxílio psicológico/físico, aumente os valores correspondentes (nunca ultrapassar o máximo).
-7. PROGRESSÃO DE NEX (Exposição Paranormal): O NEX mede a contaminação e exposição ao Outro Lado. Retorne um número inteiro positivo em "nex_increase" de acordo com o impacto sobrenatural da cena:
+5. DANO FÍSICO REALISTA: Aplique redução em pv_current quando o personagem for atingido em combate, cair em armadilha ou sofrer dano físico direto (-3 a -8 PV).
+6. Se o personagem usar habilidade com custo de PE informado no contexto, reduza pe_current.
+7. Se o personagem se curar ou receber auxílio psicológico/físico, aumente os valores correspondentes (nunca ultrapassar o máximo).
+8. PROGRESSÃO DE NEX (Exposição Paranormal): O NEX mede a contaminação e exposição ao Outro Lado. Retorne um número inteiro positivo em "nex_increase" de acordo com o impacto sobrenatural da cena:
    - +1 a +2: Pistas ocultas, símbolos de sangue, vislumbres de anomalias, ambiente macabro leve.
    - +3 a +5: Assassinatos ritualísticos, sacrifícios profanos testemunhados, rituais em execução, visões tenebrosas, perda de Sanidade em choque extremo.
    - +5 a +10: Combate direto e derrota de criaturas/monstros do Outro Lado, quebra da membrana, manifestação de entidades completas ou clímax.
    - null: Ações mundanas ou sem novo contato paranormal.
-8. NAVEGAÇÃO & MISTÉRIO CENTRAL: Narre a cena respeitando o local atual do mapa e as pistas encontradas. Documentos, chaves e revelações devem sempre convergir para desvendar o segredo da anomalia e preparar o confronto final com o Boss da história.
-9. TRILHA SONORA DINÂMICA (bgm_mood): Defina o clima sonoro da cena entre:
+9. NAVEGAÇÃO & MISTÉRIO CENTRAL: Narre a cena respeitando o local atual do mapa e os pontos de busca específicos investigados. Documentos, chaves e revelações devem sempre convergir para desvendar o segredo da anomalia e preparar o confronto final com o Boss da história.
+10. TRILHA SONORA DINÂMICA (bgm_mood): Defina o clima sonoro da cena entre:
    - "calmo": Diálogos, investigações rotineiras, calmaria ou exploração silenciosa.
    - "tenso": Sinais do Outro Lado, rituais macabros, ameaça oculta à espreita, medo iminente.
    - "batalha": Confronto tático armado ou corporal contra cultistas, criaturas e aberrações.
    - "perseguicao": Fuga desesperada, perseguição em alta velocidade, fuga de perigo mortal.
    - "vitoria": Banimento de entidades, fechamento de portais, triunfo dos agentes.
    - "derrota": Morte de personagens, colapso de insanidade, fracasso trágico.
-10. SEMPRE preencha state_updates com os NOVOS VALORES ABSOLUTOS de PV/PE/SAN (use null para o que não mudar).
-11. Não inclua Markdown ao redor do JSON, apenas o objeto JSON puro.`;
+11. SEMPRE preencha state_updates com os NOVOS VALORES ABSOLUTOS de PV/PE/SAN (use null para o que não mudar).
+12. Não inclua Markdown ao redor do JSON, apenas o objeto JSON puro.`;
+
 
 
   const userMessage = `ESTADO ATUAL DO PERSONAGEM:
